@@ -1,5 +1,5 @@
 # Ant-Project
-This will be our, Angle and javier's, project in this game you will have to log in, with an email(optional), and you will choose the type of ant and the biome in wich you will start your ant nest, then you will have a little hole in wich you will have the ant queen, three alive workes and five worker spawns.
+This will be our, Angel and javier's, project in this game you will have to log in, with an email(optional), and you will choose the type of ant and the biome in wich you will start your ant nest, then you will have a little hole in wich you will have the ant queen, three alive workes and five worker spawns.
 
 ## Wanted-Needed Features
 <ul>
