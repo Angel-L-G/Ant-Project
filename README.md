@@ -102,11 +102,11 @@ This will be our, Angle and javier's, project in this game you will have to log 
     <li>
       <h4>Cosmetics: </h4>
       <p>
-        1. some skins.
+        1. Skins.
       </p>
     </li>
     <li>
-      <h4></h4>
+      <h4>Gmail verification</h4>
     </li>
   </div>
   
