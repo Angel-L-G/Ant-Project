@@ -20,7 +20,7 @@ This will be our, Angel and javier's, project in this game you will have to log 
     </li>
   </div>
   
-</br></br>
+</br>
 
   <div>
     <h3>In game Features: </h3>
@@ -55,7 +55,7 @@ This will be our, Angel and javier's, project in this game you will have to log 
     </li>
   </div>
 
-</br></br>
+</br>
 
   <div>
     <h3>Social: </h3>
@@ -89,6 +89,8 @@ This will be our, Angel and javier's, project in this game you will have to log 
     </li>
   </div>
 </ul>
+
+</br>
 
 ## Optional Features
 <ul>
