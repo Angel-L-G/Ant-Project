@@ -52,7 +52,17 @@ CREATE TABLE `ants` (
   `damage` INT,
   `working` boolean,
   `cost` INT,
+  `biome` VARCHAR(20),
   CONSTRAINT pk_ants PRIMARY KEY(id)
+);
+
+CREATE TABLE `ant_user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_user` INT,
+  `id_ant` INT NOT NULL,
+  CONSTRAINT pk_ants PRIMARY KEY(id),
+  CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES usuarios(id),
+  CONSTRAINT fk_ant FOREIGN KEY (id_ant) REFERENCES nests(id)
 );
 
 CREATE TABLE `ant_nest` (
