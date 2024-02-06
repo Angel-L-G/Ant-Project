@@ -71,7 +71,7 @@ CREATE TABLE `ant_nest` (
   `id_ant` INT NOT NULL,
   `cuantity` INT NOT NULL,
   CONSTRAINT pk_ant_nest PRIMARY KEY(id),
-  CONSTRAINT fk_nest FOREIGN KEY (id_nest) REFERENCES ants(id)
+  CONSTRAINT fk_nest FOREIGN KEY (id_nest) REFERENCES ants(id),
   CONSTRAINT fk_ant FOREIGN KEY (id_ant) REFERENCES nests(id)
 );
 
@@ -81,5 +81,5 @@ CREATE TABLE `bosses` (
   `life` INT,
   `damage` INT,
   `reward` INT,
-  CONSTRAINT pk_boss PRIMARY KEY(id),
+  CONSTRAINT pk_boss PRIMARY KEY(id)
 );
