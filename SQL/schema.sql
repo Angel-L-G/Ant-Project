@@ -8,12 +8,13 @@ DROP TABLE IF EXISTS `nests`;
 
 CREATE TABLE `usuarios` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
   `password` varchar(200) NOT NULL,
   `rol` varchar(45) NOT NULL,
   `email` varchar (45),
-  `active` int default 0,
+  `active` BOOLEAN DEFAULT false,
   `hash` varchar(255),
+  `banned` BOOLEAN DEFAULT false,
   constraint pk_usuarios PRIMARY KEY(id),
   constraint uk_nombre UNIQUE KEY(nombre)
 );
@@ -31,6 +32,7 @@ CREATE TABLE `nests` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id_user` INT,
   `ant_type` VARCHAR(40),
+  `deleted` BOOLEAN DEFAULT false,
   CONSTRAINT pk_ants PRIMARY KEY(id),
   CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES usuarios(id)
 );
@@ -50,7 +52,7 @@ CREATE TABLE `ants` (
   `type` VARCHAR(30),
   `life` INT,
   `damage` INT,
-  `working` boolean,
+  `working` BOOLEAN DEFAULT false,
   `cost` INT,
   `biome` VARCHAR(20),
   CONSTRAINT pk_ants PRIMARY KEY(id)
