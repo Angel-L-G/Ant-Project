@@ -73,6 +73,7 @@ CREATE TABLE `ant_nest` (
   `id_nest` INT NOT NULL,
   `id_ant` INT NOT NULL,
   `cuantity` INT NOT NULL,
+  `map` TEXT NOT NULL,
   CONSTRAINT pk_ant_nest PRIMARY KEY(id),
   CONSTRAINT fk_nestant FOREIGN KEY (id_nest) REFERENCES ants(id),
   CONSTRAINT fk_antnest FOREIGN KEY (id_ant) REFERENCES nests(id)
