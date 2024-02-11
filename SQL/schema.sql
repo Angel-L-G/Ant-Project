@@ -30,20 +30,12 @@ CREATE TABLE `friends` (
 
 CREATE TABLE `nests` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id_user` INT,
   `ant_type` VARCHAR(40),
+  `id_user` INT NOT NULL,
   `deleted` BOOLEAN DEFAULT false,
+  `map` TEXT NOT NULL,
   CONSTRAINT pk_ants PRIMARY KEY(id),
   CONSTRAINT fk_usernest FOREIGN KEY (id_user) REFERENCES usuarios(id)
-);
-
-CREATE TABLE `usuario_nest` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `id_user` INT,
-  `id_nest` INT,
-  CONSTRAINT pk_ants PRIMARY KEY(id),
-  CONSTRAINT fk_user_nest FOREIGN KEY (id_user) REFERENCES usuarios(id),
-  CONSTRAINT fk_nest_user FOREIGN KEY (id_nest) REFERENCES nests(id)
 );
 
 CREATE TABLE `ants` (
@@ -72,8 +64,7 @@ CREATE TABLE `ant_nest` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id_nest` INT NOT NULL,
   `id_ant` INT NOT NULL,
-  `cuantity` INT NOT NULL,
-  `map` TEXT NOT NULL,
+  `quantity` INT NOT NULL,
   CONSTRAINT pk_ant_nest PRIMARY KEY(id),
   CONSTRAINT fk_nestant FOREIGN KEY (id_nest) REFERENCES ants(id),
   CONSTRAINT fk_antnest FOREIGN KEY (id_ant) REFERENCES nests(id)
