@@ -18,10 +18,12 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import es.iespto.agl.TresEnRayaHexagonal.domain.model.Usuario;
-import es.iespto.agl.TresEnRayaHexagonal.domain.port.secundary.IUsuarioRepository;
-import es.iespto.agl.TresEnRayaHexagonal.infrastructure.security.JwtService;
-import es.iespto.agl.TresEnRayaHexagonal.infrastructure.security.UserDetailsLogin;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
+import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
+
+
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -30,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	
 	@Autowired JwtService jwtService;
-	@Autowired private IUsuarioRepository usuarioservice;
+	@Autowired private IUsuarioService usuarioservice;
 	
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {

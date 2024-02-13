@@ -1,27 +1,8 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql;
+package es.iespto.algyjmcg.AntScape.domain.model;
 
-import java.io.Serializable;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Table;
-
-
-/**
- * The persistent class for the ants database table.
- * 
- */
-@Entity
-@Table(name="ants")
-@NamedQuery(name="Ant.findAll", query="SELECT a FROM Ant a")
-public class AntEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	@Id
+public class Ant {
 	private Integer id;
 
 	private String biome;
@@ -38,17 +19,11 @@ public class AntEntity implements Serializable {
 
 	private boolean working;
 
-	//bi-directional many-to-many association to Usuario
-	@ManyToMany
-	@JoinColumn(name="id")
-	private List<UsuarioEntity> usuarios;
+	private List<Usuario> usuarios;
 
-	//bi-directional many-to-many association to Nest
-	@ManyToMany
-	@JoinColumn(name="id")
-	private List<NestEntity> nests;
+	private List<AntNest> antNests;
 
-	public AntEntity() {
+	public Ant() {
 	}
 
 	public Integer getId() {
@@ -115,20 +90,19 @@ public class AntEntity implements Serializable {
 		this.working = working;
 	}
 
-	public List<UsuarioEntity> getUsuarios() {
+	public List<Usuario> getUsuarios() {
 		return this.usuarios;
 	}
 
-	public void setUsuarios(List<UsuarioEntity> usuarios) {
+	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
 	}
 
-	public List<NestEntity> getNests() {
-		return this.nests;
+	public List<AntNest> getAntNests() {
+		return this.antNests;
 	}
 
-	public void setNests(List<NestEntity> nests) {
-		this.nests = nests;
+	public void setAntNests(List<AntNest> nests) {
+		this.antNests = nests;
 	}
-
 }

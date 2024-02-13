@@ -1,27 +1,8 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql;
+package es.iespto.algyjmcg.AntScape.domain.model;
 
-import java.io.Serializable;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
-
-/**
- * The persistent class for the usuarios database table.
- * 
- */
-@Entity
-@Table(name="usuarios")
-@NamedQuery(name="Usuario.findAll", query="SELECT u FROM Usuario u")
-public class UsuarioEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	@Id
+public class Usuario {
 	private Integer id;
 
 	private boolean active;
@@ -38,15 +19,11 @@ public class UsuarioEntity implements Serializable {
 
 	private String rol;
 
-	//bi-directional many-to-one association to Nest
-	@OneToMany(mappedBy="usuario")
-	private List<NestEntity> nests;
+	private List<Nest> nests;
 
-	//bi-directional many-to-many association to Ant
-	@ManyToMany(mappedBy="usuarios")
-	private List<AntEntity> ants;
+	private List<Ant> ants;
 
-	public UsuarioEntity() {
+	public Usuario() {
 	}
 
 	public Integer getId() {
@@ -113,33 +90,33 @@ public class UsuarioEntity implements Serializable {
 		this.rol = rol;
 	}
 
-	public List<NestEntity> getNests() {
+	public List<Nest> getNests() {
 		return this.nests;
 	}
 
-	public void setNests(List<NestEntity> nests1) {
+	public void setNests(List<Nest> nests1) {
 		this.nests = nests1;
 	}
 
-	public NestEntity addNests1(NestEntity nests) {
+	public Nest addNests1(Nest nests) {
 		getNests().add(nests);
 		nests.setUsuario(this);
 
 		return nests;
 	}
 
-	public NestEntity removeNests1(NestEntity nests1) {
+	public Nest removeNests1(Nest nests1) {
 		getNests().remove(nests1);
 		nests1.setUsuario(null);
 
 		return nests1;
 	}
 
-	public List<AntEntity> getAnts() {
+	public List<Ant> getAnts() {
 		return this.ants;
 	}
 
-	public void setAnts(List<AntEntity> ants) {
+	public void setAnts(List<Ant> ants) {
 		this.ants = ants;
 	}
 }

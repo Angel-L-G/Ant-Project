@@ -11,19 +11,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
 
 @Configuration
 public class ApplicationConfig {
 	@Autowired
-	private IUsuarioRepository repository;
+	private IUsuarioService repository;
 
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return username -> {
 			Usuario entity = repository.findByName(username);
 			UserDetailsLogin user = new UserDetailsLogin();
-			user.setUsername(entity.getNombre());
+			user.setUsername(entity.getName());
 			user.setPassword(entity.getPassword());
 			user.setRole(entity.getRol());
 			return user;

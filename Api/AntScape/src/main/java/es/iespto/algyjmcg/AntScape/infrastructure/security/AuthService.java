@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+
 @Service
 public class AuthService {
-	@Autowired private IUsuarioRepository usuarioservice;
-	
+	@Autowired 
+	private IUsuarioService usuarioservice;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	@Autowired
@@ -17,10 +20,10 @@ public class AuthService {
 	
 	public String register(UserDetailsLogin userdetails) {
 		Usuario userentity = new Usuario();
-		userentity.setNombre(userdetails.getUsername());
+		userentity.setName(userdetails.getUsername());
 		userentity.setPassword(passwordEncoder.encode(userdetails.getPassword()));
 		userentity.setRol("ROLE_USER");
-		userentity.setActive(0);
+		userentity.setActive(false);
 		userentity.setEmail(userdetails.email);
 		
 		int randInt = (int)Math.random()*10000;
@@ -48,14 +51,18 @@ public class AuthService {
 		if (userentity != null) {
 			if (passwordEncoder.matches(request.getPassword(), userentity.getPassword())) {
 				userlogin = new UserDetailsLogin();
-				userlogin.setUsername(userentity.getNombre());
+				userlogin.setUsername(userentity.getName());
 				userlogin.setPassword(userentity.getPassword());
 				userlogin.setRole(userentity.getRol());
 			}
 		}
 		String generateToken = null;
 		if (userlogin != null) {
-			generateToken = jwtService.generateToken(userentity.getNombre(), userentity.getRol());
+			if(userentity.getActive() == true) {
+				generateToken = jwtService.generateToken(userentity.getName(), userentity.getRol());	
+			} else {
+				
+			}
 		}
 		return generateToken;
 	}

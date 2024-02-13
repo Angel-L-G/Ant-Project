@@ -1,4 +1,4 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql;
+package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity;
 
 import java.io.Serializable;
 
