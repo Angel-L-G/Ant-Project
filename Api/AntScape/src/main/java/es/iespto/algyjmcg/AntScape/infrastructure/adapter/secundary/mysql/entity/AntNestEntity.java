@@ -2,6 +2,8 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,6 +40,7 @@ public class AntNestEntity implements Serializable {
 	private AntEntity ant;
 
 	//bi-directional many-to-one association to Nest
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_ant", nullable=false)
 	private NestEntity nest;

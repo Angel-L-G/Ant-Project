@@ -58,11 +58,11 @@ public class Nest {
 		this.usuario = usuario;
 	}
 
-	public List<AntNest> getAnts() {
+	public List<AntNest> getAntNests() {
 		return this.antNests;
 	}
 
-	public void setAnts(List<AntNest> ants) {
+	public void setAntNests(List<AntNest> ants) {
 		this.antNests = ants;
 	}
 }

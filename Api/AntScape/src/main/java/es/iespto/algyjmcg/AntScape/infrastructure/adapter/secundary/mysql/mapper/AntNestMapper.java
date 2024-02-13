@@ -8,17 +8,21 @@ public class AntNestMapper {
 	private NestMapper nm;
 	
 	public AntNestEntity toPersistance(AntNest in) {
-		am = new AntMapper();
-		nm = new NestMapper();
-		
 		AntNestEntity out = new AntNestEntity();
 		
 		if(in.getId() != null) {
 			out.setId(in.getId());
 			out.setQuantity(in.getQuantity());
 			
-			out.setAnt(am.toPersistance(in.getAnt()));
-			//out.setNest(in.getNest());
+			if(in.getAnt() != null) {
+				am = new AntMapper();
+				out.setAnt(am.toPersistance(in.getAnt()));
+			}
+			
+			if(in.getNest() != null) {
+				nm = new NestMapper();
+				out.setNest(nm.toPersistance(in.getNest()));
+			}
 		}
 		
 		return out;
@@ -31,8 +35,15 @@ public class AntNestMapper {
 			out.setId(in.getId());
 			out.setQuantity(in.getQuantity());
 			
-			//out.setAnt(in.getAnt());
-			//out.setNest(in.getNest());
+			if(in.getAnt() != null) {
+				am = new AntMapper();
+				out.setAnt(am.toDomain(in.getAnt()));
+			}
+			
+			if(in.getNest() != null) {
+				nm = new NestMapper();
+				out.setNest(nm.toDomain(in.getNest()));
+			}
 		}
 		
 		return out;

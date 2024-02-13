@@ -1,8 +1,14 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import es.iespto.algyjmcg.AntScape.domain.model.AntNest;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntNestMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -36,6 +42,7 @@ public class NestEntity implements Serializable {
 	private String map;
 
 	//bi-directional many-to-one association to Usuario
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="id_user")
 	private UsuarioEntity usuario;
@@ -87,11 +94,11 @@ public class NestEntity implements Serializable {
 		this.usuario = usuario;
 	}
 
-	public List<AntNestEntity> getAnts() {
+	public List<AntNestEntity> getAntNests() {
 		return this.antNests;
 	}
 
-	public void setAnts(List<AntNestEntity> ants) {
+	public void setAntNests(List<AntNestEntity> ants) {
 		this.antNests = ants;
 	}
 }

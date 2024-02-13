@@ -58,6 +58,7 @@ public class AntEntity implements Serializable {
 	private List<UsuarioEntity> usuarios;
 
 	//bi-directional many-to-one association to AntNest
+	@JsonIgnore
 	@OneToMany(mappedBy="ant")
 	private List<AntNestEntity> antNests;
 
