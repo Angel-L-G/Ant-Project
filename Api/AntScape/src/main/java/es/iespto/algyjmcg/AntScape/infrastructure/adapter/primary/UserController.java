@@ -1,5 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +10,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Ant;
+import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 
@@ -73,23 +78,117 @@ public class UserController {
 		}
 	}
 
-	/*@PutMapping
-	public ResponseEntity<?> update(@RequestBody AlumnoInputDTO alumno) {
-		Alumno a = new Alumno();
+	@PutMapping
+	public ResponseEntity<?> update(@RequestBody UsuarioInputDTO user) {
+		Usuario u = new Usuario();
 		
-		a.setDni(alumno.getDni());
-		a.setApellidos(alumno.getApellidos());
-		a.setFoto(alumno.getFoto());
-		a.setNombre(alumno.getNombre());
-			
-		String codedfoto = alumno.getImg64();
-		byte[] photoBytes = Base64.getDecoder().decode(codedfoto);
+		u.setEmail(null);
+		u.setPassword(null);
+		u.setName(null);
 		
-		String nombreNuevoFichero = storageService.save(alumno.getFoto(), photoBytes);
-		alumno.setFoto(alumno.getFoto());
+		u.setAnts(null);
+		u.setNests(null);
 		
-		boolean updateNative = alumnoService.update(a);
-		return ResponseEntity.ok(updateNative);
-	}*/
+		return ResponseEntity.ok(u);
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> banUser(@PathVariable Integer id){
+		if(id != null) {
+			boolean ban = userService.ban(id);
+			if(ban) {
+				return ResponseEntity.ok("User Banned Correctly");
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User Not Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> unBanUser(@PathVariable Integer id){
+		if(id != null) {
+			boolean ban = userService.unBan(id);
+			if(ban) {
+				return ResponseEntity.ok("User Unbanned Correctly");
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User Not Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+}
 
+class UsuarioInputDTO{
+	private Integer id;
+
+	private String email;
+
+	private String name;
+
+	private String password;
+
+	private String rol;
+
+	private List<Nest> nests;
+
+	private List<Ant> ants;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
+	}
+
+	public List<Nest> getNests() {
+		return nests;
+	}
+
+	public void setNests(List<Nest> nests) {
+		this.nests = nests;
+	}
+
+	public List<Ant> getAnts() {
+		return ants;
+	}
+
+	public void setAnts(List<Ant> ants) {
+		this.ants = ants;
+	}
 }

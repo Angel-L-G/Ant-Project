@@ -94,22 +94,22 @@ public class Usuario {
 		return this.nests;
 	}
 
-	public void setNests(List<Nest> nests1) {
-		this.nests = nests1;
+	public void setNests(List<Nest> nests) {
+		this.nests = nests;
 	}
 
-	public Nest addNests1(Nest nests) {
+	public Nest addNests(Nest nests) {
 		getNests().add(nests);
 		nests.setUsuario(this);
 
 		return nests;
 	}
 
-	public Nest removeNests1(Nest nests1) {
-		getNests().remove(nests1);
-		nests1.setUsuario(null);
+	public Nest removeNests(Nest nests) {
+		getNests().remove(nests);
+		nests.setUsuario(null);
 
-		return nests1;
+		return nests;
 	}
 
 	public List<Ant> getAnts() {

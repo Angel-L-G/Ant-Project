@@ -54,15 +54,19 @@ public class LoginController {
 		
 		Usuario u = userService.findByName(user.getUsername());
 
-		if(u.getActive() == true) {
-			String token = service.authenticate(user);
-			if (token == null) {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User/pass erróneo");
-			}else{
-				return ResponseEntity.ok(token);
+		if(!u.getBanned()) {
+			if(u.getActive()) {
+				String token = service.authenticate(user);
+				if (token == null) {
+					return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User/pass erróneo");
+				}else{
+					return ResponseEntity.ok(token);
+				}
+			}else {
+				return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Necesario activar a traves del email antes y que la administracion confirme su cuenta");
 			}
 		}else {
-			return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Necesario activar a traves del email antes y que la administracion confirme su cuenta");
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Banned User");
 		}
 	}
 	
