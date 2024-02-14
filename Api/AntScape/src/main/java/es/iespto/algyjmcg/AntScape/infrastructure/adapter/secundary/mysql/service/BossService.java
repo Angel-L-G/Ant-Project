@@ -73,11 +73,22 @@ public class BossService implements IBossRepository{
 	}
 
 	@Override
-	public boolean update(Boss u) {
+	public boolean update(Boss in) {
+		boolean ok = false;
 		
+		if(in != null) {
+			Optional<BossEntity> findByName = bossRepo.findByName(in.getName());
+			
+			if(findByName.isPresent()) {
+				findByName.get().setDamage(in.getDamage());
+				findByName.get().setLife(in.getLife());
+				findByName.get().setReward(in.getReward());
+				
+				ok = true;
+			}
+		}
 		
-		
-		return false;
+		return ok;
 	}
 
 	@Override
