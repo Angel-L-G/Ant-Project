@@ -8,6 +8,11 @@ public interface IUsuarioRepository {
 	Iterable<Usuario> findAll();
 	void deleteById(Integer id);
 	boolean update(Usuario u);
+	
 	public Usuario findByName(String n);
 	public Usuario findByEmail(String e);
+	
+	public boolean verify(Integer id);
+	public boolean ban(Integer id);
+	public boolean unBan(Integer id);
 }
