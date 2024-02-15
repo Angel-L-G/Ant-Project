@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS AntScape;
-CREATE DATABASE AntScape;
-USE AntScape;
+DROP DATABASE IF EXISTS antscape;
+CREATE DATABASE antscape;
+USE antscape;
 
 DROP TABLE IF EXISTS `usuarios`;
 DROP TABLE IF EXISTS `ants`;
