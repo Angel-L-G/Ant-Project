@@ -17,7 +17,7 @@ public class UsuarioMapper {
 	public UsuarioEntity toPersistance(Usuario in) {
 		UsuarioEntity out = new UsuarioEntity();
 		
-		if(in.getName() != null) {
+		if(in != null) {
 			out.setId(in.getId());
 			out.setName(in.getName());
 			out.setActive(in.getActive());
@@ -36,6 +36,8 @@ public class UsuarioMapper {
 				}
 				
 				out.setAnts(lista);
+			}else {
+				out.setAnts(null);
 			}
 			
 			if(in.getNests() != null) {
@@ -47,6 +49,8 @@ public class UsuarioMapper {
 				}
 				
 				out.setNests(lista);
+			}else {
+				out.setNests(null);
 			}
 			
 		}
