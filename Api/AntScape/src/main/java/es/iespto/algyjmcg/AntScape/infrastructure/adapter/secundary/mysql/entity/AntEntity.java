@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -22,11 +24,12 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="ants")
-@NamedQuery(name="Ant.findAll", query="SELECT a FROM Ant a")
+@NamedQuery(name="AntEntity.findAll", query="SELECT a FROM AntEntity a")
 public class AntEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
 	private String biome;

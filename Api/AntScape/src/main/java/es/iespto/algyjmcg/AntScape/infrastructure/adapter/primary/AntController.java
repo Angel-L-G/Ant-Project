@@ -20,8 +20,7 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
 @CrossOrigin
 @RequestMapping("/api/v1/ants")
 public class AntController {
-	@Autowired
-	private IAntService antService;
+	@Autowired private IAntService antService;
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {

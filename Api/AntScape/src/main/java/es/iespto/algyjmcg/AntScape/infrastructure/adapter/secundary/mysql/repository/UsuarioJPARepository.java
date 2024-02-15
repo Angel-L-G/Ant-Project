@@ -11,9 +11,9 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 
 @Repository
 public interface UsuarioJPARepository  extends JpaRepository<UsuarioEntity, Integer>{
-	@Query("SELECT u from Usuario u where u.nombre=:nombre")
-	public Optional<UsuarioEntity> findByName(@Param("nombre") String nombre);
+	@Query("SELECT u from UsuarioEntity u where u.name=:name")
+	public Optional<UsuarioEntity> findByName(@Param("name") String name);
 	
-	@Query("SELECT u from Usuario u where u.email=:email")
+	@Query("SELECT u from UsuarioEntity u where u.email=:email")
 	public Optional<UsuarioEntity> findByEmail(@Param("email") String email);
 }

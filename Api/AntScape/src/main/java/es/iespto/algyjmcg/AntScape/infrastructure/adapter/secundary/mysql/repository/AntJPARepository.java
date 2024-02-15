@@ -12,10 +12,10 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 
 @Repository
 public interface AntJPARepository extends JpaRepository<AntEntity, Integer>{
-	@Query("SELECT a from Ant a where a.name=:name")
+	@Query("SELECT a from AntEntity a where a.name=:name")
 	public Optional<AntEntity> findByName(@Param("name") String name);
 	
-	@Query("SELECT a from Ant a where a.type=:type")
+	@Query("SELECT a from AntEntity a where a.type=:type")
 	public Optional<AntEntity> findByType(@Param("type") String type);
 
 }

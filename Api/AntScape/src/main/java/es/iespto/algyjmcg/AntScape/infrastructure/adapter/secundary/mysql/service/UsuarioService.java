@@ -38,7 +38,10 @@ public class UsuarioService implements IUsuarioRepository{
 		Usuario out = null;
 		
 		if(in != null) {
-			UsuarioEntity save = usuarioRepo.save(um.toPersistance(in));
+			UsuarioEntity persistance = um.toPersistance(in);
+			System.out.println(persistance.getName() + " ----------------------------------------------------------------------------");
+			
+			UsuarioEntity save = usuarioRepo.save(persistance);
 			
 			if(save != null) {
 				out = um.toDomain(save);

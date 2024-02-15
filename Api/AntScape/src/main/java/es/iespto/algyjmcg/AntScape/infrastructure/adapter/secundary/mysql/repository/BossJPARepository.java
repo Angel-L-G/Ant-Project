@@ -11,6 +11,6 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 
 @Repository
 public interface BossJPARepository extends JpaRepository<BossEntity, Integer>{
-	@Query("SELECT b from Boss b where b.name=:name")
+	@Query("SELECT b from BossEntity b where b.name=:name")
 	public Optional<BossEntity> findByName(@Param("name") String name);
 }

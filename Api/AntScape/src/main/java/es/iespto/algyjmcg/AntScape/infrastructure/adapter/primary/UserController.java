@@ -20,7 +20,6 @@ import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 
-
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/users")
@@ -52,20 +51,6 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
-	
-	@PostMapping
-	public ResponseEntity<?> save(@RequestBody Usuario nest) {
-		if(nest != null) {
-			Usuario save = userService.save(nest);
-			if(save != null) {
-				return ResponseEntity.ok(save);
-			}else {
-				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Content Not Saved, Due To An Error");
-			}
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}
-	}
 
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable Integer id) {
@@ -79,7 +64,7 @@ public class UserController {
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(@RequestBody UsuarioInputDTO in) {
+	public ResponseEntity<?> update(@RequestBody UsuarioInputUpdateDTO in) {
 		Usuario u = new Usuario();
 		
 		u.setEmail(in.getEmail());
@@ -96,7 +81,7 @@ public class UserController {
 		return ResponseEntity.ok(u);
 	}
 	
-	@GetMapping
+	@GetMapping(path = "ban/{id}")
 	public ResponseEntity<?> banUser(@PathVariable Integer id){
 		if(id != null) {
 			boolean ban = userService.ban(id);
@@ -110,7 +95,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping
+	@GetMapping(path = "unban/{id}")
 	public ResponseEntity<?> unBanUser(@PathVariable Integer id){
 		if(id != null) {
 			boolean ban = userService.unBan(id);
@@ -125,7 +110,7 @@ public class UserController {
 	}
 }
 
-class UsuarioInputDTO{
+class UsuarioInputUpdateDTO{
 	private Integer id;
 
 	private String email;

@@ -3,6 +3,8 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -14,11 +16,12 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="bosses")
-@NamedQuery(name="Boss.findAll", query="SELECT b FROM Boss b")
+@NamedQuery(name="BossEntity.findAll", query="SELECT b FROM BossEntity b")
 public class BossEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
 	private Integer damage;

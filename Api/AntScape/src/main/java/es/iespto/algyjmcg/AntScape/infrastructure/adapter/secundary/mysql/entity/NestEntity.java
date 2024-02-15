@@ -11,6 +11,8 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
@@ -26,11 +28,12 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="nests")
-@NamedQuery(name="Nest.findAll", query="SELECT n FROM Nest n")
+@NamedQuery(name="NestEntity.findAll", query="SELECT n FROM NestEntity n")
 public class NestEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
 	@Column(name="ant_type")

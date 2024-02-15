@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="ant_nest")
-@NamedQuery(name="AntNest.findAll", query="SELECT a FROM AntNest a")
+@NamedQuery(name="AntNestEntity.findAll", query="SELECT a FROM AntNestEntity a")
 public class AntNestEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -17,8 +17,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.reposi
 
 @Service
 public class AntService implements IAntRepository {
-	@Autowired
-	private AntJPARepository antRepo;
+	@Autowired private AntJPARepository antRepo;
 	private AntMapper am = new AntMapper();
 
 	@Override

@@ -92,12 +92,6 @@ public class LoginController {
 		}
 	}
 	
-	@GetMapping("usuarios")
-	public ResponseEntity<?> findAll(){
-		Iterable<Usuario> findAll = userService.findAll();
-		return ResponseEntity.ok(findAll);
-	}
-	
 	/*@GetMapping("/{token}")
 	public ResponseEntity<?> getRol(@PathVariable String token){
 		if(token != null) {
