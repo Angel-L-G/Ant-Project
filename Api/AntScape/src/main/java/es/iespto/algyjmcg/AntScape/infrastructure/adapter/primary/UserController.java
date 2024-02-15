@@ -79,15 +79,19 @@ public class UserController {
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(@RequestBody UsuarioInputDTO user) {
+	public ResponseEntity<?> update(@RequestBody UsuarioInputDTO in) {
 		Usuario u = new Usuario();
 		
-		u.setEmail(null);
-		u.setPassword(null);
-		u.setName(null);
+		u.setEmail(in.getEmail());
+		u.setPassword(in.getPassword());
+		u.setName(in.getName());
 		
-		u.setAnts(null);
-		u.setNests(null);
+		if(in.getAnts() != null) {
+			u.setAnts(in.getAnts());
+		}
+		if(in.getNests() != null) {
+			u.setNests(in.getNests());
+		}
 		
 		return ResponseEntity.ok(u);
 	}

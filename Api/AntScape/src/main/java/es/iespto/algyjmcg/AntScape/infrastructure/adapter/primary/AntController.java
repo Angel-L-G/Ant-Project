@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,23 +73,29 @@ public class AntController {
 		}
 	}
 
-	/*@PutMapping
-	public ResponseEntity<?> update(@RequestBody AlumnoInputDTO alumno) {
-		Alumno a = new Alumno();
+	@PutMapping
+	public ResponseEntity<?> update(@RequestBody Ant in) {
+		Ant a = new Ant();
 		
-		a.setDni(alumno.getDni());
-		a.setApellidos(alumno.getApellidos());
-		a.setFoto(alumno.getFoto());
-		a.setNombre(alumno.getNombre());
-			
-		String codedfoto = alumno.getImg64();
-		byte[] photoBytes = Base64.getDecoder().decode(codedfoto);
+		a.setBiome(in.getBiome());
+		a.setCost(in.getCost());
+		a.setDamage(in.getDamage());
+		a.setId(in.getId());
+		a.setLife(in.getLife());
+		a.setName(in.getName());
+		a.setType(in.getType());
+		a.setWorking(in.getWorking());
 		
-		String nombreNuevoFichero = storageService.save(alumno.getFoto(), photoBytes);
-		alumno.setFoto(alumno.getFoto());
+		a.setUsuarios(in.getUsuarios());
+		a.setAntNests(in.getAntNests());
 		
-		boolean updateNative = alumnoService.update(a);
-		return ResponseEntity.ok(updateNative);
-	}*/
+		boolean update = antService.update(a);
+		
+		if(update) {
+			return ResponseEntity.ok("Ant Updated Correctly");
+		}else {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong updating the ant"); 
+		}
+	}
 
 }
