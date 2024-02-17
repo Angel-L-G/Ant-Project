@@ -10,4 +10,5 @@ public interface IAntRepository {
 	boolean update(Ant u);
 	public Ant findByName(String name);
 	public Ant findByType(String type);
+	public Iterable<Ant> findAllById(Integer id);
 }

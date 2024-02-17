@@ -46,5 +46,10 @@ public class AntDomainService implements IAntService{
 	public Ant findByType(String type) {
 		return service.findByType(type);
 	}
+
+	@Override
+	public Iterable<Ant> findAllById(Integer id) {
+		return service.findAllById(id);
+	}
 	
 }

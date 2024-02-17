@@ -17,22 +17,25 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
 @RequestMapping("/api/v2/ants")
 public class AntV2Controller {
 	@Autowired private IAntService antService;
-	
-	@GetMapping
-	public ResponseEntity<?> findAll() {
-		Iterable<Ant> findAll = antService.findAll();
-		
-		if(findAll != null) {
-			return ResponseEntity.ok(findAll);
-		}else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
-		}
-	}
 
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<?> findById(@PathVariable Integer id) {
 		if(id != null) {
 			Ant find = antService.findById(id);
+			if(find != null) {
+				return ResponseEntity.ok(find);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@GetMapping(path = "/own/{id}")
+	public ResponseEntity<?> findByAllBy(@PathVariable Integer id) {
+		if(id != null) {
+			Iterable<Ant> find = antService.findAllById(id);
 			if(find != null) {
 				return ResponseEntity.ok(find);
 			}else {

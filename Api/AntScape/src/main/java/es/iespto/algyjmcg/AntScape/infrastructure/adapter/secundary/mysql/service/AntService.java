@@ -130,4 +130,22 @@ public class AntService implements IAntRepository {
 		return out;
 	}
 
+	@Override
+	public Iterable<Ant> findAllById(Integer id) {
+		Iterable<Ant> out = null;
+
+		if (id != null) {
+			/*List<Integer> aux = new ArrayList<Integer>();
+			aux.add(id);
+			
+			Optional<AntEntity> findById = antRepo.findAllById(aux);
+
+			if (findById.isPresent()) {
+				out = am.toDomain(findById.get());
+			}*/
+		}
+
+		return out;
+	}
+
 }
