@@ -1,4 +1,4 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
+package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v3;
 
 import java.util.List;
 
@@ -22,8 +22,8 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/users")
-public class UserController {
+@RequestMapping("/api/v3/users")
+public class UserV3Controller {
 	@Autowired
 	private IUsuarioService userService;
 	

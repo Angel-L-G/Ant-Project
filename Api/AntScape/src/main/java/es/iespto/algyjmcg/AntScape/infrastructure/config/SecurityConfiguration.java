@@ -12,8 +12,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtFilter;
 
-//@Configuration
-//@EnableWebSecurity
+@Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 	@Autowired
 	private JwtFilter jwtAuthFilter;

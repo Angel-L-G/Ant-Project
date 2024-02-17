@@ -10,10 +10,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 
-public class UsuarioMapper {
-	private AntMapper am;
-	private NestMapper nm;
-	
+public class UsuarioMapper {	
 	public UsuarioEntity toPersistance(Usuario in) {
 		UsuarioEntity out = new UsuarioEntity();
 		
@@ -27,7 +24,7 @@ public class UsuarioMapper {
 			out.setPassword(in.getPassword());
 			out.setRol(in.getRol());
 
-			if(in.getAnts() != null) {
+			/*if(in.getAnts() != null) {
 				am = new AntMapper();
 				List<AntEntity> lista = new ArrayList<AntEntity>();
 				
@@ -51,7 +48,7 @@ public class UsuarioMapper {
 				out.setNests(lista);
 			}else {
 				out.setNests(null);
-			}
+			}*/
 			
 		}
 		
@@ -71,7 +68,7 @@ public class UsuarioMapper {
 			out.setPassword(in.getPassword());
 			out.setRol(in.getRol());
 
-			if(in.getAnts() != null) {
+			/*if(in.getAnts() != null) {
 				am = new AntMapper();
 				List<Ant> lista = new ArrayList<Ant>();
 				
@@ -91,7 +88,7 @@ public class UsuarioMapper {
 				}
 				
 				out.setNests(lista);
-			}
+			}*/
 		}
 		
 		return out;

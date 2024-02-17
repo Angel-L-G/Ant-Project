@@ -12,8 +12,6 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 
 public class NestMapper {
-	private UsuarioMapper um;
-	private AntNestMapper anm;
 	
 	public NestEntity toPersistance(Nest in) {
 		NestEntity out = new NestEntity();
@@ -23,7 +21,7 @@ public class NestMapper {
 		out.setDeleted(in.getDeleted());
 		out.setMap(in.getMap());
 		
-		if(in.getUsuario() != null) {
+		/*if(in.getUsuario() != null) {
 			um = new UsuarioMapper();
 			out.setUsuario(um.toPersistance(in.getUsuario()));
 		}
@@ -35,7 +33,7 @@ public class NestMapper {
 				lista.add(anm.toPersistance(an));
 			}
 			out.setAntNests(lista);
-		}
+		}*/
 		
 		return out;
 	}
@@ -48,7 +46,7 @@ public class NestMapper {
 		out.setDeleted(in.getDeleted());
 		out.setMap(in.getMap());
 		
-		if(in.getUsuario() != null) {
+		/*if(in.getUsuario() != null) {
 			um = new UsuarioMapper();
 			out.setUsuario(um.toDomain(in.getUsuario()));
 		}
@@ -60,7 +58,7 @@ public class NestMapper {
 				lista.add(anm.toDomain(an));
 			}
 			out.setAntNests(lista);
-		}
+		}*/
 		
 		return out;
 	}

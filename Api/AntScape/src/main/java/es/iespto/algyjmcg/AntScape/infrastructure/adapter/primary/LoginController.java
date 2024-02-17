@@ -21,7 +21,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class LoginController {
 	Logger log;
 	@Autowired
@@ -30,7 +30,7 @@ public class LoginController {
 	@Autowired private IUsuarioService userService;
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestBody UserDTO request) {
+	public ResponseEntity<?> register(@RequestBody UserInputRegisterDTO request) {
 		
 		UserDetailsLogin user = new UserDetailsLogin();
 		
@@ -45,7 +45,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> authenticate(@RequestBody UserDTO request) {
+	public ResponseEntity<String> authenticate(@RequestBody UserInputLoginDTO request) {
 		
 		UserDetailsLogin user = new UserDetailsLogin();
 		
@@ -105,7 +105,7 @@ public class LoginController {
 	}*/
 }
 
-class UserDTO{
+class UserInputRegisterDTO{
 	String nombre;
 	String password;
 	String email;
@@ -128,5 +128,24 @@ class UserDTO{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public UserDTO() {}
+	public UserInputRegisterDTO() {}
+}
+
+class UserInputLoginDTO{
+	String nombre;
+	String password;
+	
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public UserInputLoginDTO() {}
 }

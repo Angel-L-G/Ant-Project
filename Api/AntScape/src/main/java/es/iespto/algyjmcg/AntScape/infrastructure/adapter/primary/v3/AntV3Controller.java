@@ -1,4 +1,4 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
+package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v3;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/ants")
-public class AntController {
+@RequestMapping("/api/v3/ants")
+public class AntV3Controller {
 	@Autowired private IAntService antService;
 	
 	@GetMapping
@@ -106,6 +106,33 @@ public class AntController {
 		}
 	}*/
 
+	@GetMapping(path = "/{name}")
+	public ResponseEntity<?> findByName(@PathVariable String name) {
+		if(name != null) {
+			Ant find = antService.findByName(name);
+			if(find != null) {
+				return ResponseEntity.ok(find);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@GetMapping(path = "/{type}")
+	public ResponseEntity<?> findByType(@PathVariable String type) {
+		if(type != null) {
+			Ant find = antService.findByType(type);
+			if(find != null) {
+				return ResponseEntity.ok(find);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
 }
 
 class AntInputDTO{
