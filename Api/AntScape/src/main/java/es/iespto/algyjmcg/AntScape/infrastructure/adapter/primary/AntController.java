@@ -81,7 +81,7 @@ public class AntController {
 		}
 	}
 
-	@PutMapping
+	/*@PutMapping
 	public ResponseEntity<?> update(@RequestBody Ant in) {
 		Ant a = new Ant();
 		
@@ -104,7 +104,7 @@ public class AntController {
 		}else {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong updating the ant"); 
 		}
-	}
+	}*/
 
 }
 

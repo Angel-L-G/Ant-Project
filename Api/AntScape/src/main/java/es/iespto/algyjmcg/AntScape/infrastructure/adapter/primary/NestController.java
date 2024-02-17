@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 
 @RestController
 @CrossOrigin
@@ -25,6 +27,8 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 public class NestController {
 	@Autowired
 	private INestService nestService;
+	@Autowired
+	private IUsuarioService userService;
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
@@ -52,8 +56,15 @@ public class NestController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody Nest nest) {
-		if(nest != null) {
+	public ResponseEntity<?> save(@RequestBody NestInputDTO in) {
+		if(in != null) {
+			Nest nest = new Nest();
+			
+			nest.setDeleted(in.isDeleted());
+			nest.setAntType(in.getAntType());
+			nest.setMap(in.getMap());
+			nest.setUsuario(userService.findById(in.getIdUser()));
+			
 			Nest save = nestService.save(nest);
 			if(save != null) {
 				return ResponseEntity.ok(save);
@@ -95,4 +106,43 @@ public class NestController {
 		return ResponseEntity.ok(updateNative);
 	}*/
 
+}
+
+class NestInputDTO {
+	private String antType;
+	private boolean deleted;
+	private String map;
+	private Integer idUser;
+
+	public String getAntType() {
+		return antType;
+	}
+
+	public void setAntType(String antType) {
+		this.antType = antType;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getMap() {
+		return map;
+	}
+
+	public void setMap(String map) {
+		this.map = map;
+	}
+
+	public Integer getIdUser() {
+		return idUser;
+	}
+
+	public void setIdUser(Integer idUser) {
+		this.idUser = idUser;
+	}
 }
