@@ -39,7 +39,6 @@ public class UsuarioService implements IUsuarioRepository{
 		
 		if(in != null) {
 			UsuarioEntity persistance = um.toPersistance(in);
-			System.out.println(persistance.getName() + " ----------------------------------------------------------------------------");
 			
 			UsuarioEntity save = usuarioRepo.save(persistance);
 			
@@ -99,54 +98,6 @@ public class UsuarioService implements IUsuarioRepository{
 		
 		return ok;
 	}
-	
-	public boolean verify(Integer id) {
-		boolean ok = false;
-		
-		if(id != null) {
-			Optional<UsuarioEntity> findByEmail = usuarioRepo.findById(id);
-			
-			if(findByEmail != null) {
-				findByEmail.get().setActive(true);
-				
-				ok = true;
-			}
-		}
-		
-		return ok;
-	}
-	
-	public boolean ban(Integer id) {
-		boolean ok = false;
-		
-		if(id != null) {
-			Optional<UsuarioEntity> findByEmail = usuarioRepo.findById(id);
-			
-			if(findByEmail != null) {
-				findByEmail.get().setBanned(true);
-				
-				ok = true;
-			}
-		}
-		
-		return ok;
-	}
-	
-	public boolean unBan(Integer id) {
-		boolean ok = false;
-		
-		if(id != null) {
-			Optional<UsuarioEntity> findByEmail = usuarioRepo.findById(id);
-			
-			if(findByEmail != null) {
-				findByEmail.get().setBanned(false);
-				
-				ok = true;
-			}
-		}
-		
-		return ok;
-	}
 
 	@Override
 	public Usuario findByName(String n) {
@@ -166,9 +117,10 @@ public class UsuarioService implements IUsuarioRepository{
 	@Override
 	public Usuario findByEmail(String e) {
 		Usuario out = null;
-		
+		System.out.println("Service: " + e);
 		if(e != null) {
-			Optional<UsuarioEntity> findById = usuarioRepo.findByName(e);
+			Optional<UsuarioEntity> findById = usuarioRepo.findByEmail(e);
+			System.out.println(findById.get());
 			
 			if(findById.isPresent()) {
 				out = um.toDomain(findById.get());
@@ -177,5 +129,64 @@ public class UsuarioService implements IUsuarioRepository{
 		
 		return out;
 	}
-
+	
+	public boolean verify(Integer id) {
+		boolean ok = false;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> findByEmail = usuarioRepo.findById(id);
+			
+			if(findByEmail != null) {
+				findByEmail.get().setActive(true);
+				
+				UsuarioEntity save = usuarioRepo.save(findByEmail.get());
+				
+				if(save != null) {
+					ok = true;
+				}
+			}
+		}
+		
+		return ok;
+	}
+	
+	public boolean ban(Integer id) {
+		boolean ok = false;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> findByEmail = usuarioRepo.findById(id);
+			
+			if(findByEmail != null) {
+				findByEmail.get().setBanned(true);
+				
+				UsuarioEntity save = usuarioRepo.save(findByEmail.get());
+				
+				if(save != null) {
+					ok = true;
+				}
+			}
+		}
+		
+		return ok;
+	}
+	
+	public boolean unBan(Integer id) {
+		boolean ok = false;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> findByEmail = usuarioRepo.findById(id);
+			
+			if(findByEmail != null) {
+				findByEmail.get().setBanned(false);
+				
+				UsuarioEntity save = usuarioRepo.save(findByEmail.get());
+				
+				if(save != null) {
+					ok = true;
+				}
+			}
+		}
+		
+		return ok;
+	}
 }

@@ -57,7 +57,7 @@ public class UserController {
 		if(id != null) {
 			userService.deleteById(id);
 			
-			return ResponseEntity.ok("Nest Deleted Correctly");
+			return ResponseEntity.ok("User Deleted Correctly");
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}

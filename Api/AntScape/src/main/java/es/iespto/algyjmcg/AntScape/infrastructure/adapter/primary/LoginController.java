@@ -21,7 +21,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class LoginController {
 	Logger log;
 	@Autowired
@@ -73,6 +73,8 @@ public class LoginController {
 	@GetMapping("/registerVerify")
 	public ResponseEntity<?> verify(@RequestParam String email, @RequestParam String hash){
 		Usuario user = userService.findByEmail(email);
+
+		System.out.println("Controller: " + user);
 		if(user != null) {
 			if(hash.equals(user.getHash())) {
 				boolean verify = userService.verify(user.getId());
@@ -88,7 +90,7 @@ public class LoginController {
 				return (ResponseEntity<?>) ResponseEntity.unprocessableEntity();
 			}
 		}else {
-			return (ResponseEntity<?>) ResponseEntity.noContent();
+			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Data Found");
 		}
 	}
 	
