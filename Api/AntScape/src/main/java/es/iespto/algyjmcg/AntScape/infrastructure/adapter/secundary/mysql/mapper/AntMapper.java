@@ -22,6 +22,7 @@ public class AntMapper {
 			out.setDamage(in.getDamage());
 			out.setLife(in.getLife());
 			out.setWorking(in.getWorking());
+			out.setType(in.getType());
 			
 			if(in.getAntNests() != null) {
 				anm = new AntNestMapper();
@@ -48,6 +49,7 @@ public class AntMapper {
 			out.setDamage(in.getDamage());
 			out.setLife(in.getLife());
 			out.setWorking(in.getWorking());
+			out.setType(in.getType());
 			
 			if(in.getAntNests() != null) {
 				anm = new AntNestMapper();

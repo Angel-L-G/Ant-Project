@@ -48,9 +48,18 @@ public class AntController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody Ant nest) {
-		if(nest != null) {
-			Ant save = antService.save(nest);
+	public ResponseEntity<?> save(@RequestBody AntInputDTO in) {
+		if(in != null) {
+			Ant ant = new Ant();
+			
+			ant.setBiome(in.getBiome());
+			ant.setCost(in.getCost());
+			ant.setDamage(in.getDamage());
+			ant.setLife(in.getLife());
+			ant.setName(in.getName());
+			ant.setType(in.getType());
+			
+			Ant save = antService.save(ant);
 			if(save != null) {
 				return ResponseEntity.ok(save);
 			}else {
@@ -66,7 +75,7 @@ public class AntController {
 		if(id != null) {
 			antService.deleteById(id);
 			
-			return ResponseEntity.ok("Nest Deleted Correctly");
+			return ResponseEntity.ok("Ant Deleted Correctly");
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
@@ -97,4 +106,66 @@ public class AntController {
 		}
 	}
 
+}
+
+class AntInputDTO{
+	private String biome;
+
+	private Integer cost;
+
+	private Integer damage;
+
+	private Integer life;
+
+	private String name;
+
+	private String type;
+
+	public String getBiome() {
+		return biome;
+	}
+
+	public void setBiome(String biome) {
+		this.biome = biome;
+	}
+
+	public Integer getCost() {
+		return cost;
+	}
+
+	public void setCost(Integer cost) {
+		this.cost = cost;
+	}
+
+	public Integer getDamage() {
+		return damage;
+	}
+
+	public void setDamage(Integer damage) {
+		this.damage = damage;
+	}
+
+	public Integer getLife() {
+		return life;
+	}
+
+	public void setLife(Integer life) {
+		this.life = life;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }
