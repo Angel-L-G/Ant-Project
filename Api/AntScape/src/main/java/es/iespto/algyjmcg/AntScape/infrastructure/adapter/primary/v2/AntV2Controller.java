@@ -32,20 +32,6 @@ public class AntV2Controller {
 		}
 	}
 	
-	@GetMapping(path = "/own/{id}")
-	public ResponseEntity<?> findByAllBy(@PathVariable Integer id) {
-		if(id != null) {
-			Iterable<Ant> find = antService.findAllById(id);
-			if(find != null) {
-				return ResponseEntity.ok(find);
-			}else {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
-			}
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}
-	}
-	
 	@GetMapping(path = "/{name}")
 	public ResponseEntity<?> findByName(@PathVariable String name) {
 		if(name != null) {

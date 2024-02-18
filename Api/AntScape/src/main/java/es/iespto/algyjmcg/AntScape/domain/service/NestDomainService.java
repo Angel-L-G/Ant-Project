@@ -1,12 +1,12 @@
 package es.iespto.algyjmcg.AntScape.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
-import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
-import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.INestRepository;
 
 @Service
@@ -40,4 +40,8 @@ public class NestDomainService implements INestService{
 		return service.update(in);
 	}
 
+	@Override
+	public List<Nest> findAllById(Integer id) {
+		return service.findAllById(id);
+	}
 }

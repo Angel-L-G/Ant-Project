@@ -7,9 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Boss;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.INestRepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AntEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.BossEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
@@ -96,6 +98,25 @@ public class NestService implements INestRepository{
 		}
 		
 		return ok;
+	}
+	
+	@Override
+	public List<Nest> findAllById(Integer id) {
+		List<Nest> out = null;
+
+		if (id != null) {
+			Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
+
+			if (findAllOwn != null) {
+				out = new ArrayList<Nest>();
+				
+				for (NestEntity e : findAllOwn) {
+					out.add(nm.toDomain(e));
+				}
+			}
+		}
+
+		return out;
 	}
 
 }

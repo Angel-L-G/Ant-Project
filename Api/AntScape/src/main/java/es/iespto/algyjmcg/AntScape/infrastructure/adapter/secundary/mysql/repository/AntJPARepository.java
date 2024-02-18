@@ -17,5 +17,4 @@ public interface AntJPARepository extends JpaRepository<AntEntity, Integer>{
 	
 	@Query("SELECT a from AntEntity a where a.type=:type")
 	public Optional<AntEntity> findByType(@Param("type") String type);
-
 }

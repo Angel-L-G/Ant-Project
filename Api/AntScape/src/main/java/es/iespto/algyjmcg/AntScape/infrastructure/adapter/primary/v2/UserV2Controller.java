@@ -3,6 +3,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,7 +38,13 @@ public class UserV2Controller {
 			u.setNests(in.getNests());
 		}
 		
-		return ResponseEntity.ok(u);
+		boolean update = userService.update(u);
+		
+		if(update) {
+			return ResponseEntity.ok(u);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+		}
 	}
 }
 

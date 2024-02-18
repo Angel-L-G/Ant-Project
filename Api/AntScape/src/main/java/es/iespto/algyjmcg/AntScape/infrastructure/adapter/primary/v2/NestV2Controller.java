@@ -1,5 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +27,17 @@ public class NestV2Controller {
 	@Autowired
 	private IUsuarioService userService;
 	
-	@GetMapping
-	public ResponseEntity<?> findAll() {
-		Iterable<Nest> findAll = nestService.findAll();
-		
-		if(findAll != null) {
-			return ResponseEntity.ok(findAll);
+	@GetMapping(path = "/own/{id}")
+	public ResponseEntity<?> findByAllOwn(@PathVariable Integer id) {
+		if(id != null) {
+			List<Nest> find = nestService.findAllById(id);
+			if(find != null) {
+				return ResponseEntity.ok(find);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
 		}else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
 
