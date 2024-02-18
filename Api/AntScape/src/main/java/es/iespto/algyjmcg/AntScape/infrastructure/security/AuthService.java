@@ -66,4 +66,9 @@ public class AuthService {
 		}
 		return generateToken;
 	}
+	
+	public String getRol(String token) {
+		String role = jwtService.extractRole(token);
+		return role;
+	}
 }

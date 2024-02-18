@@ -2,33 +2,21 @@ import { View, Text, Image, TouchableHighlight, TouchableOpacity,TextInput } fro
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import UseUser from '../hooks/UseUser';
+import { UserLogin } from '../components/types';
+import UseSesion from '../hooks/UseSesion';
 
 type Props = {
     navigation: any
 }
 
 const Login = ({navigation}: Props) => {
-    const {findByName} = UseUser();
+    //const {findByName} = UseUser();
+    const {login} = UseSesion();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     function searchUser(){
-        const user: User = {
-            id: 0,
-            name: username
-        }
-
-        let aux = findByName(user.name);
-        //console.log(aux);
-
-        if(aux != null){
-            console.log("a");
-            console.log(user);
-            navigation.navigate("Main");
-        } else {
-            console.log("Usuario Erroneo");
-        }
-
+        login(username, password, navigation);
     }
 
     return (
@@ -54,7 +42,7 @@ const Login = ({navigation}: Props) => {
                 
                 <View style={styles.innerFormContainer}>
                     <Text style={styles.formText}>Password</Text>
-                    <TextInput placeholder='********' onChangeText={setPassword}/>
+                    <TextInput placeholder='********' onChangeText={setPassword} secureTextEntry={true}/>
                 </View>
 
                 <Text></Text>

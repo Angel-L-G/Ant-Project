@@ -9,6 +9,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 
 @Repository
 public interface NestJPARepository  extends JpaRepository<NestEntity, Integer>{
-	@Query("SELECT a from AntEntity a where a.id_user=:id")
+	//@Query("SELECT a from AntEntity a where a.usuario=:id")
+	@Query("SELECT a from AntEntity a where a.id=:id")
 	public Iterable<NestEntity> findAllOwn(@Param("id") Integer id);
 }

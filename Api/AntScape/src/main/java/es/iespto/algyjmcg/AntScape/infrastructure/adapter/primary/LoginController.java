@@ -45,18 +45,17 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> authenticate(@RequestBody UserInputLoginDTO request) {
+	public ResponseEntity<String> authenticate(@RequestBody UserInputLoginDTO user) {
+		UserDetailsLogin userDetails = new UserDetailsLogin();
 		
-		UserDetailsLogin user = new UserDetailsLogin();
+		userDetails.setUsername(user.getNombre());
+		userDetails.setPassword(user.getPassword());
 		
-		user.setUsername(request.getNombre());
-		user.setPassword(request.getPassword());
-		
-		Usuario u = userService.findByName(user.getUsername());
+		Usuario u = userService.findByName(userDetails.getUsername());
 
 		if(!u.getBanned()) {
 			if(u.getActive()) {
-				String token = service.authenticate(user);
+				String token = service.authenticate(userDetails);
 				if (token == null) {
 					return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User/pass erróneo");
 				}else{
@@ -94,7 +93,7 @@ public class LoginController {
 		}
 	}
 	
-	/*@GetMapping("/{token}")
+	@GetMapping("/{token}")
 	public ResponseEntity<?> getRol(@PathVariable String token){
 		if(token != null) {
 			String rol = service.getRol(token);
@@ -102,7 +101,7 @@ public class LoginController {
 		}else {
 			return (ResponseEntity<?>) ResponseEntity.noContent();
 		}
-	}*/
+	}
 }
 
 class UserInputRegisterDTO{

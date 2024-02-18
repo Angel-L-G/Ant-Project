@@ -1,27 +1,41 @@
-type User = {
+export type ContextUser = {
     id: number,
-    name: string,
+    nombre: string,
+    password: string,
+    email: string,
+    rol: string,
 }
 
-type Chat = {
+export type UserLogin = {
+    nombre: string,
+    password: string,
+}
+
+export type UserRegister = {
+    nombre: string,
+    password: string,
+    email: string,
+}
+
+export type Chat = {
     id: number,
     name: string,
     messages: Array<Message>
 }
 
-type Message = {
+export type Message = {
     idUser: number,
     message: string
 }
 
-type Hormiguero = {
+export type Hormiguero = {
     id: number,
     img: string,
     antname: string,
     biome: string,
 }
 
-type AlmacenImg ={
+export type AlmacenImg ={
     nombre: string;
     ubicacion: ReturnType<any>;
 }

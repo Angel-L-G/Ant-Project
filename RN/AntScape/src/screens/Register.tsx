@@ -2,26 +2,23 @@ import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import UseUser from '../hooks/UseUser'
+import { UserRegister } from '../components/types'
+import UseSesion from '../hooks/UseSesion'
 
 type Props = {
     navigation: any
 }
 
 const Register = ({navigation}: Props) => {
-    const {save} = UseUser();
+    //const {save} = UseUser();
+    const {register} = UseSesion();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     function createUser(){
-        const user: User = {
-            id: 0,
-            name: username
-        }
-
-        save(user);
-
-        navigation.navigate("Main");
+        register(username, password, email);
+        navigation.navigate("login");
     }
 
     return (
@@ -55,7 +52,7 @@ const Register = ({navigation}: Props) => {
 
                 <View style={styles.innerFormContainer}>
                     <Text style={styles.formText}>Password</Text>
-                    <TextInput placeholder='********' onChangeText={setPassword}/>
+                    <TextInput placeholder='********' onChangeText={setPassword} secureTextEntry={true}/>
                 </View>
 
                 <Text></Text>

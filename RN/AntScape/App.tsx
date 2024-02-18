@@ -39,6 +39,7 @@ import Outside from './src/screens/Outside';
 import NewHormiguero from './src/screens/NewHormiguero';
 import Profile from './src/screens/Profile';
 import Game from './src/screens/Game';
+import AppContextProvider from './src/components/AppContextProvider';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -66,19 +67,21 @@ function App(): JSX.Element {
     };
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Login" component={Login}/>
-                <Stack.Screen name="Game" component={Game}/>
-                <Stack.Screen name="NewHormiguero" component={NewHormiguero}/>
-                <Stack.Screen name="Outside" component={Outside}/>
-                <Stack.Screen name="Profile" component={Profile}/>
-                <Stack.Screen name="Main" component={Main}/>
-                <Stack.Screen name="Settings" component={Settings}/>
-                <Stack.Screen name="Social" component={Social}/>
-                <Stack.Screen name="Register" component={Register}/>
-            </Stack.Navigator>
-        </NavigationContainer>
+        <AppContextProvider>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{headerShown: false}}>
+                    <Stack.Screen name="Login" component={Login}/>
+                    <Stack.Screen name="Game" component={Game}/>
+                    <Stack.Screen name="NewHormiguero" component={NewHormiguero}/>
+                    <Stack.Screen name="Outside" component={Outside}/>
+                    <Stack.Screen name="Profile" component={Profile}/>
+                    <Stack.Screen name="Main" component={Main}/>
+                    <Stack.Screen name="Settings" component={Settings}/>
+                    <Stack.Screen name="Social" component={Social}/>
+                    <Stack.Screen name="Register" component={Register}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        </AppContextProvider>
     )
 }
 

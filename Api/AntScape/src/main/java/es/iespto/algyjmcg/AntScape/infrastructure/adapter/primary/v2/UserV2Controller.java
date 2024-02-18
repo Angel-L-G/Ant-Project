@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Ant;
@@ -45,6 +47,71 @@ public class UserV2Controller {
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
 		}
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> findMe(@RequestParam String nick){
+		if(nick != null) {
+			System.out.println("AAAAAAAAAAAAAAAAAA" + nick);
+			Usuario find = userService.findByName(nick);
+			
+			UserOutputDTO user = new UserOutputDTO(find);
+			
+			if(find != null) {
+				return ResponseEntity.ok(user);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+}
+
+class UserOutputDTO {
+	Integer id;
+	String nombre;
+	String password;
+	String email;
+	String rol;
+	
+	public UserOutputDTO(Usuario u){
+		setId(u.getId());
+		setNombre(u.getName());
+		setPassword(u.getPassword());
+		setEmail(u.getEmail());
+		setRol(u.getRol());
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getRol() {
+		return rol;
+	}
+	public void setRol(String rol) {
+		this.rol = rol;
 	}
 }
 
