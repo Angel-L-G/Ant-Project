@@ -1,13 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import { Hormiguero, NestSaveDTO } from '../components/types';
+import { useAppContext } from '../components/AppContextProvider';
 
 type Props = {
     navigation: any
 }
 
 const UseHormiguero = ({navigation}: Props) => {
-    const ruta = "http://192.168.0.12:3000/hormigueros"
+    const ruta = "http://192.168.56.1:8080/api/v2/nests"
+    const {user,token} = useAppContext();
     const [hormigueros, setHormigueros] = useState<Array<Hormiguero>>([] as Array<Hormiguero>);
 
     useEffect(() => {
@@ -36,10 +39,17 @@ const UseHormiguero = ({navigation}: Props) => {
         return null;
     }
 
-    async function save(newHormiguero: Hormiguero){
+    async function save(antType: string){
         const axiospost = async (ruta: string) => {
+            let newHormiguero: NestSaveDTO = {
+                antType: antType,
+                deleted: false,
+                map: "---",
+                idUser: user.id
+            }
+
             try{
-                const response = await axios.post(ruta, newHormiguero);
+                const response = await axios.post(ruta, newHormiguero, { headers: { "Authorization": "Bearer " + token }});
                 console.log(response.data);
             } catch (error){
                 console.log(error);

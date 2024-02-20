@@ -17,6 +17,20 @@ export type UserRegister = {
     email: string,
 }
 
+export type NestSaveDTO = {
+    antType: string,
+    deleted: boolean,
+    map: string,
+    idUser: number,
+}
+
+export type Hormiguero = {
+    id: number,
+    img: string,
+    antname: string,
+    biome: string,
+}
+
 export type Chat = {
     id: number,
     name: string,
@@ -26,13 +40,6 @@ export type Chat = {
 export type Message = {
     idUser: number,
     message: string
-}
-
-export type Hormiguero = {
-    id: number,
-    img: string,
-    antname: string,
-    biome: string,
 }
 
 export type AlmacenImg ={

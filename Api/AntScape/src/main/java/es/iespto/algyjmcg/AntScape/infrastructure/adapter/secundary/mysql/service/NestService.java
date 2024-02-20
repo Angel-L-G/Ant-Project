@@ -42,6 +42,10 @@ public class NestService implements INestRepository{
 		Nest out = null;
 		
 		if(in != null) {
+			//NestEntity persistance = nm.toPersistance(in);
+			
+			//in.getUsuario()
+			
 			NestEntity save = nestRepo.save(nm.toPersistance(in));
 			
 			if(save != null) {
