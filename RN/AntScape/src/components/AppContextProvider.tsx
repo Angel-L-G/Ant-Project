@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useContext, createContext, useState } from 'react'
-import { ContextUser } from './types';
+import { ContextUser, UserLogin } from './types';
 
 type Props = {}
 
@@ -8,15 +8,15 @@ export interface AppContextType {
     setToken: Dispatch<SetStateAction<string>>
     rol: string;
     setRol: Dispatch<SetStateAction<string>>
-    user: ContextUser
-    setUser: Dispatch<SetStateAction<ContextUser>>
+    user: UserLogin
+    setUser: Dispatch<SetStateAction<UserLogin>>
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 
 export const AppContextProvider = (props: any) => {
     const [token, setToken] = useState("");
-    const [usuario, setUsuario] = useState<ContextUser>({} as ContextUser);
+    const [usuario, setUsuario] = useState<UserLogin>({} as UserLogin);
     const [rol, setRol] = useState("");
     
     const contextValues: AppContextType = {

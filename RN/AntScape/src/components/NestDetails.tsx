@@ -1,21 +1,15 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from '../themes/styles'
 import { Button } from 'react-native-elements'
+import { AlmacenImg, NestDetails } from './types'
 
 type Props = {
-    hormiguero: Hormiguero,
+    hormiguero: NestDetails,
     closeModal: Function,
 }
 
-type Hormiguero = {
-    id: number,
-    img: string,
-    antname: string,
-    biome: string,
-}
-
-const NestDetails = ({closeModal,hormiguero}: Props) => {
+const NestDetailsModal = ({closeModal,hormiguero}: Props) => {
     const almacenImagenes: AlmacenImg[] = [
         {
         "nombre": "Negra",
@@ -30,6 +24,11 @@ const NestDetails = ({closeModal,hormiguero}: Props) => {
         "ubicacion": require('../img/hormiga-roja.jpeg')
         }
     ];
+
+    useEffect(() => {
+        console.log(hormiguero);
+    }, [])
+    
 
     function getRequire(nombre: string){
         const obtenido = almacenImagenes.find( imagen => imagen.nombre == nombre);
@@ -47,7 +46,7 @@ const NestDetails = ({closeModal,hormiguero}: Props) => {
 
             <Image
                 style={styles.nestImage}
-                source={getRequire(hormiguero.antname)}
+                source={getRequire(hormiguero.antType)}
             />
 
             <Text style={styles.subTitle}>Informacion:</Text>
@@ -55,11 +54,11 @@ const NestDetails = ({closeModal,hormiguero}: Props) => {
 
             <View>
                 <Text></Text>
-                <Text style={styles.header3}>Biome: </Text>
-                <Text style={styles.textBody}>{hormiguero.biome}</Text>
+             {/*<Text style={styles.header3}>Biome: </Text>
+                <Text style={styles.textBody}>{hormiguero.}</Text>*/}
                 <Text></Text>
                 <Text style={styles.header3}>Tipo De Hormiga: </Text>
-                <Text style={styles.textBody}>{hormiguero.antname}</Text>
+                <Text style={styles.textBody}>{hormiguero.antType}</Text>
             </View>
 
             <Text></Text>
@@ -73,4 +72,4 @@ const NestDetails = ({closeModal,hormiguero}: Props) => {
     )
 }
 
-export default NestDetails
+export default NestDetailsModal

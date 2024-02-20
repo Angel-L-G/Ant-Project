@@ -7,6 +7,7 @@ import { Button } from 'react-native-elements';
 import NestDetails from '../components/NestDetails';
 import ActionButtonAux from '../navigations/ActionButtonAux';
 import UseHormiguero from '../hooks/UseHormiguero';
+import NestDetailsModal from '../components/NestDetails';
 
 type Props = {
     navigation: any,
@@ -61,13 +62,15 @@ const Main = ({navigation}: Props) => {
                         (hormigueros.length != 0)
                         ?
                             hormigueros.map((value, index) => {
-                                return <AntNest key={index} navigation={navigation} nest={value} showModal={showModal}/>
+                                return <AntNest key={index} navigation={navigation} nest={value} showModal={showModal} pos={index}/>
                             })
-                        :
-                            <TouchableHighlight onPress={() => navigation.navigate("NewHormiguero")} style={styles.button}>
-                                <Text style={styles.textBody}>Crear Hormiguero</Text>
-                            </TouchableHighlight>
+                        :<></>
+                            
                     }
+
+                <TouchableHighlight onPress={() => navigation.navigate("NewHormiguero")} style={styles.button}>
+                    <Text style={styles.textBody}>Crear Hormiguero</Text>
+                </TouchableHighlight>
             </View>            
             
             <Modal
@@ -76,7 +79,7 @@ const Main = ({navigation}: Props) => {
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
-                <NestDetails closeModal={closeModal} hormiguero={hormigueros[actual]}/>
+                <NestDetailsModal closeModal={closeModal} hormiguero={hormigueros[actual]}/>
             </Modal>
         </View>
     )

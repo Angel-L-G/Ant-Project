@@ -21,7 +21,14 @@ export type NestSaveDTO = {
     antType: string,
     deleted: boolean,
     map: string,
-    idUser: number,
+    nameUser: string,
+}
+
+export type NestDetails = {
+    id: number,
+    antType: string,
+    deleted: boolean,
+    map: string,
 }
 
 export type Hormiguero = {

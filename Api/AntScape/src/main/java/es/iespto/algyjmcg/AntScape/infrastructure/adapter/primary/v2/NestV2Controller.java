@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 
@@ -27,12 +29,28 @@ public class NestV2Controller {
 	@Autowired
 	private IUsuarioService userService;
 	
-	@GetMapping(path = "/own/{id}")
-	public ResponseEntity<?> findByAllOwn(@PathVariable Integer id) {
-		if(id != null) {
-			List<Nest> find = nestService.findAllById(id);
+	@GetMapping(path = "/own/{name}")
+	public ResponseEntity<?> findAllOwn(@PathVariable String name) {
+		if(name != null) {
+			//Arreglo temporal
+			Usuario findByName = userService.findByName(name);
+			
+			List<Nest> find = nestService.findAllById(findByName.getId());
 			if(find != null) {
-				return ResponseEntity.ok(find);
+				List<NestOutput> list = new ArrayList<>();
+				
+				for (Nest n : find) {
+					NestOutput ne = new NestOutput();
+					
+					ne.setAntType(n.getAntType());
+					ne.setDeleted(n.getDeleted());
+					ne.setId(n.getId());
+					ne.setMap(n.getMap());
+					
+					list.add(ne);
+				}
+				
+				return ResponseEntity.ok(list);
 			}else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
 			}
@@ -63,7 +81,7 @@ public class NestV2Controller {
 			nest.setDeleted(in.isDeleted());
 			nest.setAntType(in.getAntType());
 			nest.setMap(in.getMap());
-			nest.setUsuario(userService.findById(in.getIdUser()));
+			nest.setUsuario(userService.findByName(in.getNameUser()));
 			
 			Nest save = nestService.save(nest);
 			if(save != null) {
@@ -88,11 +106,56 @@ public class NestV2Controller {
 	}
 }
 
+class NestOutput {
+	private Integer id;
+
+	private String antType;
+
+	private boolean deleted;
+
+	private String map;
+	
+	public NestOutput() {
+	}
+
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getAntType() {
+		return this.antType;
+	}
+
+	public void setAntType(String antType) {
+		this.antType = antType;
+	}
+
+	public boolean getDeleted() {
+		return this.deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getMap() {
+		return this.map;
+	}
+
+	public void setMap(String map) {
+		this.map = map;
+	}
+}
+
 class NestInputDTO {
 	private String antType;
 	private boolean deleted;
 	private String map;
-	private Integer idUser;
+	private String nameUser;
 
 	public String getAntType() {
 		return antType;
@@ -118,11 +181,11 @@ class NestInputDTO {
 		this.map = map;
 	}
 
-	public Integer getIdUser() {
-		return idUser;
+	public String getNameUser() {
+		return nameUser;
 	}
 
-	public void setIdUser(Integer idUser) {
-		this.idUser = idUser;
+	public void setNameUser(String nameUser) {
+		this.nameUser = nameUser;
 	}
 }

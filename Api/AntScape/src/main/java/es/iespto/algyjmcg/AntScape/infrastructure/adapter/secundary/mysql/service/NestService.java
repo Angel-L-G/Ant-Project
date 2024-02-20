@@ -15,12 +15,14 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.BossEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.NestJPARepository;
 
 @Service
 public class NestService implements INestRepository{
 	@Autowired private NestJPARepository nestRepo;
 	private NestMapper nm = new NestMapper();
+	private UsuarioMapper um = new UsuarioMapper();
 
 	@Override
 	public Nest findById(Integer id) {
@@ -42,11 +44,11 @@ public class NestService implements INestRepository{
 		Nest out = null;
 		
 		if(in != null) {
-			//NestEntity persistance = nm.toPersistance(in);
+			NestEntity persistance = nm.toPersistance(in);
 			
-			//in.getUsuario()
+			persistance.setUsuario(um.toPersistance(in.getUsuario()));
 			
-			NestEntity save = nestRepo.save(nm.toPersistance(in));
+			NestEntity save = nestRepo.save(persistance);
 			
 			if(save != null) {
 				out = nm.toDomain(save);
@@ -109,13 +111,16 @@ public class NestService implements INestRepository{
 		List<Nest> out = null;
 
 		if (id != null) {
-			Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
-
+			//Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
+			Iterable<NestEntity> findAllOwn = nestRepo.findAll();
+			
 			if (findAllOwn != null) {
 				out = new ArrayList<Nest>();
 				
 				for (NestEntity e : findAllOwn) {
-					out.add(nm.toDomain(e));
+					if(e.getUsuario().getId() == id) {
+						out.add(nm.toDomain(e));
+					}
 				}
 			}
 		}

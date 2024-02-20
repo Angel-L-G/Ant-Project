@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { Hormiguero, NestSaveDTO } from '../components/types';
+import { Hormiguero, NestDetails, NestSaveDTO } from '../components/types';
 import { useAppContext } from '../components/AppContextProvider';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 const UseHormiguero = ({navigation}: Props) => {
     const ruta = "http://192.168.56.1:8080/api/v2/nests"
     const {user,token} = useAppContext();
-    const [hormigueros, setHormigueros] = useState<Array<Hormiguero>>([] as Array<Hormiguero>);
+    const [hormigueros, setHormigueros] = useState<Array<NestDetails>>([] as Array<NestDetails>);
 
     useEffect(() => {
         async function getAll(){
@@ -23,7 +23,9 @@ const UseHormiguero = ({navigation}: Props) => {
     
     async function findAll(){
         try{
-            const response = await axios.get(ruta);
+            
+            const response = await axios.get(ruta+"/own/"+user.nombre, {headers: { "Authorization": "Bearer " + token }});
+
             setHormigueros(response.data);
         } catch (error){
             console.log(error);
@@ -32,9 +34,9 @@ const UseHormiguero = ({navigation}: Props) => {
 
     async function findByid(id: number){
         hormigueros.map((hormiguero)=>{
-            if(hormiguero.id == id){
+            /*if(hormiguero.id == id){
                 return hormiguero;
-            }
+            }*/
         })
         return null;
     }
@@ -45,18 +47,17 @@ const UseHormiguero = ({navigation}: Props) => {
                 antType: antType,
                 deleted: false,
                 map: "---",
-                idUser: user.id
+                nameUser: user.nombre
             }
 
             try{
                 const response = await axios.post(ruta, newHormiguero, { headers: { "Authorization": "Bearer " + token }});
-                console.log(response.data);
             } catch (error){
                 console.log(error);
             }
         }
 
-        axiospost(ruta);
+        axiospost(ruta);    
     }
 
     async function drop(){}

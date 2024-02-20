@@ -46,6 +46,7 @@ const UseSesion = () => {
             try{
                 const response = await axios.post(ruta+"v1/login", user);
                 if(response.status>199 && response.status < 300){
+                    setUser(user);
                     setToken(response.data);
                     await EncryptedStorage.setItem("token", response.data);
 
@@ -85,7 +86,6 @@ const UseSesion = () => {
                         console.log("204 - No Content");
                     }else {
                         const user: ContextUser = response.data;
-                        console.log(user);
                         setUser(user);
                     }
                 } else {
