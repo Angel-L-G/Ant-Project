@@ -3,14 +3,19 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import model.JoinColumn;
+import model.Usuario;
 
 
 /**
@@ -48,6 +53,18 @@ public class UsuarioEntity implements Serializable {
 	//bi-directional many-to-many association to Ant
 	@ManyToMany(mappedBy="usuarios")
 	private List<AntEntity> ants;
+	
+	@ManyToMany
+	/*@JoinTable(
+	    name = "friends",
+	    joinColumns = @JoinColumn(name = "usuario_id"),
+	    inverseJoinColumns = @JoinColumn(name = "amigo_id")
+	)*/
+	private List<Usuario> amigos;
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "amigos")
+	private List<Usuario> amigosDe;
 
 	public UsuarioEntity() {
 	}
