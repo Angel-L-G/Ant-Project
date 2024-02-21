@@ -2,6 +2,11 @@ package es.iespto.algyjmcg.AntScape.domain.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
+import jakarta.persistence.ManyToMany;
+
 public class Usuario {
 	private Integer id;
 
@@ -22,6 +27,10 @@ public class Usuario {
 	private List<Nest> nests;
 
 	private List<Ant> ants;
+	
+	private List<Usuario> amigos;
+
+	private List<Usuario> amigosDe;
 
 	public Usuario() {
 	}
@@ -118,5 +127,21 @@ public class Usuario {
 
 	public void setAnts(List<Ant> ants) {
 		this.ants = ants;
+	}
+	
+	public List<Usuario> getAmigos() {
+		return amigos;
+	}
+
+	public void setAmigos(List<Usuario> amigos) {
+		this.amigos = amigos;
+	}
+
+	public List<Usuario> getAmigosDe() {
+		return amigosDe;
+	}
+
+	public void setAmigosDe(List<Usuario> amigosDe) {
+		this.amigosDe = amigosDe;
 	}
 }

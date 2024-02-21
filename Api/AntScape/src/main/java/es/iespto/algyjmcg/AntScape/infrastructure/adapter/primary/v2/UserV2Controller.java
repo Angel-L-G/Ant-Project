@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,25 +70,67 @@ public class UserV2Controller {
 	
 	@GetMapping(path="/{name}/addFriends/{friendName}")
 	public ResponseEntity<?> addFriends(@PathVariable String name, @PathVariable String friendName){
+		boolean added = false;
 		if(name != null && friendName != null) {
-			
-			
-			
+			added = userService.addFriend(name, friendName);
 		}
 		
-		return ResponseEntity.ok(null);
+		if(added) {
+			return ResponseEntity.ok("Friend Added Correctly");
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+		}
 	}
 	
 	@GetMapping(path="/{name}/friends")
 	public ResponseEntity<?> getFriends (@PathVariable String name){
 		if(name != null) {
-			Usuario findByName = userService.findByName(name);
-			if(findByName != null) {
-				return ResponseEntity.ok(null);
+			List<Usuario> friends = userService.findFriends(name);
+			if(friends != null) {
+				
+				List<UserFriendOutputDTO> list = new ArrayList<>();
+				for (Usuario usuario : friends) {
+					list.add(new UserFriendOutputDTO(usuario));
+				}
+				
+				return ResponseEntity.ok(list);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
 			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
-		
-		return ResponseEntity.ok(null);
+	}
+}
+
+class UserFriendOutputDTO {
+	Integer id;
+	String nombre;
+	String email;
+	
+	public UserFriendOutputDTO(Usuario u){
+		setId(u.getId());
+		setNombre(u.getName());
+		setEmail(u.getEmail());
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
 

@@ -12,8 +12,8 @@ type Props = {
   
 const UseSesion = () => {
     const {setUser,setToken,setRol,token} = useContext(AppContext);
-    const ruta = "http://172.26.16.0:8080/api/";
-    //const ruta = "http://192.168.56.1:8080/api/";
+    //const ruta = "http://172.26.16.0:8080/api/";
+    const ruta = "http://192.168.56.1:8080/api/";
 
     async function register(nick: string, password: string, email: string, navigation: any){
         console.log("register");

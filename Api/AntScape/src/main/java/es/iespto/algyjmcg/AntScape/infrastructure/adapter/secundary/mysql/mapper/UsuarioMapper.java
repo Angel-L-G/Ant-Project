@@ -67,7 +67,7 @@ public class UsuarioMapper {
 			out.setHash(in.getHash());
 			out.setPassword(in.getPassword());
 			out.setRol(in.getRol());
-
+			
 			/*if(in.getAnts() != null) {
 				am = new AntMapper();
 				List<Ant> lista = new ArrayList<Ant>();

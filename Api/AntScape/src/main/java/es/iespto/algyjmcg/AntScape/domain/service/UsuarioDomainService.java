@@ -1,5 +1,7 @@
 package es.iespto.algyjmcg.AntScape.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,8 +10,9 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
 
 @Service
-public class UsuarioDomainService implements IUsuarioService{
-	@Autowired private IUsuarioRepository service;
+public class UsuarioDomainService implements IUsuarioService {
+	@Autowired
+	private IUsuarioRepository service;
 
 	@Override
 	public Usuario findById(Integer id) {
@@ -29,7 +32,7 @@ public class UsuarioDomainService implements IUsuarioService{
 	@Override
 	public void deleteById(Integer id) {
 		service.deleteById(id);
-		
+
 	}
 
 	@Override
@@ -45,6 +48,16 @@ public class UsuarioDomainService implements IUsuarioService{
 	@Override
 	public Usuario findByEmail(String e) {
 		return service.findByEmail(e);
+	}
+
+	@Override
+	public List<Usuario> findFriends(String name){
+		return service.findFriends(name);
+	}
+	
+	@Override
+	public boolean addFriend(String name, String nameFriend) {
+		return service.addFriend(name, nameFriend);
 	}
 
 	@Override

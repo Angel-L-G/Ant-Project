@@ -130,6 +130,43 @@ public class UsuarioService implements IUsuarioRepository{
 		return out;
 	}
 	
+	@Override
+	public List<Usuario> findFriends(String name){
+		if(name != null) {
+			Optional<UsuarioEntity> findByName = usuarioRepo.findByName(name);
+			
+			if(findByName.isPresent() && findByName.get().getAmigos() != null) {
+				
+				List<Usuario> list = new ArrayList<Usuario>();
+				for (UsuarioEntity u : findByName.get().getAmigos()) {
+					list.add(um.toDomain(u));
+				}
+				
+				return list;
+			}
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean addFriend(String name, String nameFriend) {
+		boolean ok = false;
+		if(name != null && nameFriend != null) {
+			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
+			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
+			
+			if(user.isPresent() && friend.isPresent()) {
+				user.get().getAmigos().add(friend.get());
+				friend.get().getAmigos().add(user.get());
+				
+				usuarioRepo.save(user.get());
+				usuarioRepo.save(friend.get());
+				ok = true;
+			}
+		}
+		return ok;
+	}
+	
 	public boolean verify(Integer id) {
 		boolean ok = false;
 		

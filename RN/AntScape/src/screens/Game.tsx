@@ -61,8 +61,7 @@ const Game = ({navigation}: Props) => {
                         }}
                         //injectedJavaScript={runFirst}
                     />
-
-                    
+                  
 
                     {/*<TouchableHighlight onPress={() => navigation.navigate("Outside")}>
                         <Text style={{color: "white"}}>Outside</Text>

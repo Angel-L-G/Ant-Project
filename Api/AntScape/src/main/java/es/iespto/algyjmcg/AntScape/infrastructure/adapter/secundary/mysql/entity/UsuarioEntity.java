@@ -10,12 +10,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import model.JoinColumn;
-import model.Usuario;
 
 
 /**
@@ -55,16 +54,16 @@ public class UsuarioEntity implements Serializable {
 	private List<AntEntity> ants;
 	
 	@ManyToMany
-	/*@JoinTable(
+	@JoinTable(
 	    name = "friends",
-	    joinColumns = @JoinColumn(name = "usuario_id"),
-	    inverseJoinColumns = @JoinColumn(name = "amigo_id")
-	)*/
-	private List<Usuario> amigos;
+	    joinColumns = @JoinColumn(name = "id_user"),
+	    inverseJoinColumns = @JoinColumn(name = "id_friend")
+	)
+	private List<UsuarioEntity> amigos;
 
 	@JsonIgnore
 	@ManyToMany(mappedBy = "amigos")
-	private List<Usuario> amigosDe;
+	private List<UsuarioEntity> amigosDe;
 
 	public UsuarioEntity() {
 	}
@@ -161,5 +160,21 @@ public class UsuarioEntity implements Serializable {
 
 	public void setAnts(List<AntEntity> ants) {
 		this.ants = ants;
+	}
+
+	public List<UsuarioEntity> getAmigos() {
+		return amigos;
+	}
+
+	public void setAmigos(List<UsuarioEntity> amigos) {
+		this.amigos = amigos;
+	}
+
+	public List<UsuarioEntity> getAmigosDe() {
+		return amigosDe;
+	}
+
+	public void setAmigosDe(List<UsuarioEntity> amigosDe) {
+		this.amigosDe = amigosDe;
 	}
 }

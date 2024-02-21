@@ -9,8 +9,8 @@ type Props = {
 }
 
 const UseHormiguero = ({navigation}: Props) => {
-    const ruta = "http://172.26.16.0:8080/api/v2/nests";
-    //const ruta = "http://192.168.56.1:8080/api/v2/nests"
+    //const ruta = "http://172.26.16.0:8080/api/v2/nests";
+    const ruta = "http://192.168.56.1:8080/api/v2/nests"
     const {user,token} = useAppContext();
     const [hormigueros, setHormigueros] = useState<Array<NestDetails>>([] as Array<NestDetails>);
 

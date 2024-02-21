@@ -17,6 +17,12 @@ export type UserRegister = {
     email: string,
 }
 
+export type Friend = {
+    id: number,
+    nombre: string,
+    email: string,
+}
+
 export type NestSaveDTO = {
     antType: string,
     deleted: boolean,

@@ -62,7 +62,6 @@ const Main = ({navigation}: Props) => {
             {/*<ActionButtonAux/>*/}
             
             <View style={styles.mainConatiner} >
-                
                 <Text style={styles.title}>Hormigueros</Text>
 
                 <FlatList
