@@ -2,18 +2,14 @@ import { View, Text, Image, FlatList, TouchableHighlight } from 'react-native'
 import React from 'react'
 import styles from '../themes/styles'
 import UseUser from '../hooks/UseUser'
+import { useAppContext } from '../components/AppContextProvider'
 
 type Props = {
     navigation: any
 }
 
-type User = {
-    id: number,
-    name: string,
-}
-
 const Profile = ({navigation}: Props) => {
-    const {users} = UseUser();
+    const {user} = useAppContext();
 
     return (
         <View style={styles.container}>
@@ -23,7 +19,7 @@ const Profile = ({navigation}: Props) => {
                     source={require('../img/profile.png')}
                 />
 
-                <Text style={styles.title}>Nombre Perfil</Text>
+                <Text style={styles.title}>{user.nombre}</Text>
 
                 <View style={styles.textBodyContainer}>
                     <Text style={styles.textBody}>
@@ -32,14 +28,14 @@ const Profile = ({navigation}: Props) => {
                 </View>
 
                 <View style={styles.friendProfileList}>
-                    <FlatList 
+                    {/*<FlatList 
                         data={users}
                         renderItem={({item}) => (
                             <TouchableHighlight onPress={() => navigation.navigate("Social")}>
                                 <Text style={styles.friendProfileItem}>{item.name}</Text>
                             </TouchableHighlight>
                         )}
-                    />
+                    />*/}
                 </View>
             </View>
         </View>

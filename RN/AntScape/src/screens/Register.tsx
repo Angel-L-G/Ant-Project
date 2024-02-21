@@ -17,8 +17,9 @@ const Register = ({navigation}: Props) => {
     const [password, setPassword] = useState("");
 
     function createUser(){
-        register(username, password, email);
-        navigation.navigate("login");
+        register(username, password, email, navigation);
+        
+        //ToastAndroid.show('text',ToastAndroid.SHORT);
     }
 
     return (

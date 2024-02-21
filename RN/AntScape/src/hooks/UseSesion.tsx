@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import React, { useContext } from 'react'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -12,10 +12,10 @@ type Props = {
   
 const UseSesion = () => {
     const {setUser,setToken,setRol,token} = useContext(AppContext);
-    //const ruta = "http://172.26.16.0:8080/api/v1";
-    const ruta = "http://192.168.56.1:8080/api/";
+    const ruta = "http://172.26.16.0:8080/api/";
+    //const ruta = "http://192.168.56.1:8080/api/";
 
-    async function register(nick: string, password: string, email: string){
+    async function register(nick: string, password: string, email: string, navigation: any){
         console.log("register");
         let user: UserRegister = {
             email: email,
@@ -24,10 +24,14 @@ const UseSesion = () => {
         }
 
         const axiospost = async (ruta: string) => {
+            let response;
             try{
-                const response = await axios.post(ruta+"v1/register", user);
+                response = await axios.post(ruta+"v1/register", user);
+
                 if(response.status>199 && response.status < 300){
+                    navigation.navigate("Login");
                 }
+                
             } catch (error){
                 console.log(error);
             }
@@ -43,8 +47,9 @@ const UseSesion = () => {
         }
 
         const axiospost = async (ruta: string) => {
+            let response;
             try{
-                const response = await axios.post(ruta+"v1/login", user);
+                response = await axios.post(ruta+"v1/login", user);
                 if(response.status>199 && response.status < 300){
                     setUser(user);
                     setToken(response.data);
@@ -64,8 +69,12 @@ const UseSesion = () => {
                         console.log("Falta Validar");
                     }
                 }
-            } catch (error){
+            } catch (error: any){      
                 console.log(error);
+
+                if(error.response.status == 428){
+                    ToastAndroid.show('Verifique su usuario primero',ToastAndroid.SHORT);
+                }
             }
         }
 
