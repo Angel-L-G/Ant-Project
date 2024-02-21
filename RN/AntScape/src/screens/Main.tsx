@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableHighlight, Modal, StyleSheet, Alert, Pressable } from 'react-native'
+import { View, Text, Image, TouchableHighlight, Modal, StyleSheet, Alert, Pressable, RefreshControl, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -24,6 +24,7 @@ const Main = ({navigation}: Props) => {
     const {save,drop,findAll,findByid,update,hormigueros} = UseHormiguero(navigation);
     const [modalVisible, setModalVisible] = useState(false);
     const [actual, setActual] = useState(0);
+    const [refreshing, setRefreshing] = useState(false);
 
     function showModal(index: number) {
         setModalVisible(true);
@@ -32,6 +33,10 @@ const Main = ({navigation}: Props) => {
 
     function closeModal(){
         setModalVisible(false);
+    }
+
+    function handleRefresh(){
+        findAll();
     }
 
     return (
@@ -58,21 +63,28 @@ const Main = ({navigation}: Props) => {
             
             <View style={styles.mainConatiner}>
                 <Text style={styles.title}>Hormigueros</Text>
-                    {
-                        (hormigueros.length != 0)
-                        ?
-                            hormigueros.map((value, index) => {
-                                return <AntNest key={index} navigation={navigation} nest={value} showModal={showModal} pos={index}/>
-                            })
-                        :<></>
-                            
-                    }
 
-                <TouchableHighlight onPress={() => navigation.navigate("NewHormiguero")} style={styles.button}>
-                    <Text style={styles.textBody}>Crear Hormiguero</Text>
-                </TouchableHighlight>
+                <FlatList
+                    data={hormigueros}
+                    renderItem={({item,index}) => {
+                        return <AntNest key={index} navigation={navigation} nest={item} showModal={showModal} pos={index}/>
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing = {refreshing}
+                            onRefresh={handleRefresh}
+                        />
+                    }
+                />
+
+                <View style={{margin: 10}}>
+                    <TouchableHighlight onPress={() => navigation.navigate("NewHormiguero")} style={styles.button}>
+                        <Text style={styles.textBody}>Crear Hormiguero</Text>
+                    </TouchableHighlight>
+                </View>
             </View>            
-            
+                
+
             <Modal
                 animationType="fade"
                 transparent={true}

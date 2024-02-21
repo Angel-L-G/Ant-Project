@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +53,6 @@ public class UserV2Controller {
 	@GetMapping
 	public ResponseEntity<?> findMe(@RequestParam String nick){
 		if(nick != null) {
-			System.out.println("AAAAAAAAAAAAAAAAAA" + nick);
 			Usuario find = userService.findByName(nick);
 			
 			UserOutputDTO user = new UserOutputDTO(find);
@@ -65,6 +65,29 @@ public class UserV2Controller {
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
+	}
+	
+	@GetMapping(path="/{name}/addFriends/{friendName}")
+	public ResponseEntity<?> addFriends(@PathVariable String name, @PathVariable String friendName){
+		if(name != null && friendName != null) {
+			
+			
+			
+		}
+		
+		return ResponseEntity.ok(null);
+	}
+	
+	@GetMapping(path="/{name}/friends")
+	public ResponseEntity<?> getFriends (@PathVariable String name){
+		if(name != null) {
+			Usuario findByName = userService.findByName(name);
+			if(findByName != null) {
+				return ResponseEntity.ok(null);
+			}
+		}
+		
+		return ResponseEntity.ok(null);
 	}
 }
 

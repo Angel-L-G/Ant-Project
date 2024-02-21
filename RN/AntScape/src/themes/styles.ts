@@ -215,7 +215,8 @@ const styles = StyleSheet.create({
 
     gameTop: {
         paddingTop: "5%",
-        height: "70%",
+        height: 400,
+        //height: "70%",
         width: "90%",
         backgroundColor: "black"    
     },
