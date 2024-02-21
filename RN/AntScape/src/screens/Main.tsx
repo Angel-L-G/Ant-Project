@@ -61,10 +61,12 @@ const Main = ({navigation}: Props) => {
 
             {/*<ActionButtonAux/>*/}
             
-            <View style={styles.mainConatiner}>
+            <View style={styles.mainConatiner} >
+                
                 <Text style={styles.title}>Hormigueros</Text>
 
                 <FlatList
+                    style={{width:320}}
                     data={hormigueros}
                     renderItem={({item,index}) => {
                         return <AntNest key={index} navigation={navigation} nest={item} showModal={showModal} pos={index}/>
