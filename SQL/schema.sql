@@ -2,6 +2,8 @@ DROP DATABASE IF EXISTS AntScape;
 CREATE DATABASE AntScape;
 USE AntScape;
 
+SET GLOBAL time_zone = '-3:00';
+
 DROP TABLE IF EXISTS `usuarios`;
 DROP TABLE IF EXISTS `ants`;
 DROP TABLE IF EXISTS `nests`;
