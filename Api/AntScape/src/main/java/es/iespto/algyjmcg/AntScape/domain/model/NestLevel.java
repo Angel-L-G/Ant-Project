@@ -1,0 +1,70 @@
+package es.iespto.algyjmcg.AntScape.domain.model;
+
+public class NestLevel {
+	private Integer id;
+	private Integer cost;
+	private Integer level;
+	private Double multiplier;
+	private String name;
+	private Integer production;
+	private Nest nest;
+
+	public NestLevel() {
+	}
+
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getCost() {
+		return this.cost;
+	}
+
+	public void setCost(Integer cost) {
+		this.cost = cost;
+	}
+
+	public Integer getLevel() {
+		return this.level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
+	public Double getMultiplier() {
+		return this.multiplier;
+	}
+
+	public void setMultiplier(Double multiplier) {
+		this.multiplier = multiplier;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getProduction() {
+		return this.production;
+	}
+
+	public void setProduction(Integer production) {
+		this.production = production;
+	}
+
+	public Nest getNest() {
+		return this.nest;
+	}
+
+	public void setNest(Nest nest) {
+		this.nest = nest;
+	}
+}
