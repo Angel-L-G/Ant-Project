@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.iespto.algyjmcg.AntScape.BossEntity;
 import es.iespto.algyjmcg.AntScape.domain.model.Boss;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IBossRepository;
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.BossEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.BossMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.BossJPARepository;
 

@@ -4,23 +4,18 @@ import java.util.List;
 
 public class Usuario {
 	private Integer id;
-
-	private boolean active;
-
-	private boolean banned;
-
+	private Boolean active;
+	private Boolean banned;
+	private String eggs;
 	private String email;
-
+	private String goldenEggs;
 	private String hash;
-
+	private String img;
 	private String name;
-
 	private String password;
-
 	private String rol;
-
 	private List<Nest> nests;
-
+	private Guild guild;
 	private List<Ant> ants;
 
 	public Usuario() {
@@ -34,20 +29,28 @@ public class Usuario {
 		this.id = id;
 	}
 
-	public boolean getActive() {
+	public Boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 
-	public boolean getBanned() {
+	public Boolean getBanned() {
 		return this.banned;
 	}
 
-	public void setBanned(boolean banned) {
+	public void setBanned(Boolean banned) {
 		this.banned = banned;
+	}
+
+	public String getEggs() {
+		return this.eggs;
+	}
+
+	public void setEggs(String eggs) {
+		this.eggs = eggs;
 	}
 
 	public String getEmail() {
@@ -58,12 +61,28 @@ public class Usuario {
 		this.email = email;
 	}
 
+	public String getGoldenEggs() {
+		return this.goldenEggs;
+	}
+
+	public void setGoldenEggs(String goldenEggs) {
+		this.goldenEggs = goldenEggs;
+	}
+
 	public String getHash() {
 		return this.hash;
 	}
 
 	public void setHash(String hash) {
 		this.hash = hash;
+	}
+
+	public String getImg() {
+		return this.img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	public String getName() {
@@ -98,18 +117,26 @@ public class Usuario {
 		this.nests = nests;
 	}
 
-	public Nest addNests(Nest nests) {
-		getNests().add(nests);
-		nests.setUsuario(this);
+	public Nest addNest(Nest nest) {
+		getNests().add(nest);
+		nest.setUsuario(this);
 
-		return nests;
+		return nest;
 	}
 
-	public Nest removeNests(Nest nests) {
-		getNests().remove(nests);
-		nests.setUsuario(null);
+	public Nest removeNest(Nest nest) {
+		getNests().remove(nest);
+		nest.setUsuario(null);
 
-		return nests;
+		return nest;
+	}
+
+	public Guild getGuild() {
+		return this.guild;
+	}
+
+	public void setGuild(Guild guild) {
+		this.guild = guild;
 	}
 
 	public List<Ant> getAnts() {

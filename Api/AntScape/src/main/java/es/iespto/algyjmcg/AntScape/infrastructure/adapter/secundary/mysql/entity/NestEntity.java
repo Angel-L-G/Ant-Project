@@ -1,21 +1,14 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import es.iespto.algyjmcg.AntScape.domain.model.AntNest;
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntNestMapper;
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -28,31 +21,30 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="nests")
-@NamedQuery(name="NestEntity.findAll", query="SELECT n FROM NestEntity n")
+@NamedQuery(name="NestEntity.findAll", query="SELECT n FROM Nest n")
 public class NestEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	@Column(name="ant_type")
-	private String antType;
+	private Boolean deleted;
 
-	private boolean deleted;
+	//bi-directional many-to-one association to NestLevel
+	@OneToMany(mappedBy="nest")
+	private List<NestLevelEntity> nestLevels;
 
-	@Lob
-	private String map;
+	//bi-directional many-to-one association to Ant
+	@ManyToOne
+	@JoinColumn(name="id_ant", nullable=false)
+	private AntEntity ant;
 
 	//bi-directional many-to-one association to Usuario
-	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name="id_user")
+	@JoinColumn(name="id_user", nullable=false)
 	private UsuarioEntity usuario;
-
-	//bi-directional many-to-one association to AntNest
-	@OneToMany(mappedBy="nest")
-	private List<AntNestEntity> antNests;
 
 	public NestEntity() {
 	}
@@ -65,28 +57,42 @@ public class NestEntity implements Serializable {
 		this.id = id;
 	}
 
-	public String getAntType() {
-		return this.antType;
-	}
-
-	public void setAntType(String antType) {
-		this.antType = antType;
-	}
-
-	public boolean getDeleted() {
+	public Boolean getDeleted() {
 		return this.deleted;
 	}
 
-	public void setDeleted(boolean deleted) {
+	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
 
-	public String getMap() {
-		return this.map;
+	public List<NestLevelEntity> getNestLevels() {
+		return this.nestLevels;
 	}
 
-	public void setMap(String map) {
-		this.map = map;
+	public void setNestLevels(List<NestLevelEntity> nestLevels) {
+		this.nestLevels = nestLevels;
+	}
+
+	public NestLevelEntity addNestLevel(NestLevelEntity nestLevel) {
+		getNestLevels().add(nestLevel);
+		nestLevel.setNest(this);
+
+		return nestLevel;
+	}
+
+	public NestLevelEntity removeNestLevel(NestLevelEntity nestLevel) {
+		getNestLevels().remove(nestLevel);
+		nestLevel.setNest(null);
+
+		return nestLevel;
+	}
+
+	public AntEntity getAnt() {
+		return this.ant;
+	}
+
+	public void setAnt(AntEntity ant) {
+		this.ant = ant;
 	}
 
 	public UsuarioEntity getUsuario() {
@@ -97,11 +103,4 @@ public class NestEntity implements Serializable {
 		this.usuario = usuario;
 	}
 
-	public List<AntNestEntity> getAntNests() {
-		return this.antNests;
-	}
-
-	public void setAntNests(List<AntNestEntity> ants) {
-		this.antNests = ants;
-	}
 }

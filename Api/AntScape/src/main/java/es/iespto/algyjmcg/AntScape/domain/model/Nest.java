@@ -4,16 +4,10 @@ import java.util.List;
 
 public class Nest {
 	private Integer id;
-
-	private String antType;
-
-	private boolean deleted;
-
-	private String map;
-
+	private Boolean deleted;
+	private List<NestLevel> nestLevels;
+	private Ant ant;
 	private Usuario usuario;
-
-	private List<AntNest> antNests;
 
 	public Nest() {
 	}
@@ -26,28 +20,42 @@ public class Nest {
 		this.id = id;
 	}
 
-	public String getAntType() {
-		return this.antType;
-	}
-
-	public void setAntType(String antType) {
-		this.antType = antType;
-	}
-
-	public boolean getDeleted() {
+	public Boolean getDeleted() {
 		return this.deleted;
 	}
 
-	public void setDeleted(boolean deleted) {
+	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
 
-	public String getMap() {
-		return this.map;
+	public List<NestLevel> getNestLevels() {
+		return this.nestLevels;
 	}
 
-	public void setMap(String map) {
-		this.map = map;
+	public void setNestLevels(List<NestLevel> nestLevels) {
+		this.nestLevels = nestLevels;
+	}
+
+	public NestLevel addNestLevel(NestLevel nestLevel) {
+		getNestLevels().add(nestLevel);
+		nestLevel.setNest(this);
+
+		return nestLevel;
+	}
+
+	public NestLevel removeNestLevel(NestLevel nestLevel) {
+		getNestLevels().remove(nestLevel);
+		nestLevel.setNest(null);
+
+		return nestLevel;
+	}
+
+	public Ant getAnt() {
+		return this.ant;
+	}
+
+	public void setAnt(Ant ant) {
+		this.ant = ant;
 	}
 
 	public Usuario getUsuario() {
@@ -56,13 +64,5 @@ public class Nest {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	public List<AntNest> getAntNests() {
-		return this.antNests;
-	}
-
-	public void setAntNests(List<AntNest> ants) {
-		this.antNests = ants;
 	}
 }
