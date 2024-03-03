@@ -1,10 +1,12 @@
 package es.iespto.algyjmcg.AntScape.domain.model;
 
+import java.math.BigDecimal;
+
 public class NestLevel {
 	private Integer id;
 	private Integer cost;
 	private Integer level;
-	private Double multiplier;
+	private BigDecimal multiplier;
 	private String name;
 	private Integer production;
 	private Nest nest;
@@ -36,11 +38,11 @@ public class NestLevel {
 		this.level = level;
 	}
 
-	public Double getMultiplier() {
+	public BigDecimal getMultiplier() {
 		return this.multiplier;
 	}
 
-	public void setMultiplier(Double multiplier) {
+	public void setMultiplier(BigDecimal multiplier) {
 		this.multiplier = multiplier;
 	}
 

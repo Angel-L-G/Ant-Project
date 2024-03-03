@@ -60,10 +60,10 @@ public class NestV2Controller {
 		if(in != null) {
 			Nest nest = new Nest();
 			
-			nest.setDeleted(in.isDeleted());
+			/*nest.setDeleted(in.isDeleted());
 			nest.setAntType(in.getAntType());
 			nest.setMap(in.getMap());
-			nest.setUsuario(userService.findById(in.getIdUser()));
+			nest.setUsuario(userService.findById(in.getIdUser()));*/
 			
 			Nest save = nestService.save(nest);
 			if(save != null) {

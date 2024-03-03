@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="nests")
-@NamedQuery(name="NestEntity.findAll", query="SELECT n FROM Nest n")
+@NamedQuery(name="NestEntity.findAll", query="SELECT n FROM NestEntity n")
 public class NestEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

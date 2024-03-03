@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 
 @Repository
-public interface NestJPARepository  extends JpaRepository<NestEntity, Integer>{
-	@Query("SELECT a from AntEntity a where a.id_user=:id")
-	public Iterable<NestEntity> findAllOwn(@Param("id") Integer id);
+public interface NestJPARepository extends JpaRepository<NestEntity, Integer>{
+	@Query("SELECT n FROM NestEntity n WHERE n.usuario.id = :id")
+    Iterable<NestEntity> findAllOwn(@Param("id") Integer id);
 }

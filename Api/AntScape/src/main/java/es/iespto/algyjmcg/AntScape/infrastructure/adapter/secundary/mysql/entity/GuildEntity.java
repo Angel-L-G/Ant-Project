@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="guild")
-@NamedQuery(name="GuildEntity.findAll", query="SELECT g FROM Guild g")
+@NamedQuery(name="GuildEntity.findAll", query="SELECT g FROM GuildEntity g")
 public class GuildEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

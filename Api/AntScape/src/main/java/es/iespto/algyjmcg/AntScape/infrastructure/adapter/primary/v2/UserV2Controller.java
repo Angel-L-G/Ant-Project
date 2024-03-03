@@ -24,8 +24,8 @@ public class UserV2Controller {
 	private IUsuarioService userService;
 	
 	@PutMapping
-	public ResponseEntity<?> update(@RequestBody UsuarioInputUpdateDTO in) {
-		Usuario u = new Usuario();
+	public ResponseEntity<?> update(@RequestBody Usuario in) {
+		/*Usuario u = new Usuario();
 		
 		u.setEmail(in.getEmail());
 		u.setPassword(in.getPassword());
@@ -36,12 +36,14 @@ public class UserV2Controller {
 		}
 		if(in.getNests() != null) {
 			u.setNests(in.getNests());
-		}
+		}*/
 		
-		boolean update = userService.update(u);
+		//boolean update = userService.update(u);
+		boolean update = userService.update(in);
 		
 		if(update) {
-			return ResponseEntity.ok(u);
+			//return ResponseEntity.ok(u);
+			return ResponseEntity.ok(in);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
 		}

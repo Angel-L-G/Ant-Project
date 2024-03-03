@@ -3,12 +3,13 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -21,7 +22,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="ants")
-@NamedQuery(name="AntEntity.findAll", query="SELECT a FROM Ant a")
+@NamedQuery(name="AntEntity.findAll", query="SELECT a FROM AntEntity a")
 public class AntEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -46,9 +47,8 @@ public class AntEntity implements Serializable {
 	@OneToMany(mappedBy="ant")
 	private List<NestEntity> nests;
 
-	//bi-directional many-to-many association to Usuario
-	@ManyToMany
-	@JoinColumn(name="id", nullable=false, insertable=false, updatable=false)
+	@JsonIgnore
+	@ManyToMany(mappedBy="ants")
 	private List<UsuarioEntity> usuarios;
 
 	public AntEntity() {

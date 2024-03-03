@@ -61,8 +61,8 @@ public class NestV3Controller {
 			Nest nest = new Nest();
 			
 			nest.setDeleted(in.isDeleted());
-			nest.setAntType(in.getAntType());
-			nest.setMap(in.getMap());
+			//nest.setAntType(in.getAntType());
+			//nest.setMap(in.getMap());
 			nest.setUsuario(userService.findById(in.getIdUser()));
 			
 			Nest save = nestService.save(nest);

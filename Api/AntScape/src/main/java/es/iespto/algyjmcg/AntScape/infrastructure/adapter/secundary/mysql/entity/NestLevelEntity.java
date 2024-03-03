@@ -1,6 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +20,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name="nest_levels")
-@NamedQuery(name="NestLevelEntity.findAll", query="SELECT n FROM NestLevel n")
+@NamedQuery(name="NestLevelEntity.findAll", query="SELECT n FROM NestLevelEntity n")
 public class NestLevelEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -35,7 +36,7 @@ public class NestLevelEntity implements Serializable {
 	private Integer level;
 
 	@Column(nullable=false, precision=10, scale=2)
-	private Double multiplier;
+	private BigDecimal multiplier;
 
 	@Column(length=30)
 	private String name;
@@ -43,7 +44,6 @@ public class NestLevelEntity implements Serializable {
 	@Column(nullable=false)
 	private Integer production;
 
-	//bi-directional many-to-one association to Nest
 	@ManyToOne
 	@JoinColumn(name="nest_id", nullable=false)
 	private NestEntity nest;
@@ -75,11 +75,11 @@ public class NestLevelEntity implements Serializable {
 		this.level = level;
 	}
 
-	public Double getMultiplier() {
+	public BigDecimal getMultiplier() {
 		return this.multiplier;
 	}
 
-	public void setMultiplier(Double multiplier) {
+	public void setMultiplier(BigDecimal multiplier) {
 		this.multiplier = multiplier;
 	}
 

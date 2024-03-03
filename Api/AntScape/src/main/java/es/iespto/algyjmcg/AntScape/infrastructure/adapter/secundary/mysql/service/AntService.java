@@ -83,14 +83,12 @@ public class AntService implements IAntRepository {
 			if (findByName.isPresent()) {
 				AntEntity persistance = am.toPersistance(in);
 				
-				findByName.get().setAntNests(persistance.getAntNests());
 				findByName.get().setBiome(persistance.getBiome());
-				findByName.get().setCost(persistance.getCost());
-				findByName.get().setDamage(persistance.getDamage());
-				findByName.get().setLife(persistance.getLife());
 				findByName.get().setName(persistance.getName());
-				findByName.get().setWorking(persistance.getWorking());
 				findByName.get().setType(persistance.getType());
+				findByName.get().setDescription(persistance.getDescription());
+				findByName.get().setUsuarios(persistance.getUsuarios());
+				findByName.get().setNests(persistance.getNests());
 				
 				ok = true;
 			}

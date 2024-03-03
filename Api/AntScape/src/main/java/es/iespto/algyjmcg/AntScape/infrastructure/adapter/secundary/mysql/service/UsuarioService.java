@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.iespto.algyjmcg.AntScape.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.UsuarioJPARepository;
 
@@ -88,7 +88,12 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setPassword(persistance.getPassword());
 				findByName.get().setRol(persistance.getRol());
 				findByName.get().setName(persistance.getName());
+				findByName.get().setEggs(persistance.getEggs());
+				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
+				findByName.get().setImg(persistance.getImg());
 				
+				//This doesn't work
+				findByName.get().setGuild(persistance.getGuild());
 				findByName.get().setNests(persistance.getNests());
 				findByName.get().setAnts(persistance.getAnts());
 				
