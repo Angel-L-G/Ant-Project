@@ -72,8 +72,8 @@ function App(): JSX.Element {
         <AppContextProvider>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown: false}}>
-                    <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Login" component={Login}/>
+                    <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Game" component={Game}/>
                     <Stack.Screen name="NewHormiguero" component={NewHormiguero}/>
                     <Stack.Screen name="Outside" component={Outside}/>

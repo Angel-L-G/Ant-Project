@@ -13,7 +13,8 @@ type Props = {
 const UseSesion = () => {
     const {setUser,setToken,setRol,token} = useContext(AppContext);
     //const ruta = "http://172.26.16.0:8080/api/";
-    const ruta = "http://192.168.56.1:8080/api/";
+    //const ruta = "http://192.168.56.1:8080/api/";
+    const ruta = "http://192.168.0.20:8080/api/";
 
     async function register(nick: string, password: string, email: string, navigation: any){
         console.log("register");
@@ -23,7 +24,11 @@ const UseSesion = () => {
             password: password
         }
 
+        console.log("hola");
+
         const axiospost = async (ruta: string) => {
+            console.log("hola");
+            
             let response;
             try{
                 response = await axios.post(ruta+"v1/register", user);
@@ -63,7 +68,7 @@ const UseSesion = () => {
 
                     getContextUser(nick, tk);
 
-                    navigation.navigate("Main");
+                    navigation.navigate("Personal");
                 }else {
                     if(response.status == 428){
                         console.log("Falta Validar");
