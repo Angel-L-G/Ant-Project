@@ -1,17 +1,31 @@
 import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ProgressBar from '../components/ProgressBar';
 import { Image } from 'react-native';
 import { ImageBackground } from 'react-native';
 import Rama from '../components/Rama';
+import axios from 'axios';
+import { AppContext } from '../components/AppContextProvider';
 
 type Props = {}
 
 const Personal = (props: Props) => {
+    const ruta = "http://192.168.0.20:8080/api/";
+    const {token} = useContext(AppContext);
     const [ramas, setRamas] = useState<Array<Number>>([]);
+    const [eggs, setEggs] = useState(0);
+    const [goldenEggs, setGoldenEggs] = useState(0);
 
     useEffect(() => {
-        
+        async function getYourself() {
+            const response = await axios.get(ruta + "v2/users", {headers: { "Authorization": "Bearer " + token }});
+            console.log(response.data);
+            
+            setEggs(response.data.eggs);
+            setGoldenEggs(response.data.goldenEggs);
+        }
+
+        getYourself();
     }, [])
 
     function nuevaRama() {
@@ -57,12 +71,12 @@ const Personal = (props: Props) => {
                     <Image source={require('../img/profile.png')} style={{ width: "10%", height: "70%", borderRadius: 100 }} />
                     <Image source={require('../img/tablon.png')} style={{ width: "16%", height: "60%", borderRadius: 100 }} />
                     <View style={{ position: 'absolute', marginLeft: 101, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "16%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>100ab</Text>
+                        <Text style={{ color: "black", fontWeight: "bold" }}>{eggs}</Text>
                         <Image source={require('../img/FireAntEgg.webp')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
                     </View>
                     <Image source={require('../img/tablon.png')} style={{ width: "16%", height: "60%", borderRadius: 100 }} />
                     <View style={{ position: 'absolute', marginLeft: 226, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "16%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>100ab</Text>
+                        <Text style={{ color: "black", fontWeight: "bold" }}>{goldenEggs}</Text>
                         <Image source={require('../img/GoldenAntEgg2.png')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
                     </View>
                 </View>
