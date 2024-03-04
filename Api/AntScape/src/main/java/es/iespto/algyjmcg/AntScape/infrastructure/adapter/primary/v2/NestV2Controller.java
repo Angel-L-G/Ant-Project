@@ -3,6 +3,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,21 +12,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v2/nests")
 public class NestV2Controller {
-	@Autowired
-	private INestService nestService;
-	@Autowired
-	private IUsuarioService userService;
+	@Autowired private INestService nestService;
+	@Autowired private IUsuarioService userService;
+	@Autowired private IAntService antService;
+	@Autowired private JwtService jwtService;
 	
 	@GetMapping(path = "/own/{id}")
 	public ResponseEntity<?> findByAllOwn(@PathVariable Integer id) {
@@ -56,14 +61,19 @@ public class NestV2Controller {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody NestInputDTO in) {
+	public ResponseEntity<?> save(@RequestBody NestInputDTO in, @RequestHeader HttpHeaders headers) {
 		if(in != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario findByName = userService.findByName(username);
+			
 			Nest nest = new Nest();
 			
-			/*nest.setDeleted(in.isDeleted());
-			nest.setAntType(in.getAntType());
-			nest.setMap(in.getMap());
-			nest.setUsuario(userService.findById(in.getIdUser()));*/
+			nest.setDeleted(false);
+			nest.setUsuario(findByName);
+			nest.setAnt(antService.findByType(in.getAntType()));
 			
 			Nest save = nestService.save(nest);
 			if(save != null) {
@@ -90,9 +100,6 @@ public class NestV2Controller {
 
 class NestInputDTO {
 	private String antType;
-	private boolean deleted;
-	private String map;
-	private Integer idUser;
 
 	public String getAntType() {
 		return antType;
@@ -100,29 +107,5 @@ class NestInputDTO {
 
 	public void setAntType(String antType) {
 		this.antType = antType;
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getMap() {
-		return map;
-	}
-
-	public void setMap(String map) {
-		this.map = map;
-	}
-
-	public Integer getIdUser() {
-		return idUser;
-	}
-
-	public void setIdUser(Integer idUser) {
-		this.idUser = idUser;
 	}
 }

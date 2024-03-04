@@ -43,7 +43,7 @@ public class AntEntity implements Serializable {
 	@Column(length=30)
 	private String type;
 
-	//bi-directional many-to-one association to Nest
+	@JsonIgnore
 	@OneToMany(mappedBy="ant")
 	private List<NestEntity> nests;
 
