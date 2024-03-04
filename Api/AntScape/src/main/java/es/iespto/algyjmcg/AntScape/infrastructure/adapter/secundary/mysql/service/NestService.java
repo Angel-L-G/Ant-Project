@@ -171,9 +171,16 @@ public class NestService implements INestRepository{
 			if(findByName.isPresent()) {
 				NestEntity persistance = nm.toPersistance(in);
 				
-				//findByName.get().setAntNests(persistance.getAntNests());
-				//findByName.get().setAntType(persistance.getAntType());
-				//findByName.get().setMap(persistance.getMap());
+				findByName.get().setDeleted(in.getDeleted());
+				findByName.get().setNestLevels(persistance.getNestLevels());
+				
+				if(in.getAnt() != null) {
+					findByName.get().setAnt(am.toPersistance(in.getAnt()));
+				}
+				
+				if(in.getUsuario() != null) {
+					findByName.get().setUsuario(um.toPersistance(in.getUsuario()));
+				}
 				
 				ok = true;
 			}

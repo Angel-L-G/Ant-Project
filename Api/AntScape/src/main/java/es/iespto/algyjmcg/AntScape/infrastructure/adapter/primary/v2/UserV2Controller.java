@@ -92,27 +92,6 @@ public class UserV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/unlocknest")
-	public ResponseEntity<?> unlockNest(@RequestHeader HttpHeaders headers, @RequestBody Integer id_nest) {
-		String token = headers.getFirst("Authorization");
-		String resultado = token.substring(7);
-		String username = jwtService.extractUsername(resultado);
-		
-		Usuario findByName = userService.findByName(username);
-		
-		Nest nest = nestService.findById(id_nest);
-		
-		findByName.addNest(nest);
-		
-		boolean update = userService.update(findByName);
-		
-		if(update) {
-			return ResponseEntity.ok(findByName);
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
-		}
-	}
-	
 	@GetMapping
 	public ResponseEntity<?> findMe(@RequestHeader HttpHeaders headers) {
 		String token = headers.getFirst("Authorization");
