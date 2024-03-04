@@ -7,9 +7,15 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Ant;
+import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestLevelMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.UsuarioJPARepository;
 
@@ -17,6 +23,9 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.reposi
 public class UsuarioService implements IUsuarioRepository{
 	@Autowired private UsuarioJPARepository usuarioRepo;
 	private UsuarioMapper um = new UsuarioMapper();
+	private AntMapper am = new AntMapper();
+	private NestMapper nm = new NestMapper();
+	private GuildMapper gm = new GuildMapper();
 	
 	@Override
 	public Usuario findById(Integer id) {
@@ -92,10 +101,15 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
 				findByName.get().setImg(persistance.getImg());
 				
-				//This doesn't work
-				findByName.get().setGuild(persistance.getGuild());
-				findByName.get().setNests(persistance.getNests());
-				findByName.get().setAnts(persistance.getAnts());
+				findByName.get().setGuild(gm.toPersistance(in.getGuild()));
+				
+				for (Nest nest : in.getNests()) {
+					findByName.get().getNests().add(nm.toPersistance(nest));
+				}
+				
+				for (Ant ant : in.getAnts()) {
+					findByName.get().getAnts().add(am.toPersistance(ant));
+				}
 				
 				ok = true;
 			}

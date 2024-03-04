@@ -20,6 +20,8 @@ import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 
@@ -28,32 +30,110 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 @RequestMapping("/api/v2/users")
 public class UserV2Controller {
 	@Autowired private IUsuarioService userService;
+	@Autowired private IAntService antService;
+	@Autowired private INestService nestService;
+	//@Autowired private INestLevelService userService;
 	@Autowired private JwtService jwtService;
 	
 	@PutMapping
-	public ResponseEntity<?> update(@RequestBody Usuario in) {
-		/*Usuario u = new Usuario();
+	public ResponseEntity<?> update(@RequestHeader HttpHeaders headers, @RequestBody UsuarioInputUpdateDTO in) {
+		Usuario u = new Usuario();
 		
 		u.setEmail(in.getEmail());
 		u.setPassword(in.getPassword());
 		u.setName(in.getName());
 		
-		if(in.getAnts() != null) {
-			u.setAnts(in.getAnts());
-		}
-		if(in.getNests() != null) {
-			u.setNests(in.getNests());
-		}*/
-		
-		//boolean update = userService.update(u);
-		boolean update = userService.update(in);
+		boolean update = userService.update(u);
 		
 		if(update) {
-			//return ResponseEntity.ok(u);
-			return ResponseEntity.ok(in);
+			return ResponseEntity.ok(u);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
 		}
+	}
+	
+	@PutMapping(path="/updatemoney")
+	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody String eggs, @RequestBody String goldenEggs) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		findByName.setEggs(eggs);
+		findByName.setGoldenEggs(goldenEggs);
+		
+		boolean update = userService.update(findByName);
+		
+		if(update) {
+			return ResponseEntity.ok(findByName);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+		}
+	}
+	
+	@PutMapping(path="/unlockant")
+	public ResponseEntity<?> unlockAnt(@RequestHeader HttpHeaders headers, @RequestBody Integer id_ant) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Ant ant = antService.findById(id_ant);
+		
+		findByName.getAnts().add(ant);
+		
+		boolean update = userService.update(findByName);
+		
+		if(update) {
+			return ResponseEntity.ok(findByName);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+		}
+	}
+	
+	@PutMapping(path="/unlocknest")
+	public ResponseEntity<?> unlockNest(@RequestHeader HttpHeaders headers, @RequestBody Integer id_nest) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Nest nest = nestService.findById(id_nest);
+		
+		findByName.addNest(nest);
+		
+		boolean update = userService.update(findByName);
+		
+		if(update) {
+			return ResponseEntity.ok(findByName);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+		}
+	}
+	
+	@PutMapping(path="/unlocknest")
+	public ResponseEntity<?> unlockNestLevel(@RequestHeader HttpHeaders headers, @RequestBody Integer id_nest) {
+		/*String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Nest nest = nestService.findById(id_nest);
+		
+		findByName.addNest(nest);
+		
+		boolean update = userService.update(findByName);
+		
+		if(update) {
+			return ResponseEntity.ok(findByName);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+		}*/
+		
+		return ResponseEntity.ok("");
 	}
 	
 	@GetMapping
@@ -123,21 +203,9 @@ class UsuarioOutput {
 }
 
 class UsuarioInputUpdateDTO {
-	private Integer id;
 	private String email;
 	private String name;
 	private String password;
-	private String rol;
-	private List<Nest> nests;
-	private List<Ant> ants;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getEmail() {
 		return email;
@@ -161,29 +229,5 @@ class UsuarioInputUpdateDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getRol() {
-		return rol;
-	}
-
-	public void setRol(String rol) {
-		this.rol = rol;
-	}
-
-	public List<Nest> getNests() {
-		return nests;
-	}
-
-	public void setNests(List<Nest> nests) {
-		this.nests = nests;
-	}
-
-	public List<Ant> getAnts() {
-		return ants;
-	}
-
-	public void setAnts(List<Ant> ants) {
-		this.ants = ants;
 	}
 }

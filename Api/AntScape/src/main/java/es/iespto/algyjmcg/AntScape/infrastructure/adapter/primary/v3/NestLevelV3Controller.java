@@ -1,4 +1,4 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
+package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v3;
 
 import java.math.BigDecimal;
 
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +21,29 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/nestlevels")
-public class NestLevelV1Controller {
+@RequestMapping("/api/v3/nestlevels")
+public class NestLevelV3Controller {
 	@Autowired private INestLevelService mainService;
 	@Autowired private INestService secundaryService;
+	
+	@PutMapping(path="/levelup/{id}")
+	public ResponseEntity<?> levelUp(@PathVariable Integer level_id) {
+		NestLevel findById = mainService.findById(level_id);
+		
+		findById.setLevel(findById.getLevel()+1);
+		
+		BigDecimal res = findById.getMultiplier().multiply(BigDecimal.valueOf(findById.getProduction()));
+		
+		findById.setProduction(res.intValue());
+		
+		boolean update = mainService.update(findById);
+		
+		if(update) {
+			return ResponseEntity.ok("Leveled Up Correctly");
+		}else {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong leveling up the nest"); 
+		}
+	}
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
