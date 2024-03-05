@@ -16,15 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/guilds")
 public class GuildV1Controller {
 	@Autowired private IGuildService mainService;
-	@Autowired private IUsuarioService secundaryService;
+	@Autowired private IUsuarioService userService;
+	@Autowired private JwtService jwtService;
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
@@ -50,22 +53,6 @@ public class GuildV1Controller {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
-	
-	@PostMapping
-	public ResponseEntity<?> save(@RequestBody Guild in) {
-		if(in != null) {
-			
-			
-			Guild save = mainService.save(in);
-			if(save != null) {
-				return ResponseEntity.ok(save);
-			}else {
-				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Content Not Saved, Due To An Error");
-			}
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}
-	}
 
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable Integer id) {
@@ -81,11 +68,73 @@ public class GuildV1Controller {
 	@PutMapping(path="/joinguild/{id}")
 	public ResponseEntity<?> joinGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
 		if(id_guild != null) {
-			mainService.deleteById(id_guild);
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
 			
-			return ResponseEntity.ok("Ant Deleted Correctly");
+			Usuario user = userService.findByName(username);
+			
+			Guild guild = mainService.findById(id_guild);
+			
+			guild.addUsuario(user);
+			
+			Guild save = mainService.save(guild);
+			
+			if(save != null && save.getUsuarios().contains(user)) {
+				return ResponseEntity.ok("User Joined The Guild Correctly");
+			}else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
+			}
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
+	}
+	
+	@PutMapping(path="/leaveguild/{id}")
+	public ResponseEntity<?> leaveGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
+		if(id_guild != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			
+			Guild guild = mainService.findById(id_guild);
+			
+			guild.removeUsuario(user);
+			
+			Guild save = mainService.save(guild);
+			
+			if(save != null && save.getUsuarios().contains(user)) {
+				if(guild.getUsuarios().size() == 0) {
+					mainService.deleteById(id_guild);
+				}
+				return ResponseEntity.ok("User Leaved The Guild Correctly");
+			}else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't leave the guild");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@PutMapping(path="/createguild/{id}")
+	public ResponseEntity<?> createGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("");
+		/*if(id_guild != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			
+			//Guild guild = mainService.findById(id_guild);
+			
+			//guild.addUsuario(user);
+			
+			//return ResponseEntity.ok("Ant Deleted Correctly");
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}*/
 	}
 }
