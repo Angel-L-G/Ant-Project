@@ -118,23 +118,30 @@ public class GuildV1Controller {
 		}
 	}
 	
-	@PutMapping(path="/createguild/{id}")
-	public ResponseEntity<?> createGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
-		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("");
-		/*if(id_guild != null) {
+	@PutMapping(path="/createguild")
+	public ResponseEntity<?> createGuild(@RequestHeader HttpHeaders headers, @RequestBody String guild_name){
+		if(guild_name != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
 			
 			Usuario user = userService.findByName(username);
 			
-			//Guild guild = mainService.findById(id_guild);
+			Guild guild = new Guild();
 			
-			//guild.addUsuario(user);
+			guild.setName(guild_name);
+			guild.getUsuarios().add(user);
+			guild.setTrophys(10);
 			
-			//return ResponseEntity.ok("Ant Deleted Correctly");
+			Guild save = mainService.save(guild);
+			
+			if(save != null) {
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
+			}else {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body("Error while creating the guild try later");
+			}
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}*/
+		}
 	}
 }
