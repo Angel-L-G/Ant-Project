@@ -14,8 +14,10 @@ public class NestMapper {
 		out.setId(in.getId());
 		out.setDeleted(in.getDeleted());
 		
-		for (NestLevel domain : in.getNestLevels()) {
-			out.getNestLevels().add(nlm.toPersistance(domain));
+		if (in.getNestLevels() != null && in.getNestLevels().size() != 0) {
+			for (NestLevel domain : in.getNestLevels()) {
+				out.getNestLevels().add(nlm.toPersistance(domain));
+			}
 		}
 		
 		return out;
@@ -27,8 +29,10 @@ public class NestMapper {
 		out.setId(in.getId());
 		out.setDeleted(in.getDeleted());
 		
-		for (NestLevelEntity entity : in.getNestLevels()) {
-			out.getNestLevels().add(nlm.toDomain(entity));
+		if (in.getNestLevels() != null && in.getNestLevels().size() != 0) {
+			for (NestLevelEntity entity : in.getNestLevels()) {
+				out.getNestLevels().add(nlm.toDomain(entity));
+			}
 		}
 		
 		return out;

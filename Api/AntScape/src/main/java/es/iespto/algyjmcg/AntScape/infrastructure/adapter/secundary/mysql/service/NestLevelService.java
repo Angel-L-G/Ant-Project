@@ -11,12 +11,15 @@ import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.INestLevelRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestLevelEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestLevelMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.NestJPARepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.NestLevelJPARepository;
 
 @Service
 public class NestLevelService implements INestLevelRepository{
 	@Autowired private NestLevelJPARepository mainRepository;
 	private NestLevelMapper mainMapper = new NestLevelMapper();
+	private NestMapper nestMapper = new NestMapper();
 
 	@Override
 	public NestLevel findById(Integer id) {
@@ -38,7 +41,11 @@ public class NestLevelService implements INestLevelRepository{
 		NestLevel out = null;
 		
 		if(in != null) {
-			NestLevelEntity save = mainRepository.save(mainMapper.toPersistance(in));
+			NestLevelEntity persistance = mainMapper.toPersistance(in);
+			
+			persistance.setNest(nestMapper.toPersistance(in.getNest()));
+			
+			NestLevelEntity save = mainRepository.save(persistance);
 			
 			if(save != null) {
 				out = mainMapper.toDomain(save);
