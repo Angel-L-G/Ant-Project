@@ -64,6 +64,15 @@ CREATE TABLE `friends` (
   CONSTRAINT fk_friend FOREIGN KEY (id_friend) REFERENCES usuarios(id)
 );
 
+CREATE TABLE `blocked_users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_user` INT,
+  `id_friend` INT,
+  CONSTRAINT pk_blocked_users PRIMARY KEY(id),
+  CONSTRAINT fk_user_bloqued FOREIGN KEY (id_user) REFERENCES usuarios(id),
+  CONSTRAINT fk_blocked FOREIGN KEY (id_friend) REFERENCES usuarios(id)
+);
+
 CREATE TABLE `ants` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(40),
@@ -97,7 +106,7 @@ CREATE TABLE `nest_levels` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nest_id` INT NOT NULL,
   `name` varchar(30),
-  `production` INT NOT NULL,
+  `production` DOUBLE NOT NULL,
   `cost` INT NOT NULL,
   `level` INT NOT NULL,
   `multiplier` DECIMAL(10, 2) NOT NULL,
