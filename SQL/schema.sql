@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS `friends`;
 DROP TABLE IF EXISTS `nests_levels`;
 DROP TABLE IF EXISTS `ants`;
 DROP TABLE IF EXISTS `ants_user`;
+DROP TABLE IF EXISTS `blocked_users`;
 DROP TABLE IF EXISTS `bosses`;
 
 CREATE TABLE `guild` (
