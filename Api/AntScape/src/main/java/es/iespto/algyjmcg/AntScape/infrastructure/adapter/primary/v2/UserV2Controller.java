@@ -32,7 +32,6 @@ public class UserV2Controller {
 	@Autowired private IUsuarioService userService;
 	@Autowired private IAntService antService;
 	@Autowired private INestService nestService;
-	//@Autowired private INestLevelService userService;
 	@Autowired private JwtService jwtService;
 	
 	@PutMapping
@@ -92,7 +91,7 @@ public class UserV2Controller {
 		}
 	}
 	
-	@GetMapping
+	@GetMapping(path="/me")
 	public ResponseEntity<?> findMe(@RequestHeader HttpHeaders headers) {
 		String token = headers.getFirst("Authorization");
 		String resultado = token.substring(7);
@@ -103,6 +102,16 @@ public class UserV2Controller {
 		return ResponseEntity.ok(findByName);
 	}
 	
+	@GetMapping
+	public ResponseEntity<?> findAll() {
+		Iterable<Usuario> findAll = userService.findAll();
+		
+		if(findAll != null) {
+			return ResponseEntity.ok(findAll);
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+		}
+	}
 }
 
 class UsuarioOutput {

@@ -34,7 +34,7 @@ public class NestLevelV3Controller {
 		
 		BigDecimal res = findById.getMultiplier().multiply(BigDecimal.valueOf(findById.getProduction()));
 		
-		findById.setProduction(res.intValue());
+		findById.setProduction(res.doubleValue());
 		
 		boolean update = mainService.update(findById);
 		
@@ -153,7 +153,7 @@ class NestLevelSaveInputDTO {
 	private Integer level;
 	private BigDecimal multiplier;
 	private String name;
-	private Integer production;
+	private Double production;
 	private Integer id_nest;
 	
 	public NestLevelSaveInputDTO() {
@@ -190,10 +190,10 @@ class NestLevelSaveInputDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getProduction() {
+	public Double getProduction() {
 		return production;
 	}
-	public void setProduction(Integer production) {
+	public void setProduction(Double production) {
 		this.production = production;
 	}
 	public Integer getId_nest() {
