@@ -35,6 +35,9 @@ public class NestMapper {
 		out.setDeleted(in.getDeleted());
 		
 		if (in.getNestLevels() != null && in.getNestLevels().size() != 0) {
+			if (out.getNestLevels() == null) {
+				out.setNestLevels(new ArrayList<NestLevel>());
+			}
 			for (NestLevelEntity entity : in.getNestLevels()) {
 				out.getNestLevels().add(nlm.toDomain(entity));
 			}
