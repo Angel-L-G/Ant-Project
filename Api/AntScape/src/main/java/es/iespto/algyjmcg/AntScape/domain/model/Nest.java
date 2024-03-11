@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Nest {
@@ -10,6 +11,7 @@ public class Nest {
 	private Usuario usuario;
 
 	public Nest() {
+		nestLevels = new ArrayList<NestLevel>();
 	}
 
 	public Integer getId() {

@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Guild {
@@ -13,6 +14,8 @@ public class Guild {
 	private List<Usuario> usuarios;
 
 	public Guild() {
+		guildLevels = new ArrayList<GuildLevel>();
+		usuarios = new ArrayList<Usuario>();
 	}
 
 	public Integer getId() {

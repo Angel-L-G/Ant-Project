@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
@@ -19,6 +20,8 @@ public class Usuario {
 	private List<Ant> ants;
 
 	public Usuario() {
+		nests = new ArrayList<Nest>();
+		ants = new ArrayList<Ant>();
 	}
 
 	public Integer getId() {

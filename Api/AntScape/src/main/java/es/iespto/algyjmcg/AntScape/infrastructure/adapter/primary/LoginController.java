@@ -100,7 +100,7 @@ public class LoginController {
 					nl.setLevel(1);
 					nl.setName(user.getName() + "-" + antService.findById(BASE_ANT_ID).getName() + "-0");
 					nl.setMultiplier(BigDecimal.valueOf(1.05));
-					nl.setProduction(2);
+					nl.setProduction(2.0);
 					nl.setNest(save);
 					
 					nestLevelService.save(nl);

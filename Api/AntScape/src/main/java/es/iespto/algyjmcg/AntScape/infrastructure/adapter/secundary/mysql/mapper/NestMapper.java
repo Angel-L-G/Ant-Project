@@ -1,5 +1,8 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
@@ -15,9 +18,11 @@ public class NestMapper {
 		out.setDeleted(in.getDeleted());
 		
 		if (in.getNestLevels() != null && in.getNestLevels().size() != 0) {
+			List<NestLevelEntity> list = new ArrayList<NestLevelEntity>();
 			for (NestLevel domain : in.getNestLevels()) {
-				out.getNestLevels().add(nlm.toPersistance(domain));
+				list.add(nlm.toPersistance(domain));
 			}
+			out.setNestLevels(list);
 		}
 		
 		return out;

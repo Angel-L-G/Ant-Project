@@ -2,13 +2,9 @@ package es.iespto.algyjmcg.AntScape.domain.model;
 
 public class Boss {
 	private Integer id;
-
 	private Integer damage;
-
 	private Integer life;
-
 	private String name;
-
 	private Integer reward;
 
 	public Boss() {

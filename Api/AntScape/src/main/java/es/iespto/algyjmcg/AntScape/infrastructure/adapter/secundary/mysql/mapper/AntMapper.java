@@ -7,7 +7,7 @@ public class AntMapper {
 	public AntEntity toPersistance(Ant in) {
 		AntEntity out = new AntEntity();
 		
-		if(in.getName() != null) {
+		if(in != null) {
 			out.setId(in.getId());
 			out.setName(in.getName());
 			out.setBiome(in.getBiome());
@@ -21,7 +21,7 @@ public class AntMapper {
 	public Ant toDomain(AntEntity in) {
 		Ant out = new Ant();
 		
-		if(in.getName() != null) {
+		if(in != null) {
 			out.setId(in.getId());
 			out.setName(in.getName());
 			out.setBiome(in.getBiome());
