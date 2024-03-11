@@ -8,7 +8,7 @@ public class NestLevel {
 	private Integer level;
 	private BigDecimal multiplier;
 	private String name;
-	private Integer production;
+	private Double production;
 	private Nest nest;
 
 	public NestLevel() {
@@ -54,11 +54,11 @@ public class NestLevel {
 		this.name = name;
 	}
 
-	public Integer getProduction() {
+	public Double getProduction() {
 		return this.production;
 	}
 
-	public void setProduction(Integer production) {
+	public void setProduction(Double production) {
 		this.production = production;
 	}
 

@@ -42,7 +42,7 @@ public class NestLevelEntity implements Serializable {
 	private String name;
 
 	@Column(nullable=false)
-	private Integer production;
+	private Double production;
 
 	@ManyToOne
 	@JoinColumn(name="nest_id", nullable=false)
@@ -91,11 +91,11 @@ public class NestLevelEntity implements Serializable {
 		this.name = name;
 	}
 
-	public Integer getProduction() {
+	public Double getProduction() {
 		return this.production;
 	}
 
-	public void setProduction(Integer production) {
+	public void setProduction(Double production) {
 		this.production = production;
 	}
 
