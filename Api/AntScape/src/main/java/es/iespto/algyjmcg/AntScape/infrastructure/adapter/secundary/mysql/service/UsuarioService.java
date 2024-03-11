@@ -11,6 +11,7 @@ import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
@@ -126,6 +127,12 @@ public class UsuarioService implements IUsuarioRepository{
 			
 			if(findById.isPresent()) {
 				out = um.toDomain(findById.get());
+				
+				List<Nest> list = new ArrayList<Nest>();
+				for (NestEntity nest : findById.get().getNests()) {
+					list.add(nm.toDomain(nest));
+				}
+				out.setNests(list);
 			}
 		}
 		

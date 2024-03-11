@@ -34,7 +34,7 @@ public class LoginController {
 	@Autowired private INestService nestService;
 	@Autowired private INestLevelService nestLevelService;
 	@Autowired private IAntService antService;
-	private static final int BASE_ANT_ID = 2;
+	private static final int BASE_ANT_ID = 1;
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody UserInputRegisterDTO request) {
