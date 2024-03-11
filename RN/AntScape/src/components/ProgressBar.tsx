@@ -21,6 +21,7 @@ const ProgressBar = ({ duration }: Props) => {
                     setProgress(0);
                     startTime = Date.now();
                     progressInterval = setInterval(updateProgress, 100);
+                    ganarDinero();
                 }, 1);
             } else {
                 setProgress(newProgress);
@@ -37,14 +38,19 @@ const ProgressBar = ({ duration }: Props) => {
                     setProgress(0);
                     startTime = Date.now();
                     progressInterval = setInterval(updateProgress, 100);
+                    ganarDinero();
                 }, 1);
             } else {
                 setProgress(newProgress);
             }
         };
-
+        
         return () => clearInterval(progressInterval);
     }, [duration]);
+
+    async function ganarDinero() {
+        console.log("a");
+    }
 
     return (
         <Progress.Bar progress={progress} width={200} height={20} color={'green'} animated={false} />

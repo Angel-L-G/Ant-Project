@@ -7,7 +7,9 @@ import { useAppContext } from '../components/AppContextProvider';
 const UseUser = () => {
     const {user,token} = useAppContext();
     const [friends, setFriends] = useState<Array<Friend>>([] as Array<Friend>);
-    const ruta = "http://192.168.56.1:8080/api/"
+    //const ruta = "http://192.168.56.1:8080/api/"
+    //const ruta = "http://172.16.141.33:8080/api/";
+    const ruta = "http://192.168.1.9:8080/api/";
 
     useEffect(() => {
         async function getAll(){
@@ -37,7 +39,7 @@ const UseUser = () => {
 
     async function findFriends(){
         try {
-            const response = await axios.get(ruta+"v2/users/"+user.nombre+"/friends", {headers: { "Authorization": "Bearer " + token }});
+            const response = await axios.get(ruta+"v2/users/"+user.name+"/friends", {headers: { "Authorization": "Bearer " + token }});
 
             if(response.status>199 && response.status < 300){
                 if(response.status == 204){
@@ -69,8 +71,8 @@ const UseUser = () => {
 
     async function addFriend(nameFriend: string){
         try {
-            console.log(ruta+"v2/users/"+user.nombre+"/friends"+nameFriend);
-            const response = await axios.get(ruta+"v2/users/"+user.nombre+"/addFriends/"+nameFriend, {headers: { "Authorization": "Bearer " + token }});
+            console.log(ruta+"v2/users/"+user.name+"/friends"+nameFriend);
+            const response = await axios.get(ruta+"v2/users/"+user.name+"/addFriends/"+nameFriend, {headers: { "Authorization": "Bearer " + token }});
 
             if(response.status>199 && response.status < 300){
                 if(response.status == 204){

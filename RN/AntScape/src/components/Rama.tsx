@@ -1,10 +1,13 @@
 import { Alert, ImageBackground, Modal, Pressable, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React, { useState } from 'react'
 import ProgressBar from './ProgressBar'
+import { NestLevel } from './types'
 
-type Props = {}
+type Props = {
+	lastLevel: NestLevel
+}
 
-const Rama = (props: Props) => {
+const Rama = ({lastLevel}: Props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	function mejorar() {
@@ -21,7 +24,7 @@ const Rama = (props: Props) => {
 			</View>
 			<ImageBackground source={require('../img/Rama.jpg')} style={{ margin: 10, height: 80, width: 270 }}>
 				<View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 10 }}>
-					<ProgressBar duration={1000} />
+					<ProgressBar duration={1000} lastLevel={lastLevel}/>
 				</View>
 			</ImageBackground>
 

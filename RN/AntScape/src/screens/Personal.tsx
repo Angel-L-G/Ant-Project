@@ -6,32 +6,57 @@ import { ImageBackground } from 'react-native';
 import Rama from '../components/Rama';
 import axios from 'axios';
 import { AppContext } from '../components/AppContextProvider';
+import { NestLevel } from '../components/types';
 
 type Props = {}
 
 const Personal = (props: Props) => {
-    const ruta = "http://192.168.0.20:8080/api/";
-    const {token} = useContext(AppContext);
-    const [ramas, setRamas] = useState<Array<Number>>([]);
-    const [eggs, setEggs] = useState(0);
-    const [goldenEggs, setGoldenEggs] = useState(0);
+    //const ruta = "http://192.168.0.20:8080/api/";
+    //const ruta = "http://172.16.141.33:8080/api/";
+    const ruta = "http://192.168.1.9:8080/api/";
+
+    const {token, user} = useContext(AppContext);
+    const [levels, setLevels] = useState<Array<NestLevel>>([]);
+    const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
 
     useEffect(() => {
-        async function getYourself() {
-            const response = await axios.get(ruta + "v2/users", {headers: { "Authorization": "Bearer " + token }});
+        async function getLevels() {
+            const response = await axios.get(ruta + "v2/nests/" + user.id, {headers: { "Authorization": "Bearer " + token }});
             console.log(response.data);
-            
-            setEggs(response.data.eggs);
-            setGoldenEggs(response.data.goldenEggs);
-        }
 
-        getYourself();
+            setLevels(response.data.nestLevels);
+            setLastLevel(response.data.nestLevels[response.data.nestLevels?.length - 1]);
+            console.log(levels[levels?.length - 1]);
+            
+        }
+ 
+        getLevels();
     }, [])
 
-    function nuevaRama() {
-        setRamas([...ramas, 0]);
-    }
+    async function nuevaRama() {
+        const coste = lastLevel?.multiplier * lastLevel?.cost + lastLevel.id * 100;
+        const eggs = user.eggs;
 
+        const dineroRestante = eggs - coste;
+
+        const body = {
+            eggs: eggs,
+            goldenEggs: user.goldenEggs
+        }
+
+        if (user.eggs > eggs) {
+            try {
+                const response = await axios.put(ruta + "v2/users/updatemoney", body);
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+
+        }
+
+        
+    }
+ 
     return (
         <ImageBackground source={require('../img/Muro.jpg')} style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
@@ -46,9 +71,9 @@ const Personal = (props: Props) => {
                     <View style={{ height: "70%", width: "100%" }}>
                         <View>
                             <FlatList
-                                data={ramas}
+                                data={levels}
                                 renderItem={({ item }) =>
-                                    <Rama />
+                                    <Rama lastLevel={item}/>
                                 }
                                 style={{}}
                             />
@@ -58,7 +83,7 @@ const Personal = (props: Props) => {
                                 <View>
                                     <Text style={{ color: "yellow", fontSize: 20 }}>Nueva Rama</Text>
                                     <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
-                                        <Text style={{ color: "yellow", fontSize: 20 }}>20ab</Text>
+                                        <Text style={{ color: "yellow", fontSize: 20 }}>{lastLevel?.multiplier * lastLevel?.cost + lastLevel.id * 100}</Text>
                                         <Image source={require('../img/FireAntEgg.webp')} style={{ width: 20, height: 30 }} />
                                     </View>
                                 </View>
@@ -71,12 +96,12 @@ const Personal = (props: Props) => {
                     <Image source={require('../img/profile.png')} style={{ width: "10%", height: "70%", borderRadius: 100 }} />
                     <Image source={require('../img/tablon.png')} style={{ width: "16%", height: "60%", borderRadius: 100 }} />
                     <View style={{ position: 'absolute', marginLeft: 101, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "16%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>{eggs}</Text>
+                        <Text style={{ color: "black", fontWeight: "bold" }}>{user.eggs}</Text>
                         <Image source={require('../img/FireAntEgg.webp')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
                     </View>
                     <Image source={require('../img/tablon.png')} style={{ width: "16%", height: "60%", borderRadius: 100 }} />
                     <View style={{ position: 'absolute', marginLeft: 226, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "16%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>{goldenEggs}</Text>
+                        <Text style={{ color: "black", fontWeight: "bold" }}>{user.goldenEggs}</Text>
                         <Image source={require('../img/GoldenAntEgg2.png')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
                     </View>
                 </View>

@@ -59,3 +59,37 @@ export type AlmacenImg ={
     nombre: string;
     ubicacion: ReturnType<any>;
 }
+
+export type NestLevel = {
+    id: number,
+    cost: number,
+    multiplier: number,
+    name: string,
+    production: number
+}
+
+export type Ant = {
+    id: number,
+    biome: string,
+    description: string,
+    name: string,
+    type: string
+}
+
+export type User = {
+    id: number,
+    eggs: number,
+    goldenEggs: number,
+    img: string,
+    name: string,
+    nests: Array<Nest>,
+    id_guild: number
+}
+
+export type Nest = {
+    id: number,
+    deleted: false,
+    nestLevels: Array<NestLevel>,
+    ant: Ant,
+    user: User
+}
