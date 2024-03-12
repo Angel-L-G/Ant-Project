@@ -3,9 +3,9 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repos
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AntNestEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestLevelEntity;
 
 @Repository
-public interface AntNestJPARepository extends JpaRepository<AntNestEntity, Integer>{
+public interface NestLevelJPARepository extends JpaRepository<NestLevelEntity, Integer>{
 
 }

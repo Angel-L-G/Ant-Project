@@ -3,15 +3,26 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 import java.util.List;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+=======
+import jakarta.persistence.Column;
+>>>>>>> hexagonal
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+<<<<<<< HEAD
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
+=======
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+>>>>>>> hexagonal
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -29,28 +40,56 @@ public class UsuarioEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
-	private boolean active;
+	private Boolean active;
 
-	private boolean banned;
+	private Boolean banned;
 
+	@Column(length=10)
+	private String eggs;
+
+	@Column(length=45)
 	private String email;
 
+	@Column(name="golden_eggs", length=10)
+	private String goldenEggs;
+
+	@Column(length=255)
 	private String hash;
 
+	@Column(length=255)
+	private String img;
+
+	@Column(nullable=false, length=45)
 	private String name;
 
+	@Column(nullable=false, length=200)
 	private String password;
 
+	@Column(nullable=false, length=45)
 	private String rol;
 
 	//bi-directional many-to-one association to Nest
 	@OneToMany(mappedBy="usuario")
 	private List<NestEntity> nests;
 
-	//bi-directional many-to-many association to Ant
-	@ManyToMany(mappedBy="usuarios")
+	//bi-directional many-to-one association to Guild
+	@ManyToOne
+	@JoinColumn(name="id_guild")
+	private GuildEntity guild;
+
+	@ManyToMany(fetch= FetchType.LAZY)
+	@JoinTable(
+		name="ant_user"
+		, joinColumns={
+			@JoinColumn(name="id_user")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="id_ant")
+			}
+		)
 	private List<AntEntity> ants;
 	
 	@ManyToMany
@@ -76,20 +115,28 @@ public class UsuarioEntity implements Serializable {
 		this.id = id;
 	}
 
-	public boolean getActive() {
+	public Boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 
-	public boolean getBanned() {
+	public Boolean getBanned() {
 		return this.banned;
 	}
 
-	public void setBanned(boolean banned) {
+	public void setBanned(Boolean banned) {
 		this.banned = banned;
+	}
+
+	public String getEggs() {
+		return this.eggs;
+	}
+
+	public void setEggs(String eggs) {
+		this.eggs = eggs;
 	}
 
 	public String getEmail() {
@@ -100,12 +147,28 @@ public class UsuarioEntity implements Serializable {
 		this.email = email;
 	}
 
+	public String getGoldenEggs() {
+		return this.goldenEggs;
+	}
+
+	public void setGoldenEggs(String goldenEggs) {
+		this.goldenEggs = goldenEggs;
+	}
+
 	public String getHash() {
 		return this.hash;
 	}
 
 	public void setHash(String hash) {
 		this.hash = hash;
+	}
+
+	public String getImg() {
+		return this.img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	public String getName() {
@@ -136,22 +199,30 @@ public class UsuarioEntity implements Serializable {
 		return this.nests;
 	}
 
-	public void setNests(List<NestEntity> nests1) {
-		this.nests = nests1;
+	public void setNests(List<NestEntity> nests) {
+		this.nests = nests;
 	}
 
-	public NestEntity addNests1(NestEntity nests) {
-		getNests().add(nests);
-		nests.setUsuario(this);
+	public NestEntity addNest(NestEntity nest) {
+		getNests().add(nest);
+		nest.setUsuario(this);
 
-		return nests;
+		return nest;
 	}
 
-	public NestEntity removeNests1(NestEntity nests1) {
-		getNests().remove(nests1);
-		nests1.setUsuario(null);
+	public NestEntity removeNest(NestEntity nest) {
+		getNests().remove(nest);
+		nest.setUsuario(null);
 
-		return nests1;
+		return nest;
+	}
+
+	public GuildEntity getGuild() {
+		return this.guild;
+	}
+
+	public void setGuild(GuildEntity guild) {
+		this.guild = guild;
 	}
 
 	public List<AntEntity> getAnts() {
@@ -162,6 +233,7 @@ public class UsuarioEntity implements Serializable {
 		this.ants = ants;
 	}
 
+<<<<<<< HEAD
 	public List<UsuarioEntity> getAmigos() {
 		return amigos;
 	}
@@ -177,4 +249,6 @@ public class UsuarioEntity implements Serializable {
 	public void setAmigosDe(List<UsuarioEntity> amigosDe) {
 		this.amigosDe = amigosDe;
 	}
+=======
+>>>>>>> hexagonal
 }

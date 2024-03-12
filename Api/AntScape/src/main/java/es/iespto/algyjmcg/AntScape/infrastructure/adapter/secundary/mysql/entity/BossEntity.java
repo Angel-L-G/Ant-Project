@@ -2,6 +2,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,40 +23,42 @@ public class BossEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
+	@Column(unique=true, nullable=false)
+	private int id;
 
-	private Integer damage;
+	private int damage;
 
-	private Integer life;
+	private int life;
 
+	@Column(length=40)
 	private String name;
 
-	private Integer reward;
+	private int reward;
 
 	public BossEntity() {
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public Integer getDamage() {
+	public int getDamage() {
 		return this.damage;
 	}
 
-	public void setDamage(Integer damage) {
+	public void setDamage(int damage) {
 		this.damage = damage;
 	}
 
-	public Integer getLife() {
+	public int getLife() {
 		return this.life;
 	}
 
-	public void setLife(Integer life) {
+	public void setLife(int life) {
 		this.life = life;
 	}
 
@@ -67,11 +70,11 @@ public class BossEntity implements Serializable {
 		this.name = name;
 	}
 
-	public Integer getReward() {
+	public int getReward() {
 		return this.reward;
 	}
 
-	public void setReward(Integer reward) {
+	public void setReward(int reward) {
 		this.reward = reward;
 	}
 

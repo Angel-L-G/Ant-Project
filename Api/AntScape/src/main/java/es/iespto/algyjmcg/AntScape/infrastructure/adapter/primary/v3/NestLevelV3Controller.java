@@ -1,5 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v3;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,18 +15,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.iespto.algyjmcg.AntScape.domain.model.Ant;
-import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
+import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.INestLevelService;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v3/ants")
-public class AntV3Controller {
-	@Autowired private IAntService antService;
+@RequestMapping("/api/v3/nestlevels")
+public class NestLevelV3Controller {
+	@Autowired private INestLevelService mainService;
+	@Autowired private INestService secundaryService;
+	
+	@PutMapping(path="/levelup/{id}")
+	public ResponseEntity<?> levelUp(@PathVariable Integer level_id) {
+		NestLevel findById = mainService.findById(level_id);
+		
+		findById.setLevel(findById.getLevel()+1);
+		
+		BigDecimal res = findById.getMultiplier().multiply(BigDecimal.valueOf(findById.getProduction()));
+		
+		findById.setProduction(res.intValue());
+		
+		boolean update = mainService.update(findById);
+		
+		if(update) {
+			return ResponseEntity.ok("Leveled Up Correctly");
+		}else {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong leveling up the nest"); 
+		}
+	}
 	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
-		Iterable<Ant> findAll = antService.findAll();
+		Iterable<NestLevel> findAll = mainService.findAll();
 		
 		if(findAll != null) {
 			return ResponseEntity.ok(findAll);
@@ -36,7 +59,7 @@ public class AntV3Controller {
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<?> findById(@PathVariable Integer id) {
 		if(id != null) {
-			Ant find = antService.findById(id);
+			NestLevel find = mainService.findById(id);
 			if(find != null) {
 				return ResponseEntity.ok(find);
 			}else {
@@ -48,17 +71,20 @@ public class AntV3Controller {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody AntInputDTO in) {
+	public ResponseEntity<?> save(@RequestBody NestLevelSaveInputDTO in) {
 		if(in != null) {
-			Ant a = new Ant();
+			NestLevel nestlvl = new NestLevel();
 			
-			a.setBiome(in.getBiome());
-			a.setDescription(in.getDescription());
-			a.setId(in.getId());
-			a.setName(in.getName());
-			a.setType(in.getType());
+			nestlvl.setCost(in.getCost());
+			nestlvl.setId(in.getId());
+			nestlvl.setLevel(in.getLevel());
+			nestlvl.setMultiplier(in.getMultiplier());
+			nestlvl.setName(in.getName());
+			nestlvl.setProduction(in.getProduction());
 			
-			Ant save = antService.save(a);
+			nestlvl.setNest(secundaryService.findById(in.getId_nest()));
+			
+			NestLevel save = mainService.save(nestlvl);
 			if(save != null) {
 				return ResponseEntity.ok(save);
 			}else {
@@ -72,9 +98,9 @@ public class AntV3Controller {
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable Integer id) {
 		if(id != null) {
-			antService.deleteById(id);
+			mainService.deleteById(id);
 			
-			return ResponseEntity.ok("Ant Deleted Correctly");
+			return ResponseEntity.ok("NestLevel Deleted Correctly");
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
@@ -107,8 +133,8 @@ public class AntV3Controller {
 
 	@GetMapping(path = "/{name}")
 	public ResponseEntity<?> findByName(@PathVariable String name) {
-		if(name != null) {
-			Ant find = antService.findByName(name);
+		/*if(name != null) {
+			Ant find = mainService.findByName(name);
 			if(find != null) {
 				return ResponseEntity.ok(find);
 			}else {
@@ -116,30 +142,23 @@ public class AntV3Controller {
 			}
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}
-	}
-	
-	@GetMapping(path = "/{type}")
-	public ResponseEntity<?> findByType(@PathVariable String type) {
-		if(type != null) {
-			Ant find = antService.findByType(type);
-			if(find != null) {
-				return ResponseEntity.ok(find);
-			}else {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
-			}
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}
+		}*/
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("NOT IMPLEMENTEDS");
 	}
 }
 
-class AntInputDTO{
+class NestLevelSaveInputDTO {
 	private Integer id;
-	private String biome;
-	private String description;
+	private Integer cost;
+	private Integer level;
+	private BigDecimal multiplier;
 	private String name;
-	private String type;
+	private Integer production;
+	private Integer id_nest;
+	
+	public NestLevelSaveInputDTO() {
+		
+	}
 	
 	public Integer getId() {
 		return id;
@@ -147,17 +166,23 @@ class AntInputDTO{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getBiome() {
-		return biome;
+	public Integer getCost() {
+		return cost;
 	}
-	public void setBiome(String biome) {
-		this.biome = biome;
+	public void setCost(Integer cost) {
+		this.cost = cost;
 	}
-	public String getDescription() {
-		return description;
+	public Integer getLevel() {
+		return level;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+	public BigDecimal getMultiplier() {
+		return multiplier;
+	}
+	public void setMultiplier(BigDecimal multiplier) {
+		this.multiplier = multiplier;
 	}
 	public String getName() {
 		return name;
@@ -165,10 +190,16 @@ class AntInputDTO{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getType() {
-		return type;
+	public Integer getProduction() {
+		return production;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setProduction(Integer production) {
+		this.production = production;
+	}
+	public Integer getId_nest() {
+		return id_nest;
+	}
+	public void setId_nest(Integer id_nest) {
+		this.id_nest = id_nest;
 	}
 }
