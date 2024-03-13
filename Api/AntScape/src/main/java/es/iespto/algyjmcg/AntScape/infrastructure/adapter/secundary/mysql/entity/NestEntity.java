@@ -1,6 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -47,6 +48,7 @@ public class NestEntity implements Serializable {
 	private UsuarioEntity usuario;
 
 	public NestEntity() {
+		nestLevels = new ArrayList<NestLevelEntity>();
 	}
 
 	public Integer getId() {

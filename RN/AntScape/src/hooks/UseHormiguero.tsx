@@ -3,14 +3,15 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Hormiguero, NestDetails, NestSaveDTO } from '../components/types';
 import { useAppContext } from '../components/AppContextProvider';
+import Globals from '../components/Globals';
 
 type Props = {
     navigation: any
 }
 
 const UseHormiguero = ({navigation}: Props) => {
-    //const ruta = "http://172.26.16.0:8080/api/v2/nests";
-    const ruta = "http://192.168.56.1:8080/api/v2/nests"
+    const {ruta} = Globals();
+    
     const {user,token} = useAppContext();
     const [hormigueros, setHormigueros] = useState<Array<NestDetails>>([] as Array<NestDetails>);
 

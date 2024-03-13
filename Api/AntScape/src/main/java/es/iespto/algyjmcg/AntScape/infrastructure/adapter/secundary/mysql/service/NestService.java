@@ -22,11 +22,8 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.reposi
 public class NestService implements INestRepository{
 	@Autowired private NestJPARepository nestRepo;
 	private NestMapper nm = new NestMapper();
-<<<<<<< HEAD
-=======
 	private AntMapper am = new AntMapper();
 	private NestLevelMapper nlm = new NestLevelMapper();
->>>>>>> hexagonal
 	private UsuarioMapper um = new UsuarioMapper();
 
 	@Override
@@ -67,16 +64,8 @@ public class NestService implements INestRepository{
 		Nest out = null;
 		
 		if(in != null) {
-<<<<<<< HEAD
-			NestEntity persistance = nm.toPersistance(in);
-			
-			persistance.setUsuario(um.toPersistance(in.getUsuario()));
-			
-			NestEntity save = nestRepo.save(persistance);
-=======
 			//Casteo A Persistence
 			NestEntity persistance = nm.toPersistance(in);
->>>>>>> hexagonal
 			
 			if (in.getAnt() != null) {
 				persistance.setAnt(am.toPersistance(in.getAnt()));
@@ -182,9 +171,16 @@ public class NestService implements INestRepository{
 			if(findByName.isPresent()) {
 				NestEntity persistance = nm.toPersistance(in);
 				
-				//findByName.get().setAntNests(persistance.getAntNests());
-				//findByName.get().setAntType(persistance.getAntType());
-				//findByName.get().setMap(persistance.getMap());
+				findByName.get().setDeleted(in.getDeleted());
+				findByName.get().setNestLevels(persistance.getNestLevels());
+				
+				if(in.getAnt() != null) {
+					findByName.get().setAnt(am.toPersistance(in.getAnt()));
+				}
+				
+				if(in.getUsuario() != null) {
+					findByName.get().setUsuario(um.toPersistance(in.getUsuario()));
+				}
 				
 				ok = true;
 			}
@@ -198,18 +194,11 @@ public class NestService implements INestRepository{
 		List<Nest> list = null;
 
 		if (id != null) {
-			//Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
-			Iterable<NestEntity> findAllOwn = nestRepo.findAll();
-			
+			Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
+
 			if (findAllOwn != null) {
 				list = new ArrayList<Nest>();
 				
-<<<<<<< HEAD
-				for (NestEntity e : findAllOwn) {
-					if(e.getUsuario().getId() == id) {
-						out.add(nm.toDomain(e));
-					}
-=======
 				for (NestEntity entity : findAllOwn) {
 					Nest out = nm.toDomain(entity);
 					
@@ -232,7 +221,6 @@ public class NestService implements INestRepository{
 					}
 					
 					list.add(out);
->>>>>>> hexagonal
 				}
 			}
 		}

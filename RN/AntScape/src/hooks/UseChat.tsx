@@ -1,13 +1,15 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import Globals from '../components/Globals'
 
 type Props = {
     navigation: any
 }
 
 const UseChat = (props: Props) => {
-    const ruta = "http://192.168.0.12:3000/chats"
+    const {ruta} = Globals();
+
     const [chats, setChats] = useState<Array<Chat>>([] as Array<Chat>);
 
     useEffect(() => {

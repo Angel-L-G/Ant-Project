@@ -3,24 +3,15 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 import java.util.List;
 
-<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-=======
 import jakarta.persistence.Column;
->>>>>>> hexagonal
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-<<<<<<< HEAD
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
-=======
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
->>>>>>> hexagonal
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
@@ -91,18 +82,6 @@ public class UsuarioEntity implements Serializable {
 			}
 		)
 	private List<AntEntity> ants;
-	
-	@ManyToMany
-	@JoinTable(
-	    name = "friends",
-	    joinColumns = @JoinColumn(name = "id_user"),
-	    inverseJoinColumns = @JoinColumn(name = "id_friend")
-	)
-	private List<UsuarioEntity> amigos;
-
-	@JsonIgnore
-	@ManyToMany(mappedBy = "amigos")
-	private List<UsuarioEntity> amigosDe;
 
 	public UsuarioEntity() {
 	}
@@ -233,22 +212,4 @@ public class UsuarioEntity implements Serializable {
 		this.ants = ants;
 	}
 
-<<<<<<< HEAD
-	public List<UsuarioEntity> getAmigos() {
-		return amigos;
-	}
-
-	public void setAmigos(List<UsuarioEntity> amigos) {
-		this.amigos = amigos;
-	}
-
-	public List<UsuarioEntity> getAmigosDe() {
-		return amigosDe;
-	}
-
-	public void setAmigosDe(List<UsuarioEntity> amigosDe) {
-		this.amigosDe = amigosDe;
-	}
-=======
->>>>>>> hexagonal
 }

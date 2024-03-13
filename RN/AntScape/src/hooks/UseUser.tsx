@@ -3,13 +3,12 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Friend } from '../components/types';
 import { useAppContext } from '../components/AppContextProvider';
+import Globals from '../components/Globals';
 
 const UseUser = () => {
     const {user,token} = useAppContext();
     const [friends, setFriends] = useState<Array<Friend>>([] as Array<Friend>);
-    //const ruta = "http://192.168.56.1:8080/api/"
-    //const ruta = "http://172.16.141.33:8080/api/";
-    const ruta = "http://192.168.1.9:8080/api/";
+    const {ruta} = Globals();
 
     useEffect(() => {
         async function getAll(){

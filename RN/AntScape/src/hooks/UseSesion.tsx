@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import EncryptedStorage from 'react-native-encrypted-storage'
 import { ContextUser, User, UserLogin, UserRegister } from '../components/types'
 import AppContextProvider, { AppContext } from '../components/AppContextProvider';
+import Globals from '../components/Globals'
 
 type Props = {
     navigation:any
@@ -12,11 +13,7 @@ type Props = {
   
 const UseSesion = () => {
     const {setUser,setToken,setRol,token} = useContext(AppContext);
-    //const ruta = "http://172.26.16.0:8080/api/";
-    //const ruta = "http://192.168.56.1:8080/api/";
-    //const ruta = "http://192.168.0.20:8080/api/";
-    //const ruta = "http://172.16.141.33:8080/api/";
-    const ruta = "http://192.168.1.9:8080/api/";
+    const {ruta} = Globals();
 
     async function register(nick: string, password: string, email: string, navigation: any){
         console.log("register");
@@ -48,19 +45,23 @@ const UseSesion = () => {
     }
 
     async function login(nick: string, password: string, navigation: any){
+        console.log("h");
+        
         let user: UserLogin = {
             nombre: nick,
             password: password
         }
 
         const axiospost = async (ruta: string) => {
+            console.log("a");
             
             try{
                 const response = await axios.post(ruta+"v1/login", user);
+                console.log("q");
                 
                 if(response.status>199 && response.status < 300){
                     
-                    const responseGet = await axios.get(ruta + "v2/users", {headers: { "Authorization": "Bearer " + response.data }});
+                    const responseGet = await axios.get(ruta + "v2/users/me", {headers: { "Authorization": "Bearer " + response.data }});
                     console.log(responseGet.data);
                         
                     setUser(responseGet.data);

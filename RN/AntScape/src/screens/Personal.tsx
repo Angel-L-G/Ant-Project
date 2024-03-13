@@ -7,22 +7,23 @@ import Rama from '../components/Rama';
 import axios from 'axios';
 import { AppContext } from '../components/AppContextProvider';
 import { NestLevel } from '../components/types';
+import Globals from '../components/Globals';
 
 type Props = {}
 
 const Personal = (props: Props) => {
-    //const ruta = "http://192.168.0.20:8080/api/";
-    //const ruta = "http://172.16.141.33:8080/api/";
-    const ruta = "http://192.168.1.9:8080/api/";
-
+    const {ruta} = Globals();
     const {token, user} = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
 
     useEffect(() => {
+        console.log(user);
+        
+        
         async function getLevels() {
             const response = await axios.get(ruta + "v2/nests/" + user.id, {headers: { "Authorization": "Bearer " + token }});
-            console.log(response.data);
+            console.log("hola" + response.data);
 
             setLevels(response.data.nestLevels);
             setLastLevel(response.data.nestLevels[response.data.nestLevels?.length - 1]);
@@ -40,13 +41,14 @@ const Personal = (props: Props) => {
         const dineroRestante = eggs - coste;
 
         const body = {
-            eggs: eggs,
+            eggs: dineroRestante,
             goldenEggs: user.goldenEggs
         }
 
         if (user.eggs > eggs) {
             try {
-                const response = await axios.put(ruta + "v2/users/updatemoney", body);
+                const response = await axios.put(ruta + "v2/users/updatemoney", body, {headers: { "Authorization": "Bearer " + token }});
+                console.log(response.data);
             } catch (error) {
                 console.log(error);
             }

@@ -11,10 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.PathVariable;
-=======
->>>>>>> hexagonal
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -38,7 +35,6 @@ public class UserV2Controller {
 	@Autowired private IUsuarioService userService;
 	@Autowired private IAntService antService;
 	@Autowired private INestService nestService;
-	//@Autowired private INestLevelService userService;
 	@Autowired private JwtService jwtService;
 	
 	@PutMapping
@@ -58,153 +54,25 @@ public class UserV2Controller {
 		}
 	}
 	
-<<<<<<< HEAD
-	@GetMapping
-	public ResponseEntity<?> findMe(@RequestParam String nick){
-		if(nick != null) {
-			Usuario find = userService.findByName(nick);
-			
-			UserOutputDTO user = new UserOutputDTO(find);
-			
-			if(find != null) {
-				return ResponseEntity.ok(user);
-			}else {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
-			}
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}
-	}
-	
-	@GetMapping(path="/{name}/addFriends/{friendName}")
-	public ResponseEntity<?> addFriends(@PathVariable String name, @PathVariable String friendName){
-		boolean added = false;
-		if(name != null && friendName != null) {
-			added = userService.addFriend(name, friendName);
-		}
-		
-		if(added) {
-			return ResponseEntity.ok("Friend Added Correctly");
-=======
 	@PutMapping(path="/updatemoney")
-	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody String eggs, @RequestBody String goldenEggs) {
+	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody MoneyUpdateDTO money) {
 		String token = headers.getFirst("Authorization");
 		String resultado = token.substring(7);
 		String username = jwtService.extractUsername(resultado);
 		
 		Usuario findByName = userService.findByName(username);
-		findByName.setEggs(eggs);
-		findByName.setGoldenEggs(goldenEggs);
+		findByName.setEggs(money.getEggs());
+		findByName.setGoldenEggs(money.getGoldenEggs());
 		
 		boolean update = userService.update(findByName);
 		
 		if(update) {
 			return ResponseEntity.ok(findByName);
->>>>>>> hexagonal
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
 		}
 	}
 	
-<<<<<<< HEAD
-	@GetMapping(path="/{name}/friends")
-	public ResponseEntity<?> getFriends (@PathVariable String name){
-		if(name != null) {
-			List<Usuario> friends = userService.findFriends(name);
-			if(friends != null) {
-				
-				List<UserFriendOutputDTO> list = new ArrayList<>();
-				for (Usuario usuario : friends) {
-					list.add(new UserFriendOutputDTO(usuario));
-				}
-				
-				return ResponseEntity.ok(list);
-			}else {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
-			}
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
-		}
-	}
-}
-
-class UserFriendOutputDTO {
-	Integer id;
-	String nombre;
-	String email;
-	
-	public UserFriendOutputDTO(Usuario u){
-		setId(u.getId());
-		setNombre(u.getName());
-		setEmail(u.getEmail());
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-}
-
-class UserOutputDTO {
-	Integer id;
-	String nombre;
-	String password;
-	String email;
-	String rol;
-	
-	public UserOutputDTO(Usuario u){
-		setId(u.getId());
-		setNombre(u.getName());
-		setPassword(u.getPassword());
-		setEmail(u.getEmail());
-		setRol(u.getRol());
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getRol() {
-		return rol;
-	}
-	public void setRol(String rol) {
-		this.rol = rol;
-	}
-=======
 	@PutMapping(path="/unlockant")
 	public ResponseEntity<?> unlockAnt(@RequestHeader HttpHeaders headers, @RequestBody Integer id_ant) {
 		String token = headers.getFirst("Authorization");
@@ -226,28 +94,7 @@ class UserOutputDTO {
 		}
 	}
 	
-	@PutMapping(path="/unlocknest")
-	public ResponseEntity<?> unlockNest(@RequestHeader HttpHeaders headers, @RequestBody Integer id_nest) {
-		String token = headers.getFirst("Authorization");
-		String resultado = token.substring(7);
-		String username = jwtService.extractUsername(resultado);
-		
-		Usuario findByName = userService.findByName(username);
-		
-		Nest nest = nestService.findById(id_nest);
-		
-		findByName.addNest(nest);
-		
-		boolean update = userService.update(findByName);
-		
-		if(update) {
-			return ResponseEntity.ok(findByName);
-		}else {
-			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
-		}
-	}
-	
-	@GetMapping
+	@GetMapping(path="/me")
 	public ResponseEntity<?> findMe(@RequestHeader HttpHeaders headers) {
 		String token = headers.getFirst("Authorization");
 		String resultado = token.substring(7);
@@ -258,7 +105,43 @@ class UserOutputDTO {
 		return ResponseEntity.ok(findByName);
 	}
 	
->>>>>>> hexagonal
+	@GetMapping
+	public ResponseEntity<?> findAll() {
+		Iterable<Usuario> findAll = userService.findAll();
+		
+		if(findAll != null) {
+			return ResponseEntity.ok(findAll);
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+		}
+	}
+}
+
+class MoneyUpdateDTO {
+	private String goldenEggs;
+	private String eggs;
+	
+	public MoneyUpdateDTO(String goldenEggs, String eggs) {
+		super();
+		this.goldenEggs = goldenEggs;
+		this.eggs = eggs;
+	}
+	
+	public String getGoldenEggs() {
+		return goldenEggs;
+	}
+	
+	public void setGoldenEggs(String goldenEggs) {
+		this.goldenEggs = goldenEggs;
+	}
+	
+	public String getEggs() {
+		return eggs;
+	}
+	
+	public void setEggs(String eggs) {
+		this.eggs = eggs;
+	}
 }
 
 class UsuarioOutput {

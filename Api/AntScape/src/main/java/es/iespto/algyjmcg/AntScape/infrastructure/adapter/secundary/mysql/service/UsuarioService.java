@@ -11,6 +11,7 @@ import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
@@ -18,6 +19,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.UsuarioJPARepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioService implements IUsuarioRepository{
@@ -42,6 +44,7 @@ public class UsuarioService implements IUsuarioRepository{
 		return out;
 	}
 
+	@Transactional
 	@Override
 	public Usuario save(Usuario in) {
 		Usuario out = null;
@@ -83,6 +86,7 @@ public class UsuarioService implements IUsuarioRepository{
 		}
 	}
 
+	@Transactional
 	@Override
 	public boolean update(Usuario in) {
 		boolean ok = false;
@@ -100,16 +104,21 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setEggs(persistance.getEggs());
 				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
 				findByName.get().setImg(persistance.getImg());
-				
-				findByName.get().setGuild(gm.toPersistance(in.getGuild()));
-				
-				for (Nest nest : in.getNests()) {
-					findByName.get().getNests().add(nm.toPersistance(nest));
+								
+				if(in.getNests() != null ) {
+					for (Nest nest : in.getNests()) {
+						findByName.get().getNests().add(nm.toPersistance(nest));
+					}
 				}
 				
-				for (Ant ant : in.getAnts()) {
-					findByName.get().getAnts().add(am.toPersistance(ant));
+				
+				if(in.getAnts() != null) {
+					for (Ant ant : in.getAnts()) {
+						findByName.get().getAnts().add(am.toPersistance(ant));
+					}
 				}
+				
+				usuarioRepo.save(findByName.get());
 				
 				ok = true;
 			}
@@ -127,6 +136,12 @@ public class UsuarioService implements IUsuarioRepository{
 			
 			if(findById.isPresent()) {
 				out = um.toDomain(findById.get());
+				
+				List<Nest> list = new ArrayList<Nest>();
+				for (NestEntity nest : findById.get().getNests()) {
+					list.add(nm.toDomain(nest));
+				}
+				out.setNests(list);
 			}
 		}
 		
@@ -147,43 +162,6 @@ public class UsuarioService implements IUsuarioRepository{
 		}
 		
 		return out;
-	}
-	
-	@Override
-	public List<Usuario> findFriends(String name){
-		if(name != null) {
-			Optional<UsuarioEntity> findByName = usuarioRepo.findByName(name);
-			
-			if(findByName.isPresent() && findByName.get().getAmigos() != null) {
-				
-				List<Usuario> list = new ArrayList<Usuario>();
-				for (UsuarioEntity u : findByName.get().getAmigos()) {
-					list.add(um.toDomain(u));
-				}
-				
-				return list;
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public boolean addFriend(String name, String nameFriend) {
-		boolean ok = false;
-		if(name != null && nameFriend != null) {
-			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
-			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
-			
-			if(user.isPresent() && friend.isPresent()) {
-				user.get().getAmigos().add(friend.get());
-				friend.get().getAmigos().add(user.get());
-				
-				usuarioRepo.save(user.get());
-				usuarioRepo.save(friend.get());
-				ok = true;
-			}
-		}
-		return ok;
 	}
 	
 	public boolean verify(Integer id) {

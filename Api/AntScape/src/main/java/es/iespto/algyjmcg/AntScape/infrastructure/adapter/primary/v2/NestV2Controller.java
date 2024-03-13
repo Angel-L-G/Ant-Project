@@ -1,6 +1,5 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
-<<<<<<< HEAD
-=======
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
->>>>>>> hexagonal
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
@@ -36,28 +32,12 @@ public class NestV2Controller {
 	@Autowired private IAntService antService;
 	@Autowired private JwtService jwtService;
 	
-	@GetMapping(path = "/own/{name}")
-	public ResponseEntity<?> findAllOwn(@PathVariable String name) {
-		if(name != null) {
-			//Arreglo temporal
-			Usuario findByName = userService.findByName(name);
-			
-			List<Nest> find = nestService.findAllById(findByName.getId());
+	@GetMapping(path = "/own/{id}")
+	public ResponseEntity<?> findByAllOwn(@PathVariable Integer id) {
+		if(id != null) {
+			List<Nest> find = nestService.findAllById(id);
 			if(find != null) {
-				List<NestOutput> list = new ArrayList<>();
-				
-				for (Nest n : find) {
-					NestOutput ne = new NestOutput();
-					
-					ne.setAntType(n.getAntType());
-					ne.setDeleted(n.getDeleted());
-					ne.setId(n.getId());
-					ne.setMap(n.getMap());
-					
-					list.add(ne);
-				}
-				
-				return ResponseEntity.ok(list);
+				return ResponseEntity.ok(find);
 			}else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
 			}
@@ -81,8 +61,8 @@ public class NestV2Controller {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody NestInputDTO in, @RequestHeader HttpHeaders headers) {
-		if(in != null) {
+	public ResponseEntity<?> save(@RequestBody String name, @RequestHeader HttpHeaders headers) {
+		if(name != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
@@ -91,18 +71,12 @@ public class NestV2Controller {
 			
 			Nest nest = new Nest();
 			
-<<<<<<< HEAD
-			nest.setDeleted(in.isDeleted());
-			nest.setAntType(in.getAntType());
-			nest.setMap(in.getMap());
-			nest.setUsuario(userService.findByName(in.getNameUser()));
-=======
 			nest.setDeleted(false);
 			nest.setUsuario(findByName);
-			nest.setAnt(antService.findByType(in.getAntType()));
->>>>>>> hexagonal
+			nest.setAnt(antService.findByName(name));
 			
 			Nest save = nestService.save(nest);
+			
 			if(save != null) {
 				return ResponseEntity.ok(save);
 			}else {
@@ -123,94 +97,4 @@ public class NestV2Controller {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
-}
-
-class NestOutput {
-	private Integer id;
-
-	private String antType;
-
-	private boolean deleted;
-
-	private String map;
-	
-	public NestOutput() {
-	}
-
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getAntType() {
-		return this.antType;
-	}
-
-	public void setAntType(String antType) {
-		this.antType = antType;
-	}
-
-	public boolean getDeleted() {
-		return this.deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getMap() {
-		return this.map;
-	}
-
-	public void setMap(String map) {
-		this.map = map;
-	}
-}
-
-class NestInputDTO {
-	private String antType;
-<<<<<<< HEAD
-	private boolean deleted;
-	private String map;
-	private String nameUser;
-=======
->>>>>>> hexagonal
-
-	public String getAntType() {
-		return antType;
-	}
-
-	public void setAntType(String antType) {
-		this.antType = antType;
-	}
-<<<<<<< HEAD
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getMap() {
-		return map;
-	}
-
-	public void setMap(String map) {
-		this.map = map;
-	}
-
-	public String getNameUser() {
-		return nameUser;
-	}
-
-	public void setNameUser(String nameUser) {
-		this.nameUser = nameUser;
-	}
-=======
->>>>>>> hexagonal
 }

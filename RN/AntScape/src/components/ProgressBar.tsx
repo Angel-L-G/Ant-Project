@@ -1,13 +1,22 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import * as Progress from 'react-native-progress';
+import { NestLevel } from './types';
+import { AppContext } from './AppContextProvider';
+import axios from 'axios';
+import Globals from './Globals';
+import UseEggs from '../hooks/UseEggs';
 
 type Props = {
-    duration: number
+    duration: number,
+    lastLevel: NestLevel
 }
 
-const ProgressBar = ({ duration }: Props) => {
+const ProgressBar = ({ duration, lastLevel }: Props) => {
+    const {ruta} = Globals();
+    const {user, token} = useContext(AppContext);
     const [progress, setProgress] = useState(0);
+    const {eggs, ganarDinero} = UseEggs(lastLevel);
 
     useEffect(() => {
         let startTime = Date.now();
@@ -48,9 +57,7 @@ const ProgressBar = ({ duration }: Props) => {
         return () => clearInterval(progressInterval);
     }, [duration]);
 
-    async function ganarDinero() {
-        console.log("a");
-    }
+    
 
     return (
         <Progress.Bar progress={progress} width={200} height={20} color={'green'} animated={false} />

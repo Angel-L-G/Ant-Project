@@ -51,16 +51,6 @@ public class UsuarioDomainService implements IUsuarioService {
 	}
 
 	@Override
-	public List<Usuario> findFriends(String name){
-		return service.findFriends(name);
-	}
-	
-	@Override
-	public boolean addFriend(String name, String nameFriend) {
-		return service.addFriend(name, nameFriend);
-	}
-
-	@Override
 	public boolean verify(Integer id) {
 		return service.verify(id);
 	}
