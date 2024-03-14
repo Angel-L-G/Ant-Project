@@ -1,5 +1,7 @@
 package es.iespto.algyjmcg.AntScape.domain.port.primary;
 
+import java.util.List;
+
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 
 public interface IUsuarioService {
@@ -11,6 +13,8 @@ public interface IUsuarioService {
 	
 	public Usuario findByName(String n);
 	public Usuario findByEmail(String e);
+	public List<Usuario> findFriends(String name);
+	public boolean addFriend(String name, String nameFriend);
 
 	public boolean verify(Integer id);
 	public boolean ban(Integer id);

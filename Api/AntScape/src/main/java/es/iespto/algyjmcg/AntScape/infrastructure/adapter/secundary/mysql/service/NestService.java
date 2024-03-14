@@ -194,8 +194,9 @@ public class NestService implements INestRepository{
 		List<Nest> list = null;
 
 		if (id != null) {
-			Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
-
+			//Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
+			Iterable<NestEntity> findAllOwn = nestRepo.findAll();
+			
 			if (findAllOwn != null) {
 				list = new ArrayList<Nest>();
 				

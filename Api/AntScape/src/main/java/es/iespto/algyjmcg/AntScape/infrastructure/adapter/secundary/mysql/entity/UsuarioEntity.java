@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -81,6 +83,14 @@ public class UsuarioEntity implements Serializable {
 			}
 		)
 	private List<AntEntity> ants;
+	
+	@ManyToMany
+	@JoinTable(
+	    name = "friends",
+	    joinColumns = @JoinColumn(name = "id_user"),
+	    inverseJoinColumns = @JoinColumn(name = "id_friend")
+	)
+	private List<UsuarioEntity> amigos;
 
 	public UsuarioEntity() {
 	}
