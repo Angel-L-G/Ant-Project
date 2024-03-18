@@ -2,6 +2,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class NestLevelV2Controller {
 		
 		BigDecimal res = findById.getMultiplier().multiply(BigDecimal.valueOf(findById.getProduction()));
 		
-		findById.setProduction(res.intValue());
+		findById.setProduction(res.doubleValue());
 		
 		boolean update = mainService.update(findById);
 		
@@ -70,6 +71,10 @@ public class NestLevelV2Controller {
 			nestlvl.setName(in.getName());
 			nestlvl.setProduction(in.getProduction());
 			
+			System.out.println(in.getId_nest());
+			
+			System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + secundaryService.findById(in.getId_nest()).toString());
+			
 			nestlvl.setNest(secundaryService.findById(in.getId_nest()));
 			
 			NestLevel save = mainService.save(nestlvl);
@@ -90,7 +95,7 @@ class NestLevelSaveInputDTO {
 	private Integer level;
 	private BigDecimal multiplier;
 	private String name;
-	private Integer production;
+	private Double production;
 	private Integer id_nest;
 	
 	public NestLevelSaveInputDTO() {
@@ -127,10 +132,10 @@ class NestLevelSaveInputDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getProduction() {
+	public Double getProduction() {
 		return production;
 	}
-	public void setProduction(Integer production) {
+	public void setProduction(Double production) {
 		this.production = production;
 	}
 	public Integer getId_nest() {

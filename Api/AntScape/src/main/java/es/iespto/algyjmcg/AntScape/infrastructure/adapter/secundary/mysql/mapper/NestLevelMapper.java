@@ -4,6 +4,7 @@ import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestLevelEntity;
 
 public class NestLevelMapper {
+	
 	public NestLevelEntity toPersistance(NestLevel in) {
 		NestLevelEntity out = new NestLevelEntity();
 		
@@ -22,7 +23,7 @@ public class NestLevelMapper {
 	public NestLevel toDomain(NestLevelEntity in) {
 		NestLevel out = new NestLevel();
 		
-		if(in != null) {
+		if(in != null) { 
 			out.setId(in.getId());
 			out.setName(in.getName());
 			out.setCost(in.getCost());

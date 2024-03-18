@@ -63,9 +63,11 @@ export type AlmacenImg ={
 export type NestLevel = {
     id: number,
     cost: number,
+    level: number,
     multiplier: number,
     name: string,
-    production: number
+    production: number,
+    id_nest: number
 }
 
 export type Ant = {

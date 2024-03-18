@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import Globals from '../components/Globals';
 import { NestLevel } from '../components/types';
@@ -9,23 +9,29 @@ type Props = {
     lastLevel?: NestLevel
 }
 
-const UseEggs = ({lastLevel}: Props) => {
+const UseEggs = ({lastLevel}: Props = {}) => {
     const [eggs, setEggs] = useState(0);
     const {ruta} = Globals();
     const {token, user} = useContext(AppContext);
 
     async function ganarDinero() {
+        const responseGet = await axios.get(ruta + "v2/users/me", {headers: { "Authorization": "Bearer " +  token}});
+        console.log("Progress bar" + responseGet.data.eggs);
+
+        let eggs1 = responseGet.data.eggs;
+
         if (lastLevel) {
-            console.log("a");
 
-            const responseGet = await axios.get(ruta + "v2/users/me", {headers: { "Authorization": "Bearer " +  token}});
-            console.log(responseGet.data.eggs);
+            console.log("Ganar dinero");
 
-            const eggs = responseGet.data.eggs;
+            console.log(eggs1);
 
-            const dineroNuevo = (Number)(eggs) + (Number)(lastLevel.production);
+            const dineroNuevo = (Number)(eggs1) + (Number)(lastLevel.production);
 
-            console.log(dineroNuevo);
+            console.log("Dinero suma: " + dineroNuevo);
+
+            setEggs(dineroNuevo);
+                console.log("Eggs: " + eggs);
 
             const body = {
                 eggs: dineroNuevo,
@@ -34,7 +40,10 @@ const UseEggs = ({lastLevel}: Props) => {
 
             try {
                 const response = await axios.put(ruta + "v2/users/updatemoney", body, {headers: { "Authorization": "Bearer " + token }});
-                console.log(response.data);
+                console.log("Eggs after update: " + response.data.eggs);
+                
+                
+                
             } catch (error) {
                 console.log(error);
             }
@@ -43,7 +52,7 @@ const UseEggs = ({lastLevel}: Props) => {
 
     return {
         eggs,
-        ganarDinero
+        setEggs
     }
 }
 

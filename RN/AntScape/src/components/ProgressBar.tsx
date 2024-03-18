@@ -5,18 +5,54 @@ import { NestLevel } from './types';
 import { AppContext } from './AppContextProvider';
 import axios from 'axios';
 import Globals from './Globals';
-import UseEggs from '../hooks/UseEggs';
 
 type Props = {
     duration: number,
-    lastLevel: NestLevel
+    lastLevel: NestLevel,
+    updateEggs: Function
 }
 
-const ProgressBar = ({ duration, lastLevel }: Props) => {
+const ProgressBar = ({duration, lastLevel, updateEggs}: Props) => {
     const {ruta} = Globals();
     const {user, token} = useContext(AppContext);
     const [progress, setProgress] = useState(0);
-    const {eggs, ganarDinero} = UseEggs(lastLevel);
+
+    async function ganarDinero() {
+        console.log(lastLevel.production);
+
+        const responseGet = await axios.get(ruta + "v2/users/me", {headers: { "Authorization": "Bearer " +  token}});
+        console.log("Progress bar" + responseGet.data.eggs);
+
+        let eggs1 = responseGet.data.eggs;
+
+        if (lastLevel) {
+
+            console.log("Ganar dinero");
+
+            console.log(eggs1);
+
+            const dineroNuevo = Math.round((Number)(eggs1) + (Number)(lastLevel.production));
+
+            console.log("Dinero suma: " + dineroNuevo);
+
+            updateEggs(dineroNuevo);
+
+            const body = {
+                eggs: dineroNuevo,
+                goldenEggs: user.goldenEggs
+            }
+
+            try {
+                const response = await axios.put(ruta + "v2/users/updatemoney", body, {headers: { "Authorization": "Bearer " + token }});
+                console.log("Eggs after update: " + response.data.eggs);
+                
+                
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
 
     useEffect(() => {
         let startTime = Date.now();
@@ -30,6 +66,8 @@ const ProgressBar = ({ duration, lastLevel }: Props) => {
                     setProgress(0);
                     startTime = Date.now();
                     progressInterval = setInterval(updateProgress, 100);
+                    console.log("progressInterval");
+
                     ganarDinero();
                 }, 1);
             } else {
@@ -47,6 +85,8 @@ const ProgressBar = ({ duration, lastLevel }: Props) => {
                     setProgress(0);
                     startTime = Date.now();
                     progressInterval = setInterval(updateProgress, 100);
+                    console.log("updatteProgress");
+
                     ganarDinero();
                 }, 1);
             } else {

@@ -4,10 +4,11 @@ import ProgressBar from './ProgressBar'
 import { NestLevel } from './types'
 
 type Props = {
-	lastLevel: NestLevel
+	lastLevel: NestLevel,
+	updateEggs: Function
 }
 
-const Rama = ({lastLevel}: Props) => {
+const Rama = ({lastLevel, updateEggs}: Props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	function mejorar() {
@@ -24,7 +25,7 @@ const Rama = ({lastLevel}: Props) => {
 			</View>
 			<ImageBackground source={require('../img/Rama.jpg')} style={{ margin: 10, height: 80, width: 270 }}>
 				<View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 10 }}>
-					<ProgressBar duration={1000} lastLevel={lastLevel}/>
+					<ProgressBar duration={2000} lastLevel={lastLevel} updateEggs={updateEggs}/>
 				</View>
 			</ImageBackground>
 
