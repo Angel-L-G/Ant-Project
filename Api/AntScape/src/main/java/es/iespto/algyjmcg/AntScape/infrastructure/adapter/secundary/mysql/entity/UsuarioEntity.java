@@ -221,4 +221,12 @@ public class UsuarioEntity implements Serializable {
 		this.ants = ants;
 	}
 
+	public List<UsuarioEntity> getAmigos() {
+		return amigos;
+	}
+
+	public void setAmigos(List<UsuarioEntity> amigos) {
+		this.amigos = amigos;
+	}
+	
 }

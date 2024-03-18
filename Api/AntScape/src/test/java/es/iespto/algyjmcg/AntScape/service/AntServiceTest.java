@@ -98,6 +98,8 @@ class AntServiceTest {
     void deleteAnt() {
     	Ant find = service.findById(1);
     	
+    	assertNotNull(find);
+    	
     	service.deleteById(find.getId());
     	
     	find = service.findById(1);

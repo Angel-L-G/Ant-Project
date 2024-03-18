@@ -27,6 +27,12 @@ class BossServiceTest {
     
     @Test
     @Transactional
+    void saveAnt() {
+    	
+    }
+    
+    @Test
+    @Transactional
     void findByTypeAnt() {
     	
     }

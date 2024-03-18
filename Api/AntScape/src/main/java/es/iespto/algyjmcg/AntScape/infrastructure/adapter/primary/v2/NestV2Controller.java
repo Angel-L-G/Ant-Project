@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
-<<<<<<< HEAD
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
-=======
->>>>>>> react-native
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
@@ -91,16 +88,9 @@ public class NestV2Controller {
 			
 			Nest nest = new Nest();
 			
-<<<<<<< HEAD
 			nest.setDeleted(false);
 			nest.setUsuario(findByName);
 			nest.setAnt(antService.findByName(name));
-=======
-			nest.setDeleted(in.isDeleted());
-			nest.setAntType(in.getAntType());
-			nest.setMap(in.getMap());
-			nest.setUsuario(userService.findByName(in.getNameUser()));
->>>>>>> react-native
 			
 			Nest save = nestService.save(nest);
 			
@@ -124,91 +114,4 @@ public class NestV2Controller {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
-<<<<<<< HEAD
-=======
-}
-
-class NestOutput {
-	private Integer id;
-
-	private String antType;
-
-	private boolean deleted;
-
-	private String map;
-	
-	public NestOutput() {
-	}
-
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getAntType() {
-		return this.antType;
-	}
-
-	public void setAntType(String antType) {
-		this.antType = antType;
-	}
-
-	public boolean getDeleted() {
-		return this.deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getMap() {
-		return this.map;
-	}
-
-	public void setMap(String map) {
-		this.map = map;
-	}
-}
-
-class NestInputDTO {
-	private String antType;
-	private boolean deleted;
-	private String map;
-	private String nameUser;
-
-	public String getAntType() {
-		return antType;
-	}
-
-	public void setAntType(String antType) {
-		this.antType = antType;
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getMap() {
-		return map;
-	}
-
-	public void setMap(String map) {
-		this.map = map;
-	}
-
-	public String getNameUser() {
-		return nameUser;
-	}
-
-	public void setNameUser(String nameUser) {
-		this.nameUser = nameUser;
-	}
->>>>>>> react-native
 }
