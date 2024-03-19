@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
         width: 260,
         marginTop: 100,
         borderRadius: 20,
-        borderColor: "yellow",
-        borderWidth: 5,
+        //borderColor: "yellow",
+        //borderWidth: 5,
         padding: 20,
         alignItems: "center"
     },
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
 
     formText: {
         fontSize: 20,
-        color: 'black',
+        color: 'yellow',
         fontFamily: "MadimiOneRegular",
         width: 100,
         marginRight: 20,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     enlaceText: {
         fontSize: 15,
         textDecorationLine: 'underline',
-        color: 'blue',
+        color: 'white',
     },
 
     button: {

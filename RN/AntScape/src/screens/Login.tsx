@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableHighlight, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableOpacity, TextInput, ScrollView, ImageBackground, Dimensions } from 'react-native';
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import UseSesion from '../hooks/UseSesion';
@@ -20,7 +20,62 @@ const Login = ({navigation}: Props) => {
     }
 
     return (
-        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+        <ImageBackground source={require('../assets/imgs/Portada.png')} style={{ position: "absolute", width: Dimensions.get('window').width, height: Dimensions.get('window').height}}>
+            <View style={styles.container}>
+                <View style={styles.formTitle}>
+                    <Text style={{fontSize: 50, color: 'rgba(20, 40, 140, 1)', fontFamily: "MadimiOneRegular"}}>Inicia Sesión</Text>
+                </View>
+                <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1}}
+                extraScrollHeight={175}
+                enableOnAndroid={true}
+                scrollEnabled={false}>
+                    <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+                    start={{ x: 0.5, y: 0 }}
+                    end={{ x: 0.5, y: 1 }}
+                    style={ styles.formContainer }>
+                        <View style={{}}>
+
+                            <View style={styles.innerFormContainer}>
+                                <Text style={styles.formText}>Nick:</Text>
+                                <TextInput placeholder='Nick' onChangeText={setUsername} style={{width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white", }} placeholderTextColor={"white"}/>
+                            </View>
+                            
+                            <View style={styles.innerFormContainer}>
+                                <Text style={styles.formText}>Password:</Text>
+                                <TextInput placeholder='Password' onChangeText={setPassword} secureTextEntry={true} style={{width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white"}} placeholderTextColor={"white"}/>
+                            </View>
+
+                            <Text></Text>
+                            
+                            <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+                                <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                start={{ x: 0.5, y: 0 }}
+                                end={{ x: 0.5, y: 1 }}
+                                style={{ }}>
+                                    <TouchableOpacity onPress={searchUser} style={styles.button}>
+                                        <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18}}>Log In</Text>
+                                    </TouchableOpacity>
+                                </LinearGradient>
+                                
+
+                                <Text></Text>
+
+                                <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                                    <Text style={styles.enlaceText}>Register</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </LinearGradient>
+                </KeyboardAwareScrollView>
+            </View>
+        </ImageBackground>
+    )
+}
+
+export default Login
+
+/*
+<LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={{ flex: 1 }}>
@@ -67,7 +122,58 @@ const Login = ({navigation}: Props) => {
                 </KeyboardAwareScrollView>
             </View>
         </LinearGradient>
-    )
-}
 
-export default Login
+
+
+
+
+        <ImageBackground source={require('../assets/imgs/Portada.png')} style={{ flex: 1 }}>
+            <View style={styles.container}>
+                <View style={styles.formTitle}>
+                    <Text style={{fontSize: 50, color: 'rgba(20, 40, 140, 1)', fontFamily: "MadimiOneRegular"}}>Inicia Sesión</Text>
+                </View>
+                <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1}}
+                extraScrollHeight={175}
+                enableOnAndroid={true}
+                scrollEnabled={false}>
+                    <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={ styles.formContainer }>
+                    <View style={{}}>
+
+                        <View style={styles.innerFormContainer}>
+                            <Text style={styles.formText}>Nick:</Text>
+                            <TextInput placeholder='Nick' onChangeText={setUsername} style={{width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white", }} placeholderTextColor={"white"}/>
+                        </View>
+                        
+                        <View style={styles.innerFormContainer}>
+                            <Text style={styles.formText}>Password:</Text>
+                            <TextInput placeholder='Password' onChangeText={setPassword} secureTextEntry={true} style={{width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white"}} placeholderTextColor={"white"}/>
+                        </View>
+
+                        <Text></Text>
+                        
+                        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+                            <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                            start={{ x: 0.5, y: 0 }}
+                            end={{ x: 0.5, y: 1 }}
+                            style={{ }}>
+                                <TouchableOpacity onPress={searchUser} style={styles.button}>
+                                    <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18}}>Log In</Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
+                            
+
+                            <Text></Text>
+
+                            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                                <Text style={styles.enlaceText}>Register</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    </LinearGradient>
+                </KeyboardAwareScrollView>
+            </View>
+        </ImageBackground>
+*/
