@@ -37,7 +37,7 @@ const Profile = ({navigation}: Props) => {
             <View style={styles.mainConatiner}>
                 <Image
                     style={styles.bigProfilePicture}
-                    source={require('../img/profile.png')}
+                    source={require('../assets/imgs/profile.png')}
                 />
 
                 <Text style={styles.title}>{user.nombre}</Text>

@@ -23,7 +23,7 @@ const Rama = ({lastLevel, updateEggs}: Props) => {
 					<Text style={{ color: "yellow", fontWeight: "bold" }}>Mejorar</Text>
 				</TouchableHighlight>
 			</View>
-			<ImageBackground source={require('../img/Rama.jpg')} style={{ margin: 10, height: 80, width: 270 }}>
+			<ImageBackground source={require('../assets/imgs/Rama.jpg')} style={{ margin: 10, height: 80, width: 270 }}>
 				<View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 10 }}>
 					<ProgressBar duration={2000} lastLevel={lastLevel} updateEggs={updateEggs}/>
 				</View>

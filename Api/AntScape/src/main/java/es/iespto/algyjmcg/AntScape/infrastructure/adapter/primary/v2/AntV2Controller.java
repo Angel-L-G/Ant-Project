@@ -32,7 +32,7 @@ public class AntV2Controller {
 		}
 	}
 	
-	@GetMapping(path = "/{name}")
+	@GetMapping(path = "/name/{name}")
 	public ResponseEntity<?> findByName(@PathVariable String name) {
 		if(name != null) {
 			Ant find = antService.findByName(name);
@@ -46,7 +46,7 @@ public class AntV2Controller {
 		}
 	}
 	
-	@GetMapping(path = "/{type}")
+	@GetMapping(path = "/type/{type}")
 	public ResponseEntity<?> findByType(@PathVariable String type) {
 		if(type != null) {
 			Ant find = antService.findByType(type);

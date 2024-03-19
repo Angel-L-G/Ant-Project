@@ -22,11 +22,11 @@ const NewHormiguero = ({navigation}: Props) => {
         let imgActual = "";
         switch(ant){
             case "Roja":
-                imgActual = "../img/hormiga-roja.jpeg";
+                imgActual = "../assets/imgs/hormiga-roja.jpeg";
             case "Negra":
-                imgActual = "../img/Hormiga-negra.jpg";
+                imgActual = "../assets/imgs/Hormiga-negra.jpg";
             case "Cortadora de Hojas":
-                imgActual = "../img/Cotadora-de-hojas.jpg";
+                imgActual = "../assets/imgs/Cotadora-de-hojas.jpg";
         }
         
         /*const hormiguero: NestSaveDTO = {
@@ -103,8 +103,8 @@ export default NewHormiguero
 
 
 /*
-    {"id": 0, "img": "../img/Hormiga-negra.jpg", "antname": "Hormiga Negra", "biome": "Planicie"}, 
-    {"id": 1, "img": "../img/Cotadora-de-hojas.jpg", "antname": "Hormina Cortadora De Hojas", "biome": "Pantano"}, 
-    {"id": 2, "img": "../img/hormiga-roja.jpeg", "antname": "Hormiga Roja", "biome": "Humedales"},
-    {"id": 3, "img": "../img/hormiga-roja.jpeg", "antname": "Hormiga Roja", "biome": "Humedales"} 
+    {"id": 0, "img": "../assets/imgs/Hormiga-negra.jpg", "antname": "Hormiga Negra", "biome": "Planicie"}, 
+    {"id": 1, "img": "../assets/imgs/Cotadora-de-hojas.jpg", "antname": "Hormina Cortadora De Hojas", "biome": "Pantano"}, 
+    {"id": 2, "img": "../assets/imgs/hormiga-roja.jpeg", "antname": "Hormiga Roja", "biome": "Humedales"},
+    {"id": 3, "img": "../assets/imgs/hormiga-roja.jpeg", "antname": "Hormiga Roja", "biome": "Humedales"} 
 */

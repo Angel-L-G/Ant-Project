@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
         height: '100%'
@@ -16,32 +15,46 @@ const styles = StyleSheet.create({
     },
 
     formContainer: {
-        height: 300,
-        Width: 60,
-        alignItems: 'flex-start',
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 5,
-        backgroundColor: '#e9e1cc',
-        padding: 10,
+        backgroundColor: "white",
+        height: 350,
+        width: 260,
+        marginTop: 100,
+        borderRadius: 20,
+        borderColor: "yellow",
+        borderWidth: 5,
+        padding: 20,
+        alignItems: "center"
+    },
+
+    formContainerRegister: {
+        backgroundColor: "white",
+        height: 400,
+        width: 300,
+        marginTop: 100,
+        borderRadius: 20,
+        borderColor: "yellow",
+        borderWidth: 5,
+        padding: 20,
+        alignItems: "center"
     },
 
     innerFormContainer: {
         flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
     },  
 
     formTitle: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'black',
+        marginTop: 100
     },
 
     formText: {
-        fontSize: 15,
+        fontSize: 20,
         color: 'black',
-        fontWeight: 'bold',
+        fontFamily: "MadimiOneRegular",
+        width: 100,
+        marginRight: 20,
+        textAlign: "left"
     },
 
     enlaceText: {
@@ -56,7 +69,6 @@ const styles = StyleSheet.create({
         border: 'none',
         radius: 4,
         cursor: 'pointer',
-        backgroundColor: '#377d72',
         width: 100
     },
 

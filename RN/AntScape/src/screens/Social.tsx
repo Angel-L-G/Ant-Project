@@ -106,7 +106,7 @@ const Social = ({navigation}: Props) => {
                 <TouchableHighlight onPress={() => navigation.navigate("Profile")}>
                     <Image
                         style={styles.profilePicture}
-                        source={require('../img/profile.png')}
+                        source={require('../assets/imgs/profile.png')}
                     />
                 </TouchableHighlight>
 

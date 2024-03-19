@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
@@ -61,7 +62,7 @@ public class NestV2Controller {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody String name, @RequestHeader HttpHeaders headers) {
+	public ResponseEntity<?> save(@RequestParam String name, @RequestHeader HttpHeaders headers) {
 		if(name != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
