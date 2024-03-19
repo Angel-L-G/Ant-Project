@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import { Image } from 'react-native';
 import { ImageBackground } from 'react-native';
@@ -8,7 +8,11 @@ import { AppContext } from '../components/AppContextProvider';
 import { Nest, NestLevel } from '../components/types';
 import Globals from '../components/Globals';
 
-const Personal = (props: any) => {
+type Props = {
+    navigation: any
+}
+
+const Personal = ({navigation}: Props) => {
     const {ruta} = Globals();
     const {token, user} = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
@@ -79,14 +83,15 @@ const Personal = (props: any) => {
         } else {
 
         }
-
-        
     }
 
     function updateEggs(egg: number) {
         setEggs(egg);
         console.log(eggs);
-        
+    }
+
+    function goToProfile() {
+        navigation.navigate("Profile");
     }
  
     return (
@@ -127,7 +132,9 @@ const Personal = (props: any) => {
                 </View>
 
                 <View style={{ flex: 1, width: "100%", height: "7%", justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', backgroundColor: "rgba(28, 64, 169, 0.8)", position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, }}>
-                    <Image source={require('../assets/imgs/profile.png')} style={{ width: "10%", height: "70%", borderRadius: 100 }} />
+                    <TouchableOpacity onPress={() => goToProfile()} style={{width: "10%", height: "80%"}}>
+                        <Image source={require('../assets/imgs/profile.png')} style={{width: 50, height: "100%", borderRadius: 100}} />
+                    </TouchableOpacity>
                     <Image source={require('../assets/imgs/tablon.png')} style={{ width: "16%", height: "60%", borderRadius: 100 }} />
                     <View style={{ position: 'absolute', marginLeft: 101, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "16%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
                         <Text style={{ color: "black", fontWeight: "bold" }}>{eggs}</Text>

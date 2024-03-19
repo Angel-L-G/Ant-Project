@@ -1,96 +1,75 @@
-import { View, Text, Image, FlatList, TouchableHighlight, Modal, RefreshControl } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Image, FlatList, TouchableHighlight, Modal, RefreshControl, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react'
 import styles from '../themes/styles'
 import UseUser from '../hooks/UseUser'
-import { useAppContext } from '../components/AppContextProvider'
+import { AppContext, useAppContext } from '../components/AppContextProvider'
 import { Button, Input } from 'react-native-elements'
+import LinearGradient from 'react-native-linear-gradient'
+import { launchImageLibrary } from 'react-native-image-picker';
 
 type Props = {
     navigation: any
 }
 
 const Profile = ({navigation}: Props) => {
-    const {user} = useAppContext();
-    const {friends,findFriends,addFriend} = UseUser();
-    const [modalVisible, setModalVisible] = useState(false);
-    const [nameFriend, setNameFriend] = useState("");
-    const [refreshing, setRefreshing] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<string>({} as string);
+    const {user} = useContext(AppContext);
 
-    useEffect(() => {
-        findFriends();
-    }, [])
-    
-    function showModal() {
-        setModalVisible(true);
-    }
+    const openImagePicker = () => {
+        const options: any = {
+            mediaType: 'photo',
+            includeBase64: true,
+            maxHeight: 2000,
+            maxWidth: 2000,
+        };
 
-    function closeModal(){
-        setModalVisible(false);
-    }
+        launchImageLibrary(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.errorMessage) {
+                console.log('Image picker error: ', response.errorMessage);
+            } else {
+                let image64: string = response.assets?.[0].base64 + "" || response.assets?.[0].base64 + "";
+                setSelectedImage(image64);
+                console.log(image64);
+            }
+        });
+    };
 
-    function handleRefresh(){
-        findFriends();
+    function volver() {
+        navigation.navigate("Personal");
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.mainConatiner}>
-                <Image
-                    style={styles.bigProfilePicture}
-                    source={require('../assets/imgs/profile.png')}
-                />
-
-                <Text style={styles.title}>{user.nombre}</Text>
-
-                <View style={styles.textBodyContainer}>
-                    <Text style={styles.textBody}>
-                       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima illo, nemo neque repellat perferendis cupiditate molestiae error fuga dolorum cum fugiat saepe iste deserunt esse minus non architecto exercitationem placeat.
-                    </Text>
-                </View>
-
-                <View style={styles.friendProfileList}>
-                    <FlatList 
-                        data={friends}
-                        renderItem={({item}) => (
-                            <TouchableHighlight onPress={() => navigation.navigate("Social")}>
-                                <Text style={styles.friendProfileItem}>
-                                    {item.nombre}
-                                </Text>
-                            </TouchableHighlight>
-                        )}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing = {refreshing}
-                                onRefresh={handleRefresh}
-                            />
-                        }
-                    />
-                </View>
-
-                <View style={{margin: 10}}>
-                    <TouchableHighlight style={styles.button} onPress={showModal}>
-                        <Text style={styles.textBody}>
-                            Añadir Amigo
-                        </Text>
-                    </TouchableHighlight>
-                </View>
-
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => setModalVisible(false)}
-                >
-                    <View style={styles.modalContainer}>
-                        <Text style={styles.subTitle}>Nombre Del Amigo Al Que Quieras Añadir</Text>
-                        <Input onChangeText={setNameFriend} placeholder='Name'/>
-
-                        <Button title="Añadir" onPress={() => {addFriend(nameFriend), closeModal()}} />
-                        <Button title="Cerrar" onPress={() => closeModal()} />
+        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={{ flex: 1 }}>
+            <View style={{flex: 1, alignItems: "center", justifyContent: 'center'}}>
+                <View style={{width: "85%", height: "85%", backgroundColor: "white", borderRadius: 25, borderWidth: 5, borderColor: "yellow", alignItems: 'center'}}>
+                    <View style={{height: 200, width: 200, marginTop: 40}}>
+                        <TouchableOpacity onPress={() => openImagePicker()} style={{}}>
+                            <Image source={require('../assets/imgs/profile.png')} style={{width: "100%", height: "100%", borderRadius: 100}} />
+                        </TouchableOpacity>
                     </View>
-                </Modal>
+                    <View style={{flex: 1, marginTop: 50}}>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10}}>Nombre: {user.name}</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10}}>Guild: {user.id_guild}</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10}}>Eggs: {user.eggs}</Text>
+                    </View>
+                    <View>
+                    <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={{marginBottom: 40}}>
+                            <TouchableOpacity onPress={volver} style={styles.button}>
+                                <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 22}}>Volver</Text>
+                            </TouchableOpacity>
+                        </LinearGradient>
+                    </View>
+                </View>
             </View>
-        </View>
+        </LinearGradient>
     )
 }
 
