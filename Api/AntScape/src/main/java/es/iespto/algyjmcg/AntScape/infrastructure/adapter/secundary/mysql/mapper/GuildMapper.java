@@ -3,8 +3,6 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mappe
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.mapping.Array;
-
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.GuildLevel;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.GuildEntity;

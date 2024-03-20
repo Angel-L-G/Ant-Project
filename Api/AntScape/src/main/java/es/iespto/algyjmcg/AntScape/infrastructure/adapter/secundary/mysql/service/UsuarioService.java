@@ -86,13 +86,15 @@ public class UsuarioService implements IUsuarioRepository{
 	@Override
 	public boolean update(Usuario in) {
 		boolean ok = false;
-		
+		System.out.println("---------------------");
 		if(in != null) {
 			Optional<UsuarioEntity> findByName = usuarioRepo.findById(in.getId());
 			
+			System.out.println("---------------------");
 			if(findByName.isPresent()) {
 				UsuarioEntity persistance = um.toPersistance(in);
 
+				System.out.println("---------------------");
 				findByName.get().setEmail(persistance.getEmail());
 				findByName.get().setPassword(persistance.getPassword());
 				findByName.get().setRol(persistance.getRol());
@@ -110,6 +112,8 @@ public class UsuarioService implements IUsuarioRepository{
 				for (Ant ant : in.getAnts()) {
 					findByName.get().getAnts().add(am.toPersistance(ant));
 				}
+				
+				usuarioRepo.save(findByName.get());
 				
 				ok = true;
 			}

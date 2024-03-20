@@ -8,15 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Ant;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IAntRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AntEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.AntJPARepository;
 
 @Service
 public class AntService implements IAntRepository {
 	@Autowired private AntJPARepository antRepo;
 	private AntMapper am = new AntMapper();
+	private UsuarioMapper um = new UsuarioMapper();
 
 	@Override
 	public Ant findById(Integer id) {
@@ -75,19 +79,30 @@ public class AntService implements IAntRepository {
 	@Override
 	public boolean update(Ant in) {
 		boolean ok = false;
-
+		
 		if (in != null) {
-			Optional<AntEntity> findByName = antRepo.findByName(in.getName());
+			Optional<AntEntity> find = antRepo.findById(in.getId());
 
-			if (findByName.isPresent()) {
+			
+			if (find.isPresent()) {
 				AntEntity persistance = am.toPersistance(in);
 				
-				findByName.get().setBiome(persistance.getBiome());
-				findByName.get().setName(persistance.getName());
-				findByName.get().setType(persistance.getType());
-				findByName.get().setDescription(persistance.getDescription());
-				findByName.get().setUsuarios(persistance.getUsuarios());
-				findByName.get().setNests(persistance.getNests());
+				find.get().setBiome(persistance.getBiome());
+				find.get().setName(persistance.getName());
+				find.get().setType(persistance.getType());
+				find.get().setDescription(persistance.getDescription());
+				find.get().setUsuarios(persistance.getUsuarios());
+				find.get().setNests(persistance.getNests());
+				
+				if(in.getUsuarios() != null) {
+					List<UsuarioEntity> list = new ArrayList<UsuarioEntity>();
+					for (Usuario domain : in.getUsuarios()) {
+						list.add(um.toPersistance(domain));
+					}
+					find.get().setUsuarios(list);
+				}
+				
+				antRepo.save(find.get());
 				
 				ok = true;
 			}

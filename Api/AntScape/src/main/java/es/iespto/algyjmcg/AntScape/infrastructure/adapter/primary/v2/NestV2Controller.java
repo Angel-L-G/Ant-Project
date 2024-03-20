@@ -1,6 +1,5 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
@@ -40,7 +41,7 @@ public class NestV2Controller {
 			Usuario findByName = userService.findByName(name);
 			
 			List<Nest> find = nestService.findAllById(findByName.getId());
-			if(find != null) {
+			/*if(find != null) {
 				List<NestOutput> list = new ArrayList<>();
 				
 				for (Nest n : find) {
@@ -57,7 +58,8 @@ public class NestV2Controller {
 				return ResponseEntity.ok(list);
 			}else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
-			}
+			}*/
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
@@ -78,7 +80,7 @@ public class NestV2Controller {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody String name, @RequestHeader HttpHeaders headers) {
+	public ResponseEntity<?> save(@RequestParam String name, @RequestHeader HttpHeaders headers) {
 		if(name != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);

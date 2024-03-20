@@ -134,6 +134,7 @@ INSERT INTO ant_user (id, id_user, id_ant) VALUES (2, 2, 2);
 
 INSERT INTO nests (id, id_ant, id_user, deleted) VALUES (1, 1, 1, false);
 INSERT INTO nests (id, id_ant, id_user, deleted) VALUES (2, 2, 2, false);
+INSERT INTO nests (id, id_ant, id_user, deleted) VALUES (3, 2, 2, false);
 
 INSERT INTO nest_levels (id, nest_id, name, production, cost, level, multiplier) VALUES (1, 1, 'Level1', 10.0, 50, 1, 1.5);
 INSERT INTO nest_levels (id, nest_id, name, production, cost, level, multiplier) VALUES (2, 1, 'Level2', 20.0, 100, 2, 2.0);
