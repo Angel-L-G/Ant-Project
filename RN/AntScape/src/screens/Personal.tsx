@@ -58,8 +58,8 @@ const Personal = ({navigation}: Props) => {
             id: 0,
             cost: lastLevel.cost * newMult,
             id_nest: nests[0].id,
-            name: "string",
-            level: lastLevel.id + 1,
+            name: "" + lastLevel.id + 1,
+            level: 1,
             multiplier: newMult,
             production: lastLevel.production * newMult
         }
@@ -69,7 +69,7 @@ const Personal = ({navigation}: Props) => {
                 const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, {headers: { "Authorization": "Bearer " + token }});
                 console.log(responseN.data);
 
-                const responseNi = await axios.get(ruta + "v2/nests/" + user.id, {headers: { "Authorization": "Bearer " + token }});
+                const responseNi = await axios.get(ruta + "v2/nests/own/" + user.id, {headers: { "Authorization": "Bearer " + token }});
                 console.log("hola" + responseNi.data);
 
                 setLevels(responseNi.data.nestLevels);
@@ -111,7 +111,7 @@ const Personal = ({navigation}: Props) => {
                                 <FlatList
                                     data={levels}
                                     renderItem={({ item }) =>
-                                        <Rama lastLevel={item} updateEggs={updateEggs}/>
+                                        <Rama lastLevel={lastLevel} updateEggs={updateEggs} actualLevel={item}/>
                                     }
                                     style={{}}
                                 />

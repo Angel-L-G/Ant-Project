@@ -26,7 +26,7 @@ public class NestLevelV2Controller {
 	@Autowired private INestLevelService mainService;
 	@Autowired private INestService secundaryService;
 	
-	@PutMapping(path="/levelup/{id}")
+	@PutMapping(path="/levelup/{level_id}")
 	public ResponseEntity<?> levelUp(@PathVariable Integer level_id) {
 		NestLevel findById = mainService.findById(level_id);
 		

@@ -18,6 +18,8 @@ const ProgressBar = ({duration, lastLevel, updateEggs}: Props) => {
     const [progress, setProgress] = useState(0);
 
     async function ganarDinero() {
+        console.log(lastLevel);
+        
         console.log(lastLevel.production);
 
         const responseGet = await axios.get(ruta + "v2/users/me", {headers: { "Authorization": "Bearer " +  token}});
