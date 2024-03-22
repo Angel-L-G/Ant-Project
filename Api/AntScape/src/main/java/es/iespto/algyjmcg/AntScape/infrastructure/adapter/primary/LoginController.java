@@ -1,6 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
 
 import java.lang.System.Logger;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Nest;
+import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.INestLevelService;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.AuthService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
@@ -24,14 +30,15 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
 @RequestMapping("/api/v1")
 public class LoginController {
 	Logger log;
-	@Autowired
-	private AuthService service;
-	//@Autowired private MailService mailService;
+	@Autowired private AuthService service;
 	@Autowired private IUsuarioService userService;
+	@Autowired private INestService nestService;
+	@Autowired private INestLevelService nestLevelService;
+	@Autowired private IAntService antService;
+	private static final int BASE_ANT_ID = 1;
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody UserInputRegisterDTO request) {
-		
 		UserDetailsLogin user = new UserDetailsLogin();
 		
 		user.setUsername(request.getNombre());
@@ -79,6 +86,29 @@ public class LoginController {
 				boolean verify = userService.verify(user.getId());
 				
 				if(verify) {
+					Nest baseNest = new Nest();
+					
+					baseNest.setAnt(antService.findById(BASE_ANT_ID));
+					baseNest.setUsuario(user);
+					baseNest.setDeleted(false);
+					
+					Nest save = nestService.save(baseNest);
+					
+					NestLevel nl = new NestLevel();
+					
+					nl.setCost(10);
+					nl.setLevel(1);
+					nl.setName(user.getName() + "-" + antService.findById(BASE_ANT_ID).getName() + "-0");
+					nl.setMultiplier(BigDecimal.valueOf(1.05));
+					nl.setProduction(2.0);
+					nl.setNest(save);
+					
+					nestLevelService.save(nl);
+					
+					if(save == null) {
+						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error ocurred while setting up your information, try again later");
+					}
+					
 					return ResponseEntity.ok("User verified Correctly");	
 				}else {
 					return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User/pass erróneo");
@@ -86,7 +116,7 @@ public class LoginController {
 				
 				
 			}else {
-				return (ResponseEntity<?>) ResponseEntity.unprocessableEntity();
+				return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Credentials doesn't match");
 			}
 		}else {
 			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Data Found");

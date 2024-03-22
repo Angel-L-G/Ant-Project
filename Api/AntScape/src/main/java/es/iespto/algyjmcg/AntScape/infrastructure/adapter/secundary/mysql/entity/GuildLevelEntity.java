@@ -40,7 +40,6 @@ public class GuildLevelEntity implements Serializable {
 	@Column(nullable=false, length=30)
 	private String name;
 
-	//bi-directional many-to-one association to Guild
 	@ManyToOne
 	@JoinColumn(name="id_guild", nullable=false)
 	private GuildEntity guild;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
@@ -33,15 +34,33 @@ public class NestV2Controller {
 	@Autowired private IAntService antService;
 	@Autowired private JwtService jwtService;
 	
-	@GetMapping(path = "/own/{id}")
-	public ResponseEntity<?> findByAllOwn(@PathVariable Integer id) {
-		if(id != null) {
-			List<Nest> find = nestService.findAllById(id);
-			if(find != null) {
-				return ResponseEntity.ok(find);
+	@GetMapping(path = "/own/{name}")
+	public ResponseEntity<?> findAllOwn(@PathVariable String name) {
+		if(name != null) {
+			//Arreglo temporal
+			Usuario findByName = userService.findByName(name);
+			
+			List<Nest> find = nestService.findAllById(findByName.getId());
+			/*if(find != null) {
+				List<NestOutput> list = new ArrayList<>();
+				
+				for (Nest n : find) {
+					NestOutput ne = new NestOutput();
+					
+					ne.setAntType(n.getAntType());
+					ne.setDeleted(n.getDeleted());
+					ne.setId(n.getId());
+					ne.setMap(n.getMap());
+					
+					list.add(ne);
+				}
+				
+				return ResponseEntity.ok(list);
+>>>>>>> hexagonal
 			}else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
-			}
+			}*/
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}

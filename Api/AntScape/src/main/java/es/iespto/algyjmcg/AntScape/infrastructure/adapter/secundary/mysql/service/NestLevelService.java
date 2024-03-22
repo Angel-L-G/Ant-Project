@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.INestLevelRepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestLevelEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestLevelMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
@@ -18,7 +19,8 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.reposi
 public class NestLevelService implements INestLevelRepository{
 	@Autowired private NestLevelJPARepository mainRepository;
 	private NestLevelMapper mainMapper = new NestLevelMapper();
-	private NestMapper secundaryMapper = new NestMapper();
+	
+	private NestMapper nestMapper = new NestMapper();
 
 	@Override
 	public NestLevel findById(Integer id) {
@@ -42,7 +44,9 @@ public class NestLevelService implements INestLevelRepository{
 		if(in != null) {
 			NestLevelEntity persistance = mainMapper.toPersistance(in);
 			
-			persistance.setNest(secundaryMapper.toPersistance(in.getNest()));
+			NestEntity nest = nestMapper.toPersistance(in.getNest());
+			
+			persistance.setNest(nest);
 			
 			NestLevelEntity save = mainRepository.save(persistance);
 			
@@ -90,6 +94,14 @@ public class NestLevelService implements INestLevelRepository{
 			
 			if(findByName.isPresent()) {
 				NestLevelEntity persistance = mainMapper.toPersistance(in);
+				
+				NestLevelEntity e = findByName.get();
+				
+				e.setCost(persistance.getCost());
+				e.setLevel(persistance.getLevel());
+				e.setMultiplier(persistance.getMultiplier());
+				e.setName(persistance.getName());
+				e.setProduction(persistance.getProduction());
 				
 				ok = true;
 			}

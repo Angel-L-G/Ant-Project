@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +29,8 @@ public class Usuario {
 	private List<Usuario> amigosDe;
 
 	public Usuario() {
+		nests = new ArrayList<Nest>();
+		ants = new ArrayList<Ant>();
 	}
 
 	public Integer getId() {
