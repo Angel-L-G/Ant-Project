@@ -29,7 +29,7 @@ public class GuildLevelEntity implements Serializable {
 	private Integer id;
 
 	@Column(nullable=false)
-	private Integer cost;
+	private Double cost;
 
 	@Column(length=255)
 	private String efect;
@@ -55,11 +55,11 @@ public class GuildLevelEntity implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getCost() {
+	public Double getCost() {
 		return this.cost;
 	}
 
-	public void setCost(Integer cost) {
+	public void setCost(Double cost) {
 		this.cost = cost;
 	}
 

@@ -48,7 +48,7 @@ CREATE TABLE `guild_levels` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id_guild` INT NOT NULL,
   `name` varchar(30) NOT NULL,
-  `cost` INT NOT NULL,
+  `cost` DOUBLE NOT NULL,
   `level` INT NOT NULL,
   `efect` varchar(255),
   CONSTRAINT pk_guild_levels PRIMARY KEY(id),
