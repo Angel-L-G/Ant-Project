@@ -53,9 +53,9 @@ const Profile = ({navigation}: Props) => {
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 1, marginTop: 50}}>
-                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10}}>Nombre: {user.name}</Text>
-                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10}}>Guild: {user.id_guild}</Text>
-                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10}}>Eggs: {user.eggs}</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Nombre: {user.name}</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {user.id_guild}</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Eggs: {user.eggs}</Text>
                     </View>
                     <View>
                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
