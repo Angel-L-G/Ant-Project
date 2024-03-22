@@ -41,25 +41,11 @@ public class NestV2Controller {
 			Usuario findByName = userService.findByName(name);
 			
 			List<Nest> find = nestService.findAllById(findByName.getId());
-			/*if(find != null) {
-				List<NestOutput> list = new ArrayList<>();
-				
-				for (Nest n : find) {
-					NestOutput ne = new NestOutput();
-					
-					ne.setAntType(n.getAntType());
-					ne.setDeleted(n.getDeleted());
-					ne.setId(n.getId());
-					ne.setMap(n.getMap());
-					
-					list.add(ne);
-				}
-				
-				return ResponseEntity.ok(list);
+			if(find != null) {
+				return ResponseEntity.ok(find);
 			}else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
-			}*/
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+			}
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}

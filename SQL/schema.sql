@@ -108,7 +108,7 @@ CREATE TABLE `nest_levels` (
   `nest_id` INT NOT NULL,
   `name` varchar(30),
   `production` DOUBLE NOT NULL,
-  `cost` INT NOT NULL,
+  `cost` DOUBLE NOT NULL,
   `level` INT NOT NULL,
   `multiplier` DECIMAL(10, 2) NOT NULL,
   CONSTRAINT pk_nest_levels PRIMARY KEY(id),
