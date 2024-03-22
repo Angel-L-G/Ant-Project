@@ -26,15 +26,17 @@ public class NestLevelV2Controller {
 	@Autowired private INestLevelService mainService;
 	@Autowired private INestService secundaryService;
 	
-	@PutMapping(path="/levelup/{level_id}")
-	public ResponseEntity<?> levelUp(@PathVariable Integer level_id) {
-		NestLevel findById = mainService.findById(level_id);
+	@PutMapping(path="/levelup/{id}")
+	public ResponseEntity<?> levelUp(@PathVariable Integer id) {
+		NestLevel findById = mainService.findById(id);
 		
 		findById.setLevel(findById.getLevel()+1);
 		
 		BigDecimal res = findById.getMultiplier().multiply(BigDecimal.valueOf(findById.getProduction()));
-		
+
 		findById.setProduction(res.doubleValue());
+
+		findById.setCost(findById.getCost()*findById.getMultiplier().doubleValue());
 		
 		boolean update = mainService.update(findById);
 		
@@ -91,7 +93,7 @@ public class NestLevelV2Controller {
 
 class NestLevelSaveInputDTO {
 	private Integer id;
-	private Integer cost;
+	private Double cost;
 	private Integer level;
 	private BigDecimal multiplier;
 	private String name;
@@ -108,10 +110,10 @@ class NestLevelSaveInputDTO {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getCost() {
+	public Double getCost() {
 		return cost;
 	}
-	public void setCost(Integer cost) {
+	public void setCost(Double cost) {
 		this.cost = cost;
 	}
 	public Integer getLevel() {

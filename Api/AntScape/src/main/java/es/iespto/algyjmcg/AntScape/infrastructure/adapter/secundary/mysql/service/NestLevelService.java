@@ -103,6 +103,8 @@ public class NestLevelService implements INestLevelRepository{
 				e.setName(persistance.getName());
 				e.setProduction(persistance.getProduction());
 				
+				mainRepository.save(e);
+				
 				ok = true;
 			}
 		}

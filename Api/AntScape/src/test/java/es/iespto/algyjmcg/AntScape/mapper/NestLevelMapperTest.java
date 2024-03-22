@@ -17,7 +17,7 @@ class NestLevelMapperTest {
 	void toDomain() {
 		NestLevelEntity in = new NestLevelEntity();
 		in.setId(0);
-		in.setCost(1);
+		in.setCost(1.0);
 		in.setLevel(2);
 		in.setMultiplier(BigDecimal.valueOf(3.33));
 		in.setName("Name");
@@ -38,7 +38,7 @@ class NestLevelMapperTest {
 	void toPersistence() {
 		NestLevel in = new NestLevel();
 		in.setId(0);
-		in.setCost(1);
+		in.setCost(1.0);
 		in.setLevel(2);
 		in.setMultiplier(BigDecimal.valueOf(3.33));
 		in.setName("Name");

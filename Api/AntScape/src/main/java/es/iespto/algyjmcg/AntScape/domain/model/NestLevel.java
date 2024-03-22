@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class NestLevel {
 	private Integer id;
-	private Integer cost;
+	private Double cost;
 	private Integer level;
 	private BigDecimal multiplier;
 	private String name;
@@ -22,11 +22,11 @@ public class NestLevel {
 		this.id = id;
 	}
 
-	public Integer getCost() {
+	public Double getCost() {
 		return this.cost;
 	}
 
-	public void setCost(Integer cost) {
+	public void setCost(Double cost) {
 		this.cost = cost;
 	}
 

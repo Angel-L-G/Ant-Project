@@ -24,7 +24,7 @@ class NestMapperTest {
 		
 		NestLevelEntity innerClass = new NestLevelEntity();
 		innerClass.setId(0);
-		innerClass.setCost(1);
+		innerClass.setCost(1.0);
 		innerClass.setLevel(2);
 		innerClass.setMultiplier(BigDecimal.valueOf(3.33));
 		innerClass.setName("Name");
@@ -49,7 +49,7 @@ class NestMapperTest {
 		
 		NestLevel innerClass = new NestLevel();
 		innerClass.setId(0);
-		innerClass.setCost(1);
+		innerClass.setCost(1.0);
 		innerClass.setLevel(2);
 		innerClass.setMultiplier(BigDecimal.valueOf(3.33));
 		innerClass.setName("Name");
