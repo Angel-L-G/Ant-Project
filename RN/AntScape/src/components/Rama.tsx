@@ -1,10 +1,11 @@
 import { Alert, ImageBackground, Modal, Pressable, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ProgressBar from './ProgressBar'
 import { NestLevel } from './types'
 import LinearGradient from 'react-native-linear-gradient'
 import axios from 'axios'
 import Globals from './Globals'
+import { AppContext } from './AppContextProvider'
 
 type Props = {
 	lastLevel: NestLevel,
@@ -13,6 +14,7 @@ type Props = {
 }
 
 const Rama = ({lastLevel, updateEggs, actualLevel}: Props) => {
+	const {token} = useContext(AppContext);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [actualLvl, setActualLvl] = useState<NestLevel>();
 	const {ruta} = Globals();
@@ -21,10 +23,20 @@ const Rama = ({lastLevel, updateEggs, actualLevel}: Props) => {
 		console.log("Hola mejorar");
 		
 		try {
-			const response = await axios.put(ruta + "v2/nestlevels/levelup/" + actualLevel.id)
+			console.log(actualLevel);
+			console.log(token);
+
+			console.log(ruta + "v2/nestlevels/levelup/" + actualLevel.id);
+			
+			
+			
+			const response = await axios.put(ruta + "v2/nestlevels/levelup/" + actualLevel.id, {headers: { "Authorization": "Bearer " + token }})
 			console.log(response.data);
 
-			const responseGet = await axios.get(ruta + "v2/nestlevels/" + actualLevel.id);
+			console.log("Que pasa");
+			
+
+			const responseGet = await axios.get(ruta + "v2/nestlevels/" + actualLevel.id, {headers: { "Authorization": "Bearer " + token }});
 			setActualLvl(responseGet.data);
 		} catch (error) {
 			console.log(error);

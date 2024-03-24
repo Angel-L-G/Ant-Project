@@ -27,7 +27,7 @@ const Personal = ({navigation}: Props) => {
         setEggs(user.eggs);
 
         async function getOwnNests() {
-            const response = await axios.get(ruta + "v2/nests/own/" + user.id, {headers: { "Authorization": "Bearer " + token }});
+            const response = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
             console.log(response.data[0]);
 
             setLevels(response.data[0].nestLevels);
@@ -69,7 +69,7 @@ const Personal = ({navigation}: Props) => {
                 const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, {headers: { "Authorization": "Bearer " + token }});
                 console.log(responseN.data);
 
-                const responseNi = await axios.get(ruta + "v2/nests/own/" + user.id, {headers: { "Authorization": "Bearer " + token }});
+                const responseNi = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
                 console.log("hola" + responseNi.data);
 
                 setLevels(responseNi.data.nestLevels);
