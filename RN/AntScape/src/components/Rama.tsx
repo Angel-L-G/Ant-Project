@@ -10,34 +10,25 @@ import { AppContext } from './AppContextProvider'
 type Props = {
 	lastLevel: NestLevel,
 	updateEggs: Function,
+	updateLevels: Function,
 	actualLevel: NestLevel
 }
 
-const Rama = ({lastLevel, updateEggs, actualLevel}: Props) => {
-	const {token} = useContext(AppContext);
+const Rama = ({lastLevel, updateEggs, updateLevels, actualLevel}: Props) => {
+	const {token, user} = useContext(AppContext);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [actualLvl, setActualLvl] = useState<NestLevel>();
 	const {ruta} = Globals();
 
 	async function mejorar() {
-		console.log("Hola mejorar");
-		
 		try {
-			console.log(actualLevel);
-			console.log(token);
-
-			console.log(ruta + "v2/nestlevels/levelup/" + actualLevel.id);
-			
-			
-			
-			const response = await axios.put(ruta + "v2/nestlevels/levelup/" + actualLevel.id, {headers: { "Authorization": "Bearer " + token }})
-			console.log(response.data);
-
-			console.log("Que pasa");
-			
+			const response = await axios.put(ruta + "v2/nestlevels/levelup/" + actualLevel.id, null, {headers: { "Authorization": "Bearer " + token }});
 
 			const responseGet = await axios.get(ruta + "v2/nestlevels/" + actualLevel.id, {headers: { "Authorization": "Bearer " + token }});
 			setActualLvl(responseGet.data);
+
+            const responseGetLevels = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
+			updateLevels(responseGetLevels.data[0].nestLevels);
 		} catch (error) {
 			console.log(error);
 		}

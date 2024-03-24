@@ -67,7 +67,6 @@ public class NestLevelV2Controller {
 			NestLevel nestlvl = new NestLevel();
 			
 			nestlvl.setCost(in.getCost());
-			nestlvl.setId(in.getId());
 			nestlvl.setLevel(in.getLevel());
 			nestlvl.setMultiplier(in.getMultiplier());
 			nestlvl.setName(in.getName());

@@ -1,5 +1,5 @@
 import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native';
 import { ImageBackground } from 'react-native';
 import Rama from '../components/Rama';
@@ -18,22 +18,18 @@ const Personal = ({navigation}: Props) => {
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
+    const eg = useRef(0);
     const [nests, setNests] = useState<Array<Nest>>([]);
 
     useEffect(() => {
-        console.log(user);
-        console.log(eggs);
-
         setEggs(user.eggs);
+        eg.current = user.eggs;
 
         async function getOwnNests() {
             const response = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
-            console.log(response.data[0]);
 
             setLevels(response.data[0].nestLevels);
-            setLastLevel(response.data[0].nestLevels[response.data[0].nestLevels?.length - 1]);
-            console.log(levels[levels?.length - 1]);
-            
+            setLastLevel(response.data[0].nestLevels[response.data[0].nestLevels?.length - 1]);            
 
             setNests(response.data);
         }
@@ -42,10 +38,13 @@ const Personal = ({navigation}: Props) => {
     }, [])
 
     async function nuevaRama() {
-        const coste = lastLevel?.multiplier * lastLevel?.cost + lastLevel.id * 100;
-        const eggs = user.eggs;
+        console.log(lastLevel);
 
-        const dineroRestante = Math.round(eggs - coste);
+        const coste = lastLevel?.multiplier * lastLevel?.cost + lastLevel.id * 100;
+        const cantidadEggs = eggs;
+        const cantidadEg = eg.current;
+
+        const dineroRestante = Math.round(cantidadEg - coste);
 
         const body = {
             eggs: dineroRestante,
@@ -55,39 +54,49 @@ const Personal = ({navigation}: Props) => {
         const newMult = lastLevel.multiplier + 0.05;
 
         const nestlevel: NestLevel = {
-            id: 0,
+            id: Number(lastLevel.id) + 1,
             cost: lastLevel.cost * newMult,
             id_nest: nests[0].id,
-            name: "" + lastLevel.id + 1,
+            name: "" + Number(lastLevel.id) + 1,
             level: 1,
             multiplier: newMult,
             production: lastLevel.production * newMult
         }
 
-        if (eggs > coste) {
+        if (eg.current > coste) {
             try {
                 const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, {headers: { "Authorization": "Bearer " + token }});
                 console.log(responseN.data);
 
                 const responseNi = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
-                console.log("hola" + responseNi.data);
 
-                setLevels(responseNi.data.nestLevels);
-                setLastLevel(responseNi.data.nestLevels[responseNi.data.nestLevels?.length - 1]);
-
+                setLevels(responseNi.data[0].nestLevels);
+                setLastLevel(responseNi.data[0].nestLevels[responseNi.data[0].nestLevels?.length - 1]);
+            
                 const response = await axios.put(ruta + "v2/users/updatemoney", body, {headers: { "Authorization": "Bearer " + token }});
-                console.log(response.data);
             } catch (error) {
                 console.log(error);
             }
         } else {
-
+            console.log("No tienes huevos");
+            console.log(eg.current);
+            
         }
     }
 
+    function updateLevels(ramas: Array<NestLevel>) {
+        setLevels(ramas);
+    }
+
+    useEffect(() => {
+        console.log("Han cambiado los huevos");
+        console.log(eg.current);
+    }, [eg.current])
+    
+
     function updateEggs(egg: number) {
         setEggs(egg);
-        console.log(eggs);
+        eg.current = egg;
     }
 
     function goToProfile() {
@@ -111,7 +120,7 @@ const Personal = ({navigation}: Props) => {
                                 <FlatList
                                     data={levels}
                                     renderItem={({ item }) =>
-                                        <Rama lastLevel={lastLevel} updateEggs={updateEggs} actualLevel={item}/>
+                                        <Rama lastLevel={lastLevel} updateEggs={updateEggs} updateLevels={updateLevels} actualLevel={item}/>
                                     }
                                     style={{}}
                                 />
@@ -121,7 +130,7 @@ const Personal = ({navigation}: Props) => {
                                     <View>
                                         <Text style={{ color: "yellow", fontSize: 20 }}>Nueva Rama</Text>
                                         <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
-                                            <Text style={{ color: "yellow", fontSize: 20 }}>{lastLevel?.multiplier * lastLevel?.cost + lastLevel.id * 100}</Text>
+                                            <Text style={{ color: "yellow", fontSize: 20 }}>{lastLevel?.multiplier * lastLevel?.cost + lastLevel?.id * 100}</Text>
                                             <Image source={require('../assets/imgs/FireAntEgg.webp')} style={{ width: 20, height: 30 }} />
                                         </View>
                                     </View>
@@ -137,7 +146,7 @@ const Personal = ({navigation}: Props) => {
                     </TouchableOpacity>
                     <Image source={require('../assets/imgs/tablon.png')} style={{ width: "16%", height: "60%", borderRadius: 100 }} />
                     <View style={{ position: 'absolute', marginLeft: 101, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "16%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>{eggs}</Text>
+                        <Text style={{ color: "black", fontWeight: "bold" }}>{eg.current}</Text>
                         <Image source={require('../assets/imgs/FireAntEgg.webp')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
                     </View>
                     <Image source={require('../assets/imgs/tablon.png')} style={{ width: "16%", height: "60%", borderRadius: 100 }} />
