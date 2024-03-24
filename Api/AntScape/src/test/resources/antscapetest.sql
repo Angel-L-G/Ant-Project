@@ -112,6 +112,7 @@ CREATE TABLE bosses (
 
 INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (1, 'Guild1', 10, 5, 1, 4);
 INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 15, 7, 2, 5);
+INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (3, 'Guild2', 15, 7, 2, 5);
 
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1);
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2);

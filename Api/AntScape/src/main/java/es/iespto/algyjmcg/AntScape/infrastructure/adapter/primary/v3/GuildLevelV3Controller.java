@@ -1,6 +1,4 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
-
-import java.math.BigDecimal;
+package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v3;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,16 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.iespto.algyjmcg.AntScape.domain.model.Boss;
-import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.GuildLevel;
-import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildLevelService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/guildlevels")
-public class GuildLevelV1Controller {
+@RequestMapping("/api/v3/guildlevels")
+public class GuildLevelV3Controller {
 	@Autowired private IGuildLevelService mainService;
 	
 	@GetMapping
