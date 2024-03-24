@@ -11,12 +11,14 @@ import es.iespto.algyjmcg.AntScape.domain.model.GuildLevel;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IGuildLevelRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.GuildLevelEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildLevelMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.GuildLevelJPARepository;
 
 @Service
 public class GuildLevelService implements IGuildLevelRepository{
 	@Autowired private GuildLevelJPARepository repository;
 	private GuildLevelMapper glm = new GuildLevelMapper();
+	private GuildMapper gm = new GuildMapper();
 
 	@Override
 	public GuildLevel findById(Integer id) {
@@ -38,7 +40,10 @@ public class GuildLevelService implements IGuildLevelRepository{
 		GuildLevel out = null;
 		
 		if(in != null) {
-			GuildLevelEntity save = repository.save(glm.toPersistance(in));
+			GuildLevelEntity entity = glm.toPersistance(in);
+			entity.setGuild(gm.toPersistance(in.getGuild()));
+			
+			GuildLevelEntity save = repository.save(entity);
 			
 			if(save != null) {
 				out = glm.toDomain(save);
