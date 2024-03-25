@@ -32,6 +32,7 @@ public class GuildLevelV2Controller {
 
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<?> findById(@PathVariable Integer id) {
+		
 		if(id != null) {
 			GuildLevel find = mainService.findById(id);
 			if(find != null) {
@@ -46,20 +47,33 @@ public class GuildLevelV2Controller {
 	
 	@PutMapping(path="/levelup/{id}")
 	public ResponseEntity<?> levelUp(@PathVariable Integer id) {
-		GuildLevel findById = mainService.findById(id);
-		
-		findById.setLevel(findById.getLevel()+1);
-
-		findById.setCost(findById.getCost()*1.7);
-		
-		//Something with the efect string
-		
-		boolean update = mainService.update(findById);
-		
-		if(update) {
-			return ResponseEntity.ok("Leveled Up Correctly");
+		if(id != null) {
+			GuildLevel findById = mainService.findById(id);
+			if(findById != null) {
+				findById.setLevel(findById.getLevel()+1);
+				
+				findById.setCost(findById.getCost()*1.7);
+				
+				//Something with the efect string
+				
+				boolean update = mainService.update(findById);
+				
+				if(update) {
+					return ResponseEntity.ok("Leveled Up Correctly");
+				}else {
+					return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong leveling up"); 
+				}
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
 		}else {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong leveling up the nest"); 
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
+		
+		
+		
+		
+		
+		
 	}
 }

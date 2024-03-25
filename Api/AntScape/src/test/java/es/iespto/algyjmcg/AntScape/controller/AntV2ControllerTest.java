@@ -19,7 +19,7 @@ import es.iespto.algyjmcg.AntScape.helpers.AuthenticationUtils;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AntV2ControllerTest {
-	AuthenticationUtils loginService = new AuthenticationUtils();
+	private AuthenticationUtils loginService = new AuthenticationUtils();
     @Autowired
     private MockMvc mockMvc;
     @MockBean
