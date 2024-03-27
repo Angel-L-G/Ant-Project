@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS antscape;
 CREATE DATABASE antscape;
 USE antscape;
 
-SET GLOBAL time_zone = '-3:00';
+SET GLOBAL time_zone = '+01:00';
 
 DROP TABLE IF EXISTS `usuarios`;
 DROP TABLE IF EXISTS `ants`;
@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS `ants`;
 DROP TABLE IF EXISTS `ants_user`;
 DROP TABLE IF EXISTS `blocked_users`;
 DROP TABLE IF EXISTS `bosses`;
+DROP TABLE IF EXISTS `user_timestamps`;
 
 CREATE TABLE `guild` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -44,6 +45,16 @@ CREATE TABLE `usuarios` (
   constraint uk_name UNIQUE KEY(name)
 );
 
+CREATE TABLE `administrative_info` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `usuario_id` INT,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  `informacion` TEXT,
+  `last_login` TIMESTAMP,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE `guild_levels` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id_guild` INT NOT NULL,
@@ -68,7 +79,7 @@ CREATE TABLE `friends` (
 CREATE TABLE `blocked_users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id_user` INT,
-  `id_friend` INT,
+  `id_blocked` INT,
   CONSTRAINT pk_blocked_users PRIMARY KEY(id),
   CONSTRAINT fk_user_bloqued FOREIGN KEY (id_user) REFERENCES usuarios(id),
   CONSTRAINT fk_blocked FOREIGN KEY (id_friend) REFERENCES usuarios(id)
