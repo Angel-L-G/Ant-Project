@@ -1,13 +1,62 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: #F3F3F3;
+	height: 100vh;
+}
+
+.accordion-header {
+    background-color: blue !important;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
+}
+
+.login {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	height: 100vh;
+	justify-content: center;
+	align-items: center;
+}
+
+.formTitle {
+	display: flex;
+	justify-content: center;
+	margin-top: 50px;
+}
+
+.loginForm {
+	max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.div {
+	width: 100%;
+    display: flex;
+    justify-content: space-around;
+	align-items: center;
+    margin: 30px;
+}
+
+.loginContent {
+	flex-direction: column;
+	height: 100%;
+	margin-top: 100px
+}
+
+.registerContent {
+	flex-direction: column;
+	height: 100%;
+	margin-top: 70px
 }
