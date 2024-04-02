@@ -16,26 +16,31 @@ type Props = {
 	eg: number
 }
 
-const Rama = ({lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, eg}: Props) => {
-	const {token, user} = useContext(AppContext);
+const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, eg }: Props) => {
+	const { token, user } = useContext(AppContext);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [actualLvl, setActualLvl] = useState<NestLevel>(actualLevel);
-	const {ruta} = Globals();
+	const { ruta } = Globals();
+	const [internalState, setInternalState] = useState<NestLevel>(actualLvl);
+
+	useEffect(() => {
+		setInternalState(actualLvl);
+	}, [actualLvl]);
 
 	async function mejorar() {
 		try {
 			const levelToUpgrade = actualLvl || actualLevel;
 			if (eg >= levelToUpgrade.cost) {
-				const response = await axios.put(ruta + "v2/nestlevels/levelup/" + levelToUpgrade.id, null, {headers: { "Authorization": "Bearer " + token }});
-	
-				const responseGet = await axios.get(ruta + "v2/nestlevels/" + levelToUpgrade.id, {headers: { "Authorization": "Bearer " + token }});
+				const response = await axios.put(ruta + "v2/nestlevels/levelup/" + levelToUpgrade.id, null, { headers: { "Authorization": "Bearer " + token } });
+
+				const responseGet = await axios.get(ruta + "v2/nestlevels/" + levelToUpgrade.id, { headers: { "Authorization": "Bearer " + token } });
 				setActualLvl(responseGet.data);
-				console.log(actualLvl);
-				
-	
-				const responseGetLevels = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
+				console.log("Upgrade: " + actualLvl.production);
+
+
+				const responseGetLevels = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
 				updateLevels(responseGetLevels.data[0].nestLevels);
-	
+
 				ganarDinero(-levelToUpgrade.cost);
 			}
 		} catch (error) {
@@ -53,7 +58,7 @@ const Rama = ({lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, eg
 			</View>
 			<ImageBackground source={require('../assets/imgs/Rama.jpg')} style={{ margin: 10, height: 80, width: 270 }}>
 				<View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', marginBottom: 10 }}>
-					<ProgressBar duration={1000 * actualLvl.multiplier} lastLevel={actualLvl} updateEggs={updateEggs} ganarDinero={ganarDinero}/>
+					<ProgressBar duration={1000 * actualLvl.multiplier} lastLevel={internalState} updateEggs={updateEggs} ganarDinero={ganarDinero} />
 				</View>
 			</ImageBackground>
 
@@ -67,47 +72,47 @@ const Rama = ({lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, eg
 				}}>
 				<View style={styles.centeredView}>
 					<View style={styles.modalView}>
-						<Text style={{textAlign: 'center', fontFamily: "MadimiOneRegular", fontSize: 30, color: "yellow", marginBottom: 20}}>
+						<Text style={{ textAlign: 'center', fontFamily: "MadimiOneRegular", fontSize: 30, color: "yellow", marginBottom: 20 }}>
 							Datos Rama {actualLvl.name}
 						</Text>
-						<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+						<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 							<LinearGradient colors={['rgba(0, 136, 185, 1)', 'rgba(0, 100, 100, 1)', 'rgba(0, 136, 185, 1)']}
-							start={{ x: 0.5, y: 0 }}
-							end={{ x: 0.5, y: 1 }}
-							style={{ marginBottom: 20, width: 109 }}>
-								<Text style={{fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center'}}>
+								start={{ x: 0.5, y: 0 }}
+								end={{ x: 0.5, y: 1 }}
+								style={{ marginBottom: 20, width: 109 }}>
+								<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>
 									Nivel: {actualLvl.level}
 								</Text>
 							</LinearGradient>
 							<LinearGradient colors={['rgba(0, 136, 185, 1)', 'rgba(0, 100, 100, 1)', 'rgba(0, 136, 185, 1)']}
-							start={{ x: 0.5, y: 0 }}
-							end={{ x: 0.5, y: 1 }}
-							style={{ marginBottom: 20, width: 109 }}>
-								<Text style={{fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center'}}>
+								start={{ x: 0.5, y: 0 }}
+								end={{ x: 0.5, y: 1 }}
+								style={{ marginBottom: 20, width: 109 }}>
+								<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>
 									Nivel: {actualLvl.level + 1}
 								</Text>
 							</LinearGradient>
 						</View>
-						<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+						<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 							<LinearGradient colors={['rgba(0, 136, 185, 1)', 'rgba(0, 100, 100, 1)', 'rgba(0, 136, 185, 1)']}
-							start={{ x: 0.5, y: 0 }}
-							end={{ x: 0.5, y: 1 }}
-							style={{ marginBottom: 20, width: 109 }}>
-								<Text style={{fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center'}}>
+								start={{ x: 0.5, y: 0 }}
+								end={{ x: 0.5, y: 1 }}
+								style={{ marginBottom: 20, width: 109 }}>
+								<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>
 									Produc.: {actualLvl.production}
 								</Text>
 							</LinearGradient>
 							<LinearGradient colors={['rgba(0, 136, 185, 1)', 'rgba(0, 100, 100, 1)', 'rgba(0, 136, 185, 1)']}
-							start={{ x: 0.5, y: 0 }}
-							end={{ x: 0.5, y: 1 }}
-							style={{ marginBottom: 20, width: 109 }}>
-								<Text style={{fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center'}}>
+								start={{ x: 0.5, y: 0 }}
+								end={{ x: 0.5, y: 1 }}
+								style={{ marginBottom: 20, width: 109 }}>
+								<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>
 									Produc.: {(actualLvl.production * actualLvl.multiplier).toFixed(2)}
 								</Text>
 							</LinearGradient>
 						</View>
 						<View style={{}}>
-							<View style={{alignItems: 'center'}}>
+							<View style={{ alignItems: 'center' }}>
 								<Pressable
 									style={[styles.button, styles.buttonClose]}
 									onPress={() => setModalVisible(!modalVisible)}>
@@ -115,7 +120,7 @@ const Rama = ({lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, eg
 								</Pressable>
 							</View>
 
-							<View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+							<View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
 								<View style={{ justifyContent: 'center', alignItems: 'center', width: 80, height: 60, backgroundColor: "rgb(28, 64, 169)", marginTop: 30, borderRadius: 20, borderWidth: 2, borderColor: "yellow" }}>
 									<Text style={{ color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18, textAlign: 'center' }}>Coste: {actualLvl.cost}</Text>
 								</View>

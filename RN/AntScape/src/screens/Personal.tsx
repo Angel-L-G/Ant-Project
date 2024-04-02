@@ -62,7 +62,7 @@ const Personal = ({ navigation }: Props) => {
     async function nuevaRama() {
         console.log(lastLevel);
 
-        const coste = lastLevel?.multiplier * lastLevel?.cost + lastLevel.id * 100;
+        const coste = lastLevel?.multiplier * levels.length * 100;
         const cantidadEggs = eggs;
         const cantidadEg = eg.current;
 
@@ -77,7 +77,7 @@ const Personal = ({ navigation }: Props) => {
 
         const nestlevel: NestLevel = {
             id: Number(lastLevel.id) + 1,
-            cost: lastLevel.cost * newMult,
+            cost: lastLevel.cost * newMult * lastLevel.level,
             id_nest: nests[0].id,
             name: "" + Number(lastLevel.id) + 1,
             level: 1,
@@ -130,6 +130,8 @@ const Personal = ({ navigation }: Props) => {
     }, []);
 
     async function ganarDinero(produccion: number) {
+        console.log("Ganar dinero: " + produccion);
+        
         let eggs1 = eg.current;
 
         if (lastLevel) {
