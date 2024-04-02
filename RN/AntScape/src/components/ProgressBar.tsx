@@ -32,7 +32,7 @@ const ProgressBar = ({duration, lastLevel, updateEggs, ganarDinero}: Props) => {
                     animationFrameId = requestAnimationFrame(updateProgress);
                     console.log("Progress: " + lastLevel.production);
                     ganarDinero(lastLevel.production);
-                }, 500);
+                }, 400);
             } else {
                 setProgress(newProgress);
                 animationFrameId = requestAnimationFrame(updateProgress);

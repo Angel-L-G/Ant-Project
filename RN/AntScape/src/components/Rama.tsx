@@ -99,7 +99,7 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 								end={{ x: 0.5, y: 1 }}
 								style={{ marginBottom: 20, width: 109 }}>
 								<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>
-									Produc.: {actualLvl.production}
+									Produc.: {actualLvl.production.toFixed(2)}
 								</Text>
 							</LinearGradient>
 							<LinearGradient colors={['rgba(0, 136, 185, 1)', 'rgba(0, 100, 100, 1)', 'rgba(0, 136, 185, 1)']}

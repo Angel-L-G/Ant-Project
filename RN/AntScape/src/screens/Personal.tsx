@@ -62,7 +62,7 @@ const Personal = ({ navigation }: Props) => {
     async function nuevaRama() {
         console.log(lastLevel);
 
-        const coste = lastLevel?.multiplier * levels.length * 100;
+        const coste = Math.round(lastLevel?.multiplier * levels.length * 100);
         const cantidadEggs = eggs;
         const cantidadEg = eg.current;
 
@@ -73,16 +73,16 @@ const Personal = ({ navigation }: Props) => {
             goldenEggs: user.goldenEggs
         }
 
-        const newMult = lastLevel.multiplier + 0.05;
+        const newMult = lastLevel.multiplier + 0.2;
 
         const nestlevel: NestLevel = {
             id: Number(lastLevel.id) + 1,
-            cost: lastLevel.cost * newMult * lastLevel.level,
+            cost: 10 * newMult ,
             id_nest: nests[0].id,
             name: "" + Number(lastLevel.id) + 1,
             level: 1,
             multiplier: newMult,
-            production: lastLevel.production * newMult
+            production: 2 * newMult
         }
 
         if (eg.current > coste) {
@@ -177,12 +177,12 @@ const Personal = ({ navigation }: Props) => {
                                     style={{}}
                                 />
                             </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 30 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 30, marginBottom: 30 }}>
                                 <TouchableHighlight onPress={() => nuevaRama()} style={{ justifyContent: "center", alignItems: 'center', backgroundColor: "rgb(28, 64, 169)", height: 80, width: 140, borderRadius: 30, borderWidth: 2, borderColor: "yellow" }}>
                                     <View>
                                         <Text style={{ color: "yellow", fontSize: 20 }}>Nueva Rama</Text>
                                         <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
-                                            <Text style={{ color: "yellow", fontSize: 20 }}>{lastLevel?.multiplier * lastLevel?.cost + lastLevel?.id * 100}</Text>
+                                            <Text style={{ color: "yellow", fontSize: 20 }}>{abreviarNumero(Math.round(lastLevel?.multiplier ** levels.length * 100))}</Text>
                                             <Image source={require('../assets/imgs/FireAntEgg.webp')} style={{ width: 20, height: 30 }} />
                                         </View>
                                     </View>
