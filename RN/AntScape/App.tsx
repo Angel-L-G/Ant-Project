@@ -29,17 +29,15 @@ import {
 import Login from './src/screens/Login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Register from './src/screens/Register';
 import Main from './src/screens/Main';
-import AntNest from './src/components/AntNest';
 import Social from './src/screens/Social';
 import Settings from './src/screens/Settings';
 import Outside from './src/screens/Outside';
 import NewHormiguero from './src/screens/NewHormiguero';
 import Profile from './src/screens/Profile';
 import Game from './src/screens/Game';
-import AppContextProvider from './src/components/AppContextProvider';
+import AppContextProvider from './src/context/AppContextProvider';
 import Personal from './src/screens/Personal';
 
 type SectionProps = PropsWithChildren<{

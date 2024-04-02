@@ -2,7 +2,7 @@ import { View, Text, ToastAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Friend } from '../components/types';
-import { useAppContext } from '../components/AppContextProvider';
+import { useAppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 
 const UseUser = () => {

@@ -4,7 +4,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import EncryptedStorage from 'react-native-encrypted-storage'
 import { ContextUser, User, UserLogin, UserRegister } from '../components/types'
-import AppContextProvider, { AppContext } from '../components/AppContextProvider';
+import AppContextProvider, { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals'
 
 type Props = {

@@ -2,7 +2,7 @@ import { View, Text, Image, FlatList, TouchableHighlight, Modal, RefreshControl,
 import React, { useContext, useEffect, useState } from 'react'
 import styles from '../themes/styles'
 import UseUser from '../hooks/UseUser'
-import { AppContext, useAppContext } from '../components/AppContextProvider'
+import { AppContext, useAppContext } from '../context/AppContextProvider'
 import { Button, Input } from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient'
 import { launchImageLibrary } from 'react-native-image-picker';

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import Globals from '../components/Globals';
 import { NestLevel } from '../components/types';
-import { AppContext } from '../components/AppContextProvider';
+import { AppContext } from '../context/AppContextProvider';
 
 type Props = {
     lastLevel?: NestLevel

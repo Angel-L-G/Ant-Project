@@ -4,7 +4,7 @@ import { Image } from 'react-native';
 import { ImageBackground } from 'react-native';
 import Rama from '../components/Rama';
 import axios from 'axios';
-import { AppContext } from '../components/AppContextProvider';
+import { AppContext } from '../context/AppContextProvider';
 import { Nest, NestLevel } from '../components/types';
 import Globals from '../components/Globals';
 
@@ -12,9 +12,9 @@ type Props = {
     navigation: any
 }
 
-const Personal = ({navigation}: Props) => {
-    const {ruta} = Globals();
-    const {token, user} = useContext(AppContext);
+const Personal = ({ navigation }: Props) => {
+    const { ruta } = Globals();
+    const { token, user } = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
@@ -26,10 +26,10 @@ const Personal = ({navigation}: Props) => {
         eg.current = user.eggs;
 
         async function getOwnNests() {
-            const response = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
+            const response = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
 
             setLevels(response.data[0].nestLevels);
-            setLastLevel(response.data[0].nestLevels[response.data[0].nestLevels?.length - 1]);            
+            setLastLevel(response.data[0].nestLevels[response.data[0].nestLevels?.length - 1]);
 
             setNests(response.data);
         }
@@ -87,22 +87,55 @@ const Personal = ({navigation}: Props) => {
 
         if (eg.current > coste) {
             try {
-                const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, {headers: { "Authorization": "Bearer " + token }});
+                const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, { headers: { "Authorization": "Bearer " + token } });
                 console.log(responseN.data);
 
-                const responseNi = await axios.get(ruta + "v2/nests/own/" + user.name, {headers: { "Authorization": "Bearer " + token }});
+                const responseNi = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
 
                 setLevels(responseNi.data[0].nestLevels);
                 setLastLevel(responseNi.data[0].nestLevels[responseNi.data[0].nestLevels?.length - 1]);
-            
-                const response = await axios.put(ruta + "v2/users/updatemoney", body, {headers: { "Authorization": "Bearer " + token }});
+
+                const response = await axios.put(ruta + "v2/users/updatemoney", body, { headers: { "Authorization": "Bearer " + token } });
+                eg.current = dineroRestante;
             } catch (error) {
                 console.log(error);
             }
         } else {
             console.log("No tienes huevos");
             console.log(eg.current);
-            
+
+        }
+    }
+
+    useEffect(() => {
+        const intervalo = setInterval(() => {
+            async function updateMoney() {
+                const body = {
+                    eggs: eg.current,
+                    goldenEggs: user.goldenEggs
+                }
+
+                try {
+                    const response = await axios.put(ruta + "v2/users/updatemoney", body, { headers: { "Authorization": "Bearer " + token } });
+
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            updateMoney();
+            console.log('Esta función se ejecutará cada 5 segundos');
+        }, 5000);
+
+        return () => clearInterval(intervalo);
+    }, []);
+
+    async function ganarDinero(produccion: number) {
+        let eggs1 = eg.current;
+
+        if (lastLevel) {
+            const dineroNuevo = Math.round((Number)(eggs1) + (Number)(produccion));
+
+            updateEggs(dineroNuevo);
         }
     }
 
@@ -110,21 +143,16 @@ const Personal = ({navigation}: Props) => {
         setLevels(ramas);
     }
 
-    useEffect(() => {
-        console.log("Han cambiado los huevos");
-        console.log(eg.current);
-    }, [eg.current])
-    
-
     function updateEggs(egg: number) {
         setEggs(egg);
         eg.current = egg;
+        console.log(eg.current);
     }
 
     function goToProfile() {
         navigation.navigate("Profile");
     }
- 
+
     return (
         <ImageBackground source={require('../assets/imgs/Muro.jpg')} style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
@@ -142,7 +170,7 @@ const Personal = ({navigation}: Props) => {
                                 <FlatList
                                     data={levels}
                                     renderItem={({ item }) =>
-                                        <Rama lastLevel={lastLevel} updateEggs={updateEggs} updateLevels={updateLevels} actualLevel={item}/>
+                                        <Rama lastLevel={lastLevel} updateEggs={updateEggs} updateLevels={updateLevels} actualLevel={item} ganarDinero={ganarDinero} eg={eg.current}/>
                                     }
                                     style={{}}
                                 />
@@ -163,12 +191,12 @@ const Personal = ({navigation}: Props) => {
                 </View>
 
                 <View style={{ flex: 1, width: "100%", height: "7%", justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', backgroundColor: "rgba(28, 64, 169, 0.8)", position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, }}>
-                    <TouchableOpacity onPress={() => goToProfile()} style={{width: "10%", height: "80%"}}>
-                        <Image source={require('../assets/imgs/profile.png')} style={{width: 50, height: "100%", borderRadius: 100}} />
+                    <TouchableOpacity onPress={() => goToProfile()} style={{ width: "10%", height: "80%" }}>
+                        <Image source={require('../assets/imgs/profile.png')} style={{ width: 50, height: "100%", borderRadius: 100 }} />
                     </TouchableOpacity>
                     <Image source={require('../assets/imgs/tablon.png')} style={{ width: "20%", height: "60%", borderRadius: 100 }} />
                     <View style={{ position: 'absolute', marginLeft: 92, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "20%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>{abreviarNumero(eg.current)}</Text>
+                        <Text style={{ color: "black", fontWeight: "bold" }}>{abreviarNumero(eggs)}</Text>
                         <Image source={require('../assets/imgs/FireAntEgg.webp')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
                     </View>
                     <Image source={require('../assets/imgs/tablon.png')} style={{ width: "20%", height: "60%", borderRadius: 100 }} />
