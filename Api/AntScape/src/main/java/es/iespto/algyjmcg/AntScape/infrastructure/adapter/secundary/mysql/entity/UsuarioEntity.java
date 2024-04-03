@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,7 +38,7 @@ public class UsuarioEntity implements Serializable {
 
 	private Boolean banned;
 
-	@Column(length=10)
+	@Column(length=30)
 	private String eggs;
 
 	@Column(length=45)

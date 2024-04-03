@@ -36,7 +36,7 @@ CREATE TABLE `usuarios` (
   `active` BOOLEAN DEFAULT false,
   `hash` varchar(255),
   `banned` BOOLEAN DEFAULT false,
-  `eggs` varchar(10) DEFAULT("10"),
+  `eggs` varchar(30) DEFAULT("10"),
   `golden_eggs` varchar(10) DEFAULT ("0"),
   `img` varchar(255) DEFAULT("profile.png"),
   `id_guild` INT DEFAULT(null),

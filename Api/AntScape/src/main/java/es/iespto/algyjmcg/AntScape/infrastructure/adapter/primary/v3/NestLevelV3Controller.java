@@ -149,7 +149,7 @@ public class NestLevelV3Controller {
 
 class NestLevelSaveInputDTO {
 	private Integer id;
-	private Double cost;
+	private Float cost;
 	private Integer level;
 	private BigDecimal multiplier;
 	private String name;
@@ -166,10 +166,10 @@ class NestLevelSaveInputDTO {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Double getCost() {
+	public Float getCost() {
 		return cost;
 	}
-	public void setCost(Double cost) {
+	public void setCost(Float cost) {
 		this.cost = cost;
 	}
 	public Integer getLevel() {

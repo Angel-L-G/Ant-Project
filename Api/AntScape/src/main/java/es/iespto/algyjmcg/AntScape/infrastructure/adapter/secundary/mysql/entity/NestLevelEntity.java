@@ -30,7 +30,7 @@ public class NestLevelEntity implements Serializable {
 	private Integer id;
 
 	@Column(nullable=false)
-	private Double cost;
+	private Float cost;
 
 	@Column(nullable=false)
 	private Integer level;
@@ -59,11 +59,11 @@ public class NestLevelEntity implements Serializable {
 		this.id = id;
 	}
 
-	public Double getCost() {
+	public Float getCost() {
 		return this.cost;
 	}
 
-	public void setCost(Double cost) {
+	public void setCost(Float cost) {
 		this.cost = cost;
 	}
 
