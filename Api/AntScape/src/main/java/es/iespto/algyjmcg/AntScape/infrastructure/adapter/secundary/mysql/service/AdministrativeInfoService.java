@@ -96,4 +96,15 @@ public class AdministrativeInfoService implements IAdministrativeInfoRepository{
 
 		return ok;
 	}
+
+	@Override
+	public AdministrativeInfo findByUserId(Integer user_id) {
+		AdministrativeInfo out = null;
+		
+		if(user_id != null) {
+			
+		}
+		
+		return out;
+	}
 }

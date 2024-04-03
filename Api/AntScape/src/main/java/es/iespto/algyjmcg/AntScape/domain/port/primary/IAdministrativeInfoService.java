@@ -8,4 +8,6 @@ public interface IAdministrativeInfoService {
 	Iterable<AdministrativeInfo> findAll();
 	void deleteById(Integer id);
 	boolean update(AdministrativeInfo in);
+	
+	AdministrativeInfo findByUserId(Integer user_id);
 }

@@ -64,6 +64,9 @@ type GuildLevel {
 }
 
 
+type Query {
+    findAdministrativeInfoByUserId(userId: Int!): AdministrativeInfo
+}
 
 type Query {
 	findAllNests: [Nest]

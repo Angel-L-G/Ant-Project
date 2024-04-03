@@ -37,4 +37,10 @@ public class AdministrativeInfoDomainService implements IAdministrativeInfoServi
 	public boolean update(AdministrativeInfo in) {
 		return service.update(in);
 	}
+
+	@Override
+	public AdministrativeInfo findByUserId(Integer user_id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
