@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS `ants`;
 DROP TABLE IF EXISTS `blocked_users`;
 DROP TABLE IF EXISTS `friends`;
 DROP TABLE IF EXISTS `guild_levels`;
+DROP TABLE IF EXISTS `administrative_info`;
 DROP TABLE IF EXISTS `usuarios`;
 DROP TABLE IF EXISTS `guild`;
 
@@ -35,6 +36,16 @@ CREATE TABLE usuarios (
   id_guild INT,
   FOREIGN KEY (id_guild) REFERENCES guild(id),
   UNIQUE (name)
+);
+
+CREATE TABLE `administrative_info` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `usuario_id` INT,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  `informacion` TEXT,
+  `last_login` TIMESTAMP,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE guild_levels (
@@ -117,6 +128,13 @@ INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) V
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1);
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2);
 
+INSERT INTO administrative_info (usuario_id, informacion, last_login, created_at, updated_at) 
+VALUES (1, 'Información administrativa para el usuario 1', '2024-03-25 15:30:00', '2024-03-25 15:30:00', '2024-03-25 15:30:00');
+INSERT INTO administrative_info (usuario_id, informacion, last_login) 
+VALUES (2, 'Información administrativa para el usuario 2', '2024-03-26 10:45:00');
+INSERT INTO administrative_info (usuario_id, informacion, last_login) 
+VALUES (1, 'Información administrativa para el usuario 3', '2024-03-24 18:20:00');
+
 INSERT INTO guild_levels (id, id_guild, name, cost, level, efect) VALUES (1, 1, 'Level1', 100, 1, 'Efecto nivel 1');
 INSERT INTO guild_levels (id, id_guild, name, cost, level, efect) VALUES (2, 1, 'Level2', 200, 2, 'Efecto nivel 2');
 INSERT INTO guild_levels (id, id_guild, name, cost, level, efect) VALUES (3, 2, 'Level1', 150, 1, 'Efecto nivel 1');
@@ -144,4 +162,3 @@ INSERT INTO nest_levels (id, nest_id, name, production, cost, level, multiplier)
 
 INSERT INTO bosses (id, name, life, damage, reward) VALUES (1, 'Boss1', 100, 20, 500);
 INSERT INTO bosses (id, name, life, damage, reward) VALUES (2, 'Boss2', 150, 30, 750);
-

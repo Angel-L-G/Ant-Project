@@ -72,6 +72,9 @@ public class UsuarioEntity implements Serializable {
 	@JoinColumn(name="id_guild")
 	private GuildEntity guild;
 
+	@OneToMany(mappedBy="usuario")
+	private List<AdministrativeInfoEntity> administrativeInfos;
+	
 	@ManyToMany(fetch= FetchType.LAZY)
 	@JoinTable(
 		name="ant_user"
@@ -91,6 +94,14 @@ public class UsuarioEntity implements Serializable {
 	    inverseJoinColumns = @JoinColumn(name = "id_friend")
 	)
 	private List<UsuarioEntity> amigos;
+	
+	@ManyToMany
+	@JoinTable(
+	    name = "blocked_users",
+	    joinColumns = @JoinColumn(name = "id_user"),
+	    inverseJoinColumns = @JoinColumn(name = "id_blocked")
+	)
+	private List<UsuarioEntity> bloqued;
 
 	public UsuarioEntity() {
 	}

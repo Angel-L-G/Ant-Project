@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AdministrativeInfoEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import jakarta.persistence.ManyToMany;
 
@@ -20,13 +21,12 @@ public class Usuario {
 	private String name;
 	private String password;
 	private String rol;
-	private List<Nest> nests;
 	private Guild guild;
+	private List<Nest> nests;
 	private List<Ant> ants;
-	
 	private List<Usuario> amigos;
-
-	private List<Usuario> amigosDe;
+	private List<UsuarioEntity> bloqued;
+	private List<AdministrativeInfoEntity> administrativeInfos;
 
 	public Usuario() {
 		nests = new ArrayList<Nest>();
@@ -167,11 +167,19 @@ public class Usuario {
 		this.amigos = amigos;
 	}
 
-	public List<Usuario> getAmigosDe() {
-		return amigosDe;
+	public List<UsuarioEntity> getBloqued() {
+		return bloqued;
 	}
 
-	public void setAmigosDe(List<Usuario> amigosDe) {
-		this.amigosDe = amigosDe;
+	public void setBloqued(List<UsuarioEntity> bloqued) {
+		this.bloqued = bloqued;
+	}
+
+	public List<AdministrativeInfoEntity> getAdministrativeInfos() {
+		return administrativeInfos;
+	}
+
+	public void setAdministrativeInfos(List<AdministrativeInfoEntity> administrativeInfos) {
+		this.administrativeInfos = administrativeInfos;
 	}
 }
