@@ -96,7 +96,7 @@ class NestLevelV2Controller {
         nestLevel.setLevel(1);
         nestLevel.setMultiplier(BigDecimal.valueOf(1.5));
         nestLevel.setProduction(50.0);
-        nestLevel.setCost(100.0);
+        nestLevel.setCost(100.0F);
 
         given(nestLevelService.findById(id)).willReturn(nestLevel);
         given(nestLevelService.update(any(NestLevel.class))).willReturn(true);

@@ -43,7 +43,7 @@ class NestLevelServiceTest {
     	assertNotNull(find);
     	assertEquals(find.getName(), "Level2");
     	assertEquals(find.getProduction(), 20.0);
-    	assertEquals(find.getCost(), 100.0);
+    	assertEquals(find.getCost(), 100.0F);
     	assertEquals(find.getLevel(), 2);
     	assertEquals(find.getMultiplier().doubleValue(), 2.00);
     	
@@ -60,7 +60,7 @@ class NestLevelServiceTest {
     	obj.setId(10);
     	obj.setName("Name");
     	obj.setProduction(25.2);
-    	obj.setCost(24.0);
+    	obj.setCost(24.0F);
     	obj.setLevel(2);
     	obj.setMultiplier(new BigDecimal(1.3));
     	
@@ -100,7 +100,7 @@ class NestLevelServiceTest {
     	obj.setId(1);
     	obj.setName("Name");
     	obj.setProduction(25.2);
-    	obj.setCost(24.0);
+    	obj.setCost(24.0F);
     	obj.setLevel(2);
     	obj.setMultiplier(new BigDecimal(1.3));
     	

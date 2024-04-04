@@ -157,7 +157,7 @@ public class UsuarioService implements IUsuarioRepository{
 		return out;
 	}
 	
-	@Override
+	/*@Override
 	public List<Usuario> findFriends(String name){
 		if(name != null) {
 			Optional<UsuarioEntity> findByName = usuarioRepo.findByName(name);
@@ -173,7 +173,7 @@ public class UsuarioService implements IUsuarioRepository{
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	@Override
 	public boolean addFriend(String name, String nameFriend) {
@@ -251,6 +251,75 @@ public class UsuarioService implements IUsuarioRepository{
 			}
 		}
 		
+		return ok;
+	}
+
+	@Override
+	public List<Usuario> findFriends() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean removeFriend(String name, String nameFriend) {
+		boolean ok = false;
+		if(name != null && nameFriend != null) {
+			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
+			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
+			
+			if(user.isPresent() && friend.isPresent()) {
+				user.get().getAmigos().remove(friend.get());
+				friend.get().getAmigos().remove(user.get());
+				
+				usuarioRepo.save(user.get());
+				usuarioRepo.save(friend.get());
+				ok = true;
+			}
+		}
+		return ok;
+	}
+
+	@Override
+	public List<Usuario> findBloqued() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean block(String name, String nameFriend) {
+		boolean ok = false;
+		if(name != null && nameFriend != null) {
+			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
+			Optional<UsuarioEntity> bloqued = usuarioRepo.findByName(nameFriend);
+			
+			if(user.isPresent() && bloqued.isPresent()) {
+				user.get().getBloqued().add(bloqued.get());
+				bloqued.get().getBloqued().add(user.get());
+				
+				usuarioRepo.save(user.get());
+				usuarioRepo.save(bloqued.get());
+				ok = true;
+			}
+		}
+		return ok;
+	}
+
+	@Override
+	public boolean unblock(String name, String nameFriend) {
+		boolean ok = false;
+		if(name != null && nameFriend != null) {
+			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
+			Optional<UsuarioEntity> bloqued = usuarioRepo.findByName(nameFriend);
+			
+			if(user.isPresent() && bloqued.isPresent()) {
+				user.get().getBloqued().remove(bloqued.get());
+				bloqued.get().getBloqued().remove(user.get());
+				
+				usuarioRepo.save(user.get());
+				usuarioRepo.save(bloqued.get());
+				ok = true;
+			}
+		}
 		return ok;
 	}
 }
