@@ -7,6 +7,7 @@ import axios from 'axios';
 import { AppContext } from '../context/AppContextProvider';
 import { Nest, NestLevel } from '../components/types';
 import Globals from '../components/Globals';
+import NavBarBotton from '../components/NavBarBotton';
 
 type Props = {
     navigation: any
@@ -76,10 +77,10 @@ const Personal = ({ navigation }: Props) => {
         const newMult = lastLevel.multiplier + 0.2;
 
         const nestlevel: NestLevel = {
-            id: Number(lastLevel.id) + 1,
+            id: 0,
             cost: 10 * newMult ,
             id_nest: nests[0].id,
-            name: "" + Number(lastLevel.id) + 1,
+            name: "" + Number(levels.length + 1),
             level: 1,
             multiplier: newMult,
             production: 2 * newMult
@@ -166,7 +167,7 @@ const Personal = ({ navigation }: Props) => {
                         <Image source={require('../assets/imgs/Background.png')} style={{ height: "100%", width: "100%" }} />
                     </View>
 
-                    <View style={{ height: "70%", width: "100%" }}>
+                    <View style={{ height: "63%", width: "100%" }}>
                         <ScrollView>
                             <View>
                                 <FlatList
@@ -190,9 +191,11 @@ const Personal = ({ navigation }: Props) => {
                             </View>
                         </ScrollView>
                     </View>
+
+                    <NavBarBotton />
                 </View>
 
-                <View style={{ flex: 1, width: "100%", height: "7%", justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', backgroundColor: "rgba(28, 64, 169, 0.8)", position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, }}>
+                <View style={{ flex: 1, width: "100%", height: "7%", justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', backgroundColor: "rgba(28, 64, 169, 0)", position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, }}>
                     <TouchableOpacity onPress={() => goToProfile()} style={{ width: "10%", height: "80%" }}>
                         <Image source={require('../assets/imgs/profile.png')} style={{ width: 50, height: "100%", borderRadius: 100 }} />
                     </TouchableOpacity>

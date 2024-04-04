@@ -33,6 +33,7 @@ const UseSesion = () => {
                 response = await axios.post(ruta+"v1/register", user);
                 
                 if(response.status>199 && response.status < 300){
+                    ToastAndroid.show('Registrado! Ahora verifique su usuario', ToastAndroid.LONG);
                     navigation.navigate("Login");
                 }
 
@@ -85,6 +86,8 @@ const UseSesion = () => {
 
                 if(error.response.status == 428){
                     ToastAndroid.show('Verifique su usuario primero',ToastAndroid.SHORT);
+                } else {
+                    ToastAndroid.show('Usuario o contraseña erroneo', ToastAndroid.LONG);
                 }
             }
         }
