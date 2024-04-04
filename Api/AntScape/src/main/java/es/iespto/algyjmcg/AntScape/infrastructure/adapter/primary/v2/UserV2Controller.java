@@ -1,31 +1,26 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
-import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Ant;
-import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
-import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.domain.service.IFileStorageService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 
 @RestController
@@ -34,8 +29,8 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 public class UserV2Controller {
 	@Autowired private IUsuarioService userService;
 	@Autowired private IAntService antService;
-	@Autowired private INestService nestService;
 	@Autowired private JwtService jwtService;
+	@Autowired private IFileStorageService fileStorage;
 	
 	@PutMapping
 	public ResponseEntity<?> update(@RequestHeader HttpHeaders headers, @RequestBody UsuarioInputUpdateDTO in) {
@@ -54,15 +49,38 @@ public class UserV2Controller {
 		}
 	}
 	
+	@PutMapping("/profilepic")
+	public ResponseEntity<?> updateProfilePicture(@RequestHeader HttpHeaders headers, @RequestBody updateProfilePictureDTO inputDTO) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario u = userService.findByName(username);
+		
+		String codedfoto = inputDTO.getBase64();
+        byte[] photoBytes = Base64.getDecoder().decode(codedfoto);
+        String nombreNuevoFichero = fileStorage.save(inputDTO.getImgName(), photoBytes);
+		
+		u.setImg(nombreNuevoFichero);
+		
+		boolean update = userService.update(u);
+		
+		if(update) {
+			return ResponseEntity.ok(u);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Profile Picture Not Updated");
+		}
+	}
+	
 	@PutMapping(path="/updatemoney")
-	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody String eggs, @RequestBody String goldenEggs) {
+	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody updateMoneyDTO money) {
 		String token = headers.getFirst("Authorization");
 		String resultado = token.substring(7);
 		String username = jwtService.extractUsername(resultado);
 		
 		Usuario findByName = userService.findByName(username);
-		findByName.setEggs(eggs);
-		findByName.setGoldenEggs(goldenEggs);
+		findByName.setEggs(money.getEggs());
+		findByName.setGoldenEggs(money.getGoldenEggs());
 		
 		boolean update = userService.update(findByName);
 		
@@ -114,6 +132,46 @@ public class UserV2Controller {
 		}else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
 		}
+	}
+}
+
+class updateProfilePictureDTO {
+	private String imgName;
+	private String base64;
+	
+	public updateProfilePictureDTO() {}
+	
+	public String getImgName() {
+		return imgName;
+	}
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
+	}
+	public String getBase64() {
+		return base64;
+	}
+	public void setBase64(String base64) {
+		this.base64 = base64;
+	}
+}
+
+class updateMoneyDTO{
+	private String eggs;
+	private String goldenEggs;
+	
+	public updateMoneyDTO() {}
+	
+	public String getEggs() {
+		return eggs;
+	}
+	public void setEggs(String eggs) {
+		this.eggs = eggs;
+	}
+	public String getGoldenEggs() {
+		return goldenEggs;
+	}
+	public void setGoldenEggs(String goldenEggs) {
+		this.goldenEggs = goldenEggs;
 	}
 }
 
