@@ -28,7 +28,7 @@ public class AuthService {
 		userentity.setBanned(false);
 		userentity.setEggs("10");
 		userentity.setGoldenEggs("0");
-		userentity.setImg("./profile.png");
+		userentity.setImg("profile.png");
 		
 		int randInt = (int)Math.random()*10000;
 		String randStrHashed = passwordEncoder.encode(randInt+"");

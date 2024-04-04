@@ -15,7 +15,7 @@ class GuildLevelsMapperTest {
 	void toDomain() {
 		GuildLevelEntity in = new GuildLevelEntity();
 		in.setId(0);
-		in.setCost(1);
+		in.setCost(1.0);
 		in.setEfect("Effect");
 		in.setLevel(2);
 		in.setName("Name");
@@ -34,7 +34,7 @@ class GuildLevelsMapperTest {
 	void toPersistence() {
 		GuildLevel in = new GuildLevel();
 		in.setId(0);
-		in.setCost(1);
+		in.setCost(11.0);
 		in.setEfect("Effect");
 		in.setLevel(2);
 		in.setName("Name");

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
+<<<<<<< HEAD
+=======
+
+>>>>>>> hexagonal
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +40,7 @@ public class UsuarioEntity implements Serializable {
 
 	private Boolean banned;
 
-	@Column(length=10)
+	@Column(length=30)
 	private String eggs;
 
 	@Column(length=45)
@@ -69,6 +73,9 @@ public class UsuarioEntity implements Serializable {
 	@JoinColumn(name="id_guild")
 	private GuildEntity guild;
 
+	@OneToMany(mappedBy="usuario")
+	private List<AdministrativeInfoEntity> administrativeInfos;
+	
 	@ManyToMany(fetch= FetchType.LAZY)
 	@JoinTable(
 		name="ant_user"
@@ -88,6 +95,14 @@ public class UsuarioEntity implements Serializable {
 	    inverseJoinColumns = @JoinColumn(name = "id_friend")
 	)
 	private List<UsuarioEntity> amigos;
+	
+	@ManyToMany
+	@JoinTable(
+	    name = "blocked_users",
+	    joinColumns = @JoinColumn(name = "id_user"),
+	    inverseJoinColumns = @JoinColumn(name = "id_blocked")
+	)
+	private List<UsuarioEntity> bloqued;
 
 	public UsuarioEntity() {
 	}

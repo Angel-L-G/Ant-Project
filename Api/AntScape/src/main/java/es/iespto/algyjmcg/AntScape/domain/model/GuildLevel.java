@@ -2,7 +2,7 @@ package es.iespto.algyjmcg.AntScape.domain.model;
 
 public class GuildLevel {
 	private Integer id;
-	private Integer cost;
+	private Double cost;
 	private String efect;
 	private Integer level;
 	private String name;
@@ -19,11 +19,11 @@ public class GuildLevel {
 		this.id = id;
 	}
 
-	public int getCost() {
+	public Double getCost() {
 		return this.cost;
 	}
 
-	public void setCost(Integer cost) {
+	public void setCost(Double cost) {
 		this.cost = cost;
 	}
 

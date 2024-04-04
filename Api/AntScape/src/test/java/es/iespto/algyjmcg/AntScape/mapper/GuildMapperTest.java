@@ -27,7 +27,7 @@ class GuildMapperTest {
 		
 		GuildLevelEntity innerClass = new GuildLevelEntity();
 		innerClass.setId(0);
-		innerClass.setCost(1);
+		innerClass.setCost(1.0);
 		innerClass.setEfect("Effect");
 		innerClass.setLevel(2);
 		innerClass.setName("Name");
@@ -59,7 +59,7 @@ class GuildMapperTest {
 		
 		GuildLevel innerClass = new GuildLevel();
 		innerClass.setId(0);
-		innerClass.setCost(1);
+		innerClass.setCost(1.0);
 		innerClass.setEfect("Effect");
 		innerClass.setLevel(2);
 		innerClass.setName("Name");

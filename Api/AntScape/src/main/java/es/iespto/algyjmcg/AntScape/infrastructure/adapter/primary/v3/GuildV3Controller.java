@@ -1,4 +1,4 @@
-package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
+package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v3;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,8 +22,8 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/guilds")
-public class GuildV1Controller {
+@RequestMapping("/api/v3/guilds")
+public class GuildV3Controller {
 	@Autowired private IGuildService mainService;
 	@Autowired private IUsuarioService userService;
 	@Autowired private JwtService jwtService;
