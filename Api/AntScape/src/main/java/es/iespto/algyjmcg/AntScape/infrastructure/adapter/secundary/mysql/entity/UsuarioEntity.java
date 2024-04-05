@@ -240,4 +240,23 @@ public class UsuarioEntity implements Serializable {
 	public void setAmigos(List<UsuarioEntity> amigos) {
 		this.amigos = amigos;
 	}
+<<<<<<< HEAD
+=======
+
+	public List<AdministrativeInfoEntity> getAdministrativeInfos() {
+		return administrativeInfos;
+	}
+
+	public void setAdministrativeInfos(List<AdministrativeInfoEntity> administrativeInfos) {
+		this.administrativeInfos = administrativeInfos;
+	}
+
+	public List<UsuarioEntity> getBloqued() {
+		return bloqued;
+	}
+
+	public void setBloqued(List<UsuarioEntity> bloqued) {
+		this.bloqued = bloqued;
+	}
+>>>>>>> hexagonal
 }

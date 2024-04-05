@@ -63,11 +63,18 @@ type GuildLevel {
     guild: Guild
 }
 
-
-type Query {
-    findAdministrativeInfoByUserId(userId: Int!): AdministrativeInfo
+type AdministrativeInfo {
+    id: ID!
+    createdAt: String
+    informacion: String
+    lastLogin: String
+    updatedAt: String
+    usuario: Usuario
 }
+
+
 
 type Query {
 	findAllNests: [Nest]
+    findAdministrativeInfoByUserId(userId: Int!): AdministrativeInfo
 }
