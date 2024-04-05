@@ -6,15 +6,19 @@ import { AppContext, useAppContext } from '../context/AppContextProvider'
 import { Button, Input } from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient'
 import { launchImageLibrary } from 'react-native-image-picker';
+import Globals from '../components/Globals';
+import axios from 'axios';
 
 type Props = {
     navigation: any
 }
 
 const Profile = ({navigation}: Props) => {
-    const [selectedImage, setSelectedImage] = useState<string>({} as string);
-    const {user} = useContext(AppContext);
-
+    const {ruta} = Globals();
+    const {setUser, user, eggsContext, token} = useContext(AppContext);
+    const [selectedImage, setSelectedImage] = useState<string>(ruta + "v1/files/" + user.img);
+    const [selectedImage64, setSelectedImage64] = useState<string>("");
+    
     const openImagePicker = () => {
         const options: any = {
             mediaType: 'photo',
@@ -30,14 +34,37 @@ const Profile = ({navigation}: Props) => {
                 console.log('Image picker error: ', response.errorMessage);
             } else {
                 let image64: string = response.assets?.[0].base64 + "" || response.assets?.[0].base64 + "";
-                setSelectedImage(image64);
+                setSelectedImage(`data:image/png;base64,${image64}`);
+                setSelectedImage64(image64);
                 console.log(image64);
             }
         });
     };
 
+    async function updateImage() {
+        const body = {
+            imgName: "profile" + user.name + ".png",
+            base64: selectedImage64
+        }
+
+        try {
+            const response = await axios.put(ruta + "v2/users/profilepic", body, { headers: { "Authorization": "Bearer " + token } });
+            console.log(response.data);
+
+            const responseGet = await axios.get(ruta + "v2/users/me", {headers: { "Authorization": "Bearer " + token }});
+            console.log("Usu" + responseGet.data);
+            console.log("UsuImg" + responseGet.data.img);
+            
+            setUser(responseGet.data);
+            setSelectedImage(ruta + "v1/files/" + responseGet.data.img);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     function volver() {
-        navigation.navigate("Personal");
+        navigation.goBack();
     }
 
     return (
@@ -49,16 +76,26 @@ const Profile = ({navigation}: Props) => {
                 <View style={{width: "85%", height: "85%", backgroundColor: "white", borderRadius: 25, borderWidth: 5, borderColor: "yellow", alignItems: 'center'}}>
                     <View style={{height: 200, width: 200, marginTop: 40}}>
                         <TouchableOpacity onPress={() => openImagePicker()} style={{}}>
-                            <Image source={require('../assets/imgs/profile.png')} style={{width: "100%", height: "100%", borderRadius: 100}} />
+                            <Image source={{uri: selectedImage}} style={{width: "100%", height: "100%", borderRadius: 100}} />
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 1, marginTop: 50}}>
                         <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Nombre: {user.name}</Text>
-                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {user.id_guild}</Text>
-                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Eggs: {user.eggs}</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: -----</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Eggs: {eggsContext}</Text>
                     </View>
                     <View>
-                    <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+                        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={{marginBottom: 40}}>
+                            <TouchableOpacity onPress={updateImage} style={styles.button}>
+                                <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 22}}>Actualizar</Text>
+                            </TouchableOpacity>
+                        </LinearGradient>
+                    </View>
+                    <View>
+                        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
                         start={{ x: 0.5, y: 0 }}
                         end={{ x: 0.5, y: 1 }}
                         style={{marginBottom: 40}}>

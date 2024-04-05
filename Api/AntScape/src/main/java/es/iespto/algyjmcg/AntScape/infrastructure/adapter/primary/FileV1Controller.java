@@ -22,7 +22,7 @@ import es.iespto.algyjmcg.AntScape.domain.service.IFileStorageService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/files")
 public class FileV1Controller {
 	@Autowired
 	private IFileStorageService storageService;

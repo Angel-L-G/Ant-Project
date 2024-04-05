@@ -52,7 +52,7 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 		<View style={{ backgroundColor: "#0099CA", margin: 15, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
 			<View>
-				<TouchableHighlight style={{ justifyContent: 'center', alignItems: 'center', width: 60, height: 60, backgroundColor: "rgb(28, 64, 169)", margin: 10, borderRadius: 20, borderWidth: 2, borderColor: "yellow" }} onPress={() => setModalVisible(true)}>
+				<TouchableHighlight underlayColor={'rgb(10, 40, 142)'} style={{ justifyContent: 'center', alignItems: 'center', width: 60, height: 60, backgroundColor: "rgb(28, 64, 169)", margin: 10, borderRadius: 20, borderWidth: 2, borderColor: "yellow" }} onPress={() => setModalVisible(true)}>
 					<Text style={{ color: "yellow", fontWeight: "bold" }}>Mejorar</Text>
 				</TouchableHighlight>
 			</View>
@@ -124,7 +124,7 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 								<View style={{ justifyContent: 'center', alignItems: 'center', width: 80, height: 60, backgroundColor: "rgb(28, 64, 169)", marginTop: 30, borderRadius: 20, borderWidth: 2, borderColor: "yellow" }}>
 									<Text style={{ color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18, textAlign: 'center' }}>Coste: {actualLvl.cost}</Text>
 								</View>
-								<TouchableHighlight style={{ justifyContent: 'center', alignItems: 'center', width: 80, height: 60, backgroundColor: "rgb(28, 64, 169)", marginTop: 30, borderRadius: 20, borderWidth: 2, borderColor: "yellow" }} onPress={() => mejorar()}>
+								<TouchableHighlight underlayColor={'rgb(10, 40, 142)'} style={{ justifyContent: 'center', alignItems: 'center', width: 80, height: 60, backgroundColor: "rgb(28, 64, 169)", marginTop: 30, borderRadius: 20, borderWidth: 2, borderColor: "yellow" }} onPress={() => mejorar()}>
 									<Text style={{ color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18 }}>Mejorar</Text>
 								</TouchableHighlight>
 							</View>
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
-		height: 400,
+		height: 'auto',
 		width: 350
 	},
 	button: {

@@ -1,155 +1,115 @@
-import { StyleSheet, Text, View, Image, FlatList, TouchableHighlight, TextInput } from 'react-native'
-import React from 'react'
-import styles from '../themes/styles'
-import Icon from 'react-native-vector-icons/Ionicons';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
+import NavBarBotton from '../components/NavBarBotton';
+import NavBarTop from '../components/NavBarTop';
 
 type Props = {
-    navigation: any
+    navigation: any,
 }
 
-type Chat = {
-    id: number,
-    name: string,
-    messages: Array<Message>
-}
+const Social = ({ navigation }: Props) => {
+    const [activeTab, setActiveTab] = useState(0);
 
-type Message = {
-    idUser: number,
-    message: string
-}
-
-const Social = ({navigation}: Props) => {
-    const amigos: Array<Chat> = [
-        {
-            id: 1,
-            name: 'Javier',
-            messages: [
-                {
-                    idUser: 0,
-                    message: 'Hola',
-                },
-                {
-                    idUser: 1,
-                    message: 'Hey!',
-                },
-                {
-                    idUser: 0,
-                    message: 'Has visto mi nuevo hormiguero?',
-                },
-                {
-                    idUser: 1,
-                    message: 'La verdad, No me he fijado',
-                },
-                {
-                    idUser: 1,
-                    message: 'Dejame Revisarlo ;)',
-                },
-            ]
-        },
-        {
-            id: 2,
-            name: 'ABC',
-            messages: [
-                {
-                    idUser: 0,
-                    message: 'Hola',
-                },
-                {
-                    idUser: 1,
-                    message: 'Hey!',
-                },
-                {
-                    idUser: 0,
-                    message: 'Has visto mi nuevo hormiguero?',
-                },
-                {
-                    idUser: 1,
-                    message: 'La verdad, No me he fijado',
-                },
-                {
-                    idUser: 1,
-                    message: 'Dejame Revisarlo ;)',
-                },
-            ]
-        },
-        {
-            id: 0,
-            name: 'Angel',
-            messages: [
-                {
-                    idUser: 0,
-                    message: 'Hola',
-                },
-                {
-                    idUser: 1,
-                    message: 'Hey!',
-                },
-                {
-                    idUser: 0,
-                    message: 'Has visto mi nuevo hormiguero?',
-                },
-                {
-                    idUser: 1,
-                    message: 'La verdad, No me he fijado',
-                },
-                {
-                    idUser: 1,
-                    message: 'Dejame Revisarlo ;)',
-                },
-            ]
-        }
-    ]
+    const handleTabPress = (tabIndex: number) => {
+        setActiveTab(tabIndex);
+    };
 
     return (
         <View style={styles.container}>
-            <View style={styles.profileBar}>
-                <TouchableHighlight onPress={() => navigation.navigate("Profile")}>
-                    <Image
-                        style={styles.profilePicture}
-                        source={require('../assets/imgs/profile.png')}
-                    />
-                </TouchableHighlight>
+            <NavBarTop navigation={navigation} />
 
-                <Text style={styles.title}>Nombre Perfil</Text>
-
-                <TouchableHighlight style={styles.icono}>
-                    <Icon name="person-circle-outline" size={40}/>
-                </TouchableHighlight>
-            </View>
-
-            <View style={styles.chatContainer}>
-                <View style={styles.friendsScrollConatiner}>
-                    <FlatList
-                        data={amigos}
-                        renderItem={(a) => {
-                            return (
-                                <View>
-                                    <Text style={styles.friendsText}>
-                                        {a.item.name} 
-                                    </Text>
-                                </View>    
-                            )
-                        }}
-                    />
+            <View style={{ height: "93%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
+                <View style={{ height: "93%", width: "100%" }}>
+                    <View style={styles.tabsContainer}>
+                        <TouchableHighlight
+                            style={[styles.tab, activeTab === 0 && styles.activeTab]}
+                            onPress={() => handleTabPress(0)}
+                            underlayColor="transparent"
+                        >
+                            <Text style={styles.tabText}>Usuarios</Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight
+                            style={[styles.tab, activeTab === 1 && styles.activeTab]}
+                            onPress={() => handleTabPress(1)}
+                            underlayColor="#transparent"
+                        >
+                            <Text style={styles.tabText}>Amigos</Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight
+                            style={[styles.tab, activeTab === 2 && styles.activeTab]}
+                            onPress={() => handleTabPress(2)}
+                            underlayColor="#transparent"
+                        >
+                            <Text style={styles.tabText}>Clan</Text>
+                        </TouchableHighlight>
+                    </View>
                 </View>
-
-                <View style={styles.messageContainer}>
-                    {
-                        amigos[1].messages.map((value, index) => {
-                            return (
-                                <View key={index}>
-                                    <Text style={styles.messageText}>
-                                        {value.idUser}: {value.message}
-                                    </Text>
-                                </View>
-                            )
-                        })
-                    }
-                    <TextInput placeholder='Mensaje' style={styles.chatInput}/>
-                </View>
+                <NavBarBotton navigation={navigation} icon='social' />
             </View>
         </View>
-    )
-}
+    );
+};
 
-export default Social
+const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+    },
+
+    tabsContainer: {
+        backgroundColor: "rgb(15, 47, 150)",
+        flexDirection: 'row',
+    },
+    tab: {
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: 14,
+        borderBottomWidth: 2,
+        borderBottomColor: 'rgb(28, 64, 169)',
+    },
+    activeTab: {
+        backgroundColor: 'rgba(255, 255, 0, 0.18)',
+        borderBottomColor: 'yellow',
+    },
+    tabText: {
+        fontSize: 18,
+        fontFamily: 'MadimiOneRegular',
+        color: 'yellow',
+    },
+
+    /*
+    <View style={styles.tabsContainer}>
+                <TouchableHighlight
+                    style={[styles.tab, activeTab === 0 && styles.activeTab]}
+                    onPress={() => handleTabPress(0)}
+                    underlayColor="#E5E5E5"
+                >
+                    <Text style={styles.tabText}>Tab 1</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                    style={[styles.tab, activeTab === 1 && styles.activeTab]}
+                    onPress={() => handleTabPress(1)}
+                    underlayColor="#E5E5E5"
+                >
+                    <Text style={styles.tabText}>Tab 2</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                    style={[styles.tab, activeTab === 2 && styles.activeTab]}
+                    onPress={() => handleTabPress(2)}
+                    underlayColor="#E5E5E5"
+                >
+                    <Text style={styles.tabText}>Tab 3</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                    style={[styles.tab, activeTab === 3 && styles.activeTab]}
+                    onPress={() => handleTabPress(3)}
+                    underlayColor="#E5E5E5"
+                >
+                    <Text style={styles.tabText}>Tab 4</Text>
+                </TouchableHighlight>
+            </View>
+    */
+});
+
+export default Social;

@@ -51,8 +51,6 @@ public class UsuarioDomainService implements IUsuarioService {
 	}
 
 	@Override
-<<<<<<< HEAD
-=======
 	public List<Usuario> findFriends(){
 		return service.findFriends();
 	}
@@ -63,7 +61,6 @@ public class UsuarioDomainService implements IUsuarioService {
 	}
 
 	@Override
->>>>>>> hexagonal
 	public boolean verify(Integer id) {
 		return service.verify(id);
 	}

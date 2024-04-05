@@ -8,6 +8,7 @@ import { AppContext } from '../context/AppContextProvider';
 import { Nest, NestLevel } from '../components/types';
 import Globals from '../components/Globals';
 import NavBarBotton from '../components/NavBarBotton';
+import NavBarTop from '../components/NavBarTop';
 
 type Props = {
     navigation: any
@@ -15,7 +16,7 @@ type Props = {
 
 const Personal = ({ navigation }: Props) => {
     const { ruta } = Globals();
-    const { token, user } = useContext(AppContext);
+    const { token, user, setEggsContext } = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
@@ -25,6 +26,7 @@ const Personal = ({ navigation }: Props) => {
     useEffect(() => {
         setEggs(user.eggs);
         eg.current = user.eggs;
+        setEggsContext(user.eggs);
 
         async function getOwnNests() {
             const response = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
@@ -63,7 +65,7 @@ const Personal = ({ navigation }: Props) => {
     async function nuevaRama() {
         console.log(lastLevel);
 
-        const coste = Math.round(lastLevel?.multiplier * levels.length * 100);
+        const coste = Math.round(lastLevel?.multiplier ** levels.length * 100);
         const cantidadEggs = eggs;
         const cantidadEg = eg.current;
 
@@ -86,6 +88,9 @@ const Personal = ({ navigation }: Props) => {
             production: 2 * newMult
         }
 
+        console.log("Current" + eg.current);
+        console.log(eg.current > coste);
+        
         if (eg.current > coste) {
             try {
                 const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, { headers: { "Authorization": "Bearer " + token } });
@@ -150,18 +155,14 @@ const Personal = ({ navigation }: Props) => {
         setEggs(egg);
         eg.current = egg;
         console.log(eg.current);
+        setEggsContext(eg.current);
     }
-
-    function goToProfile() {
-        navigation.navigate("Profile");
-    }
-
+    
     return (
         <ImageBackground source={require('../assets/imgs/Muro.jpg')} style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
-                <View style={{ width: "100%", height: "7%", backgroundColor: "rgb(28, 64, 169)" }}>
+                <NavBarTop navigation={navigation}/>
 
-                </View>
                 <View style={{ height: "93%", width: "100%" }}>
                     <View style={{ height: "30%", width: "100%" }}>
                         <Image source={require('../assets/imgs/Background.png')} style={{ height: "100%", width: "100%" }} />
@@ -179,7 +180,7 @@ const Personal = ({ navigation }: Props) => {
                                 />
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 30, marginBottom: 30 }}>
-                                <TouchableHighlight onPress={() => nuevaRama()} style={{ justifyContent: "center", alignItems: 'center', backgroundColor: "rgb(28, 64, 169)", height: 80, width: 140, borderRadius: 30, borderWidth: 2, borderColor: "yellow" }}>
+                                <TouchableHighlight underlayColor={'rgb(10, 40, 142)'} onPress={() => nuevaRama()} style={{ justifyContent: "center", alignItems: 'center', backgroundColor: "rgb(28, 64, 169)", height: 80, width: 140, borderRadius: 30, borderWidth: 2, borderColor: "yellow" }}>
                                     <View>
                                         <Text style={{ color: "yellow", fontSize: 20 }}>Nueva Rama</Text>
                                         <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
@@ -192,23 +193,7 @@ const Personal = ({ navigation }: Props) => {
                         </ScrollView>
                     </View>
 
-                    <NavBarBotton />
-                </View>
-
-                <View style={{ flex: 1, width: "100%", height: "7%", justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', backgroundColor: "rgba(28, 64, 169, 0)", position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, }}>
-                    <TouchableOpacity onPress={() => goToProfile()} style={{ width: "10%", height: "80%" }}>
-                        <Image source={require('../assets/imgs/profile.png')} style={{ width: 50, height: "100%", borderRadius: 100 }} />
-                    </TouchableOpacity>
-                    <Image source={require('../assets/imgs/tablon.png')} style={{ width: "20%", height: "60%", borderRadius: 100 }} />
-                    <View style={{ position: 'absolute', marginLeft: 92, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "20%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>{abreviarNumero(eggs)}</Text>
-                        <Image source={require('../assets/imgs/FireAntEgg.webp')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
-                    </View>
-                    <Image source={require('../assets/imgs/tablon.png')} style={{ width: "20%", height: "60%", borderRadius: 100 }} />
-                    <View style={{ position: 'absolute', marginLeft: 226, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "20%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                        <Text style={{ color: "black", fontWeight: "bold" }}>{user.goldenEggs}</Text>
-                        <Image source={require('../assets/imgs/GoldenAntEgg2.png')} style={{ width: "18%", height: "60%", borderRadius: 100, marginLeft: 5 }} />
-                    </View>
+                    <NavBarBotton navigation={navigation} icon='personal'/>
                 </View>
             </View>
         </ImageBackground>

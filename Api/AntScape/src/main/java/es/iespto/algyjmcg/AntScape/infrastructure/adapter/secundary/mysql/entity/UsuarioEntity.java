@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
-<<<<<<< HEAD
-=======
-
->>>>>>> hexagonal
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -240,8 +236,6 @@ public class UsuarioEntity implements Serializable {
 	public void setAmigos(List<UsuarioEntity> amigos) {
 		this.amigos = amigos;
 	}
-<<<<<<< HEAD
-=======
 
 	public List<AdministrativeInfoEntity> getAdministrativeInfos() {
 		return administrativeInfos;
@@ -258,5 +252,4 @@ public class UsuarioEntity implements Serializable {
 	public void setBloqued(List<UsuarioEntity> bloqued) {
 		this.bloqued = bloqued;
 	}
->>>>>>> hexagonal
 }

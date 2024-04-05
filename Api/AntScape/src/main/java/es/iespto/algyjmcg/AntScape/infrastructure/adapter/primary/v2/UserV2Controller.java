@@ -73,11 +73,7 @@ public class UserV2Controller {
 	}
 	
 	@PutMapping(path="/updatemoney")
-<<<<<<< HEAD
-	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody MoneyUpdateDTO money) {
-=======
 	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody updateMoneyDTO money) {
->>>>>>> hexagonal
 		String token = headers.getFirst("Authorization");
 		String resultado = token.substring(7);
 		String username = jwtService.extractUsername(resultado);
@@ -139,25 +135,6 @@ public class UserV2Controller {
 	}
 }
 
-<<<<<<< HEAD
-class MoneyUpdateDTO {
-	private String goldenEggs;
-	private String eggs;
-	
-	public MoneyUpdateDTO(String goldenEggs, String eggs) {
-		super();
-		this.goldenEggs = goldenEggs;
-		this.eggs = eggs;
-	}
-	
-	public String getGoldenEggs() {
-		return goldenEggs;
-	}
-	
-	public void setGoldenEggs(String goldenEggs) {
-		this.goldenEggs = goldenEggs;
-	}
-=======
 class updateProfilePictureDTO {
 	private String imgName;
 	private String base64;
@@ -183,27 +160,21 @@ class updateMoneyDTO{
 	private String goldenEggs;
 	
 	public updateMoneyDTO() {}
->>>>>>> hexagonal
 	
 	public String getEggs() {
 		return eggs;
 	}
-<<<<<<< HEAD
 	
 	public void setEggs(String eggs) {
 		this.eggs = eggs;
 	}
-=======
-	public void setEggs(String eggs) {
-		this.eggs = eggs;
-	}
+	
 	public String getGoldenEggs() {
 		return goldenEggs;
 	}
 	public void setGoldenEggs(String goldenEggs) {
 		this.goldenEggs = goldenEggs;
 	}
->>>>>>> hexagonal
 }
 
 class UsuarioOutput {

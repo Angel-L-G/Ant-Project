@@ -69,7 +69,7 @@ function App(): JSX.Element {
     return (
         <AppContextProvider>
             <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Game" component={Game}/>

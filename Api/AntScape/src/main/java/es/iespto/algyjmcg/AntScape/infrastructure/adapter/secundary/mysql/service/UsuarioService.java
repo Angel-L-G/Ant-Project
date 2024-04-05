@@ -103,16 +103,13 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setEggs(persistance.getEggs());
 				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
 				findByName.get().setImg(persistance.getImg());
-<<<<<<< HEAD
 								
 				if(in.getNests() != null ) {
 					for (Nest nest : in.getNests()) {
 						findByName.get().getNests().add(nm.toPersistance(nest));
 					}
 				}
-				
-=======
-				
+								
 				if(in.getGuild() != null) {
 					findByName.get().setGuild(gm.toPersistance(in.getGuild()));
 				}
@@ -122,7 +119,6 @@ public class UsuarioService implements IUsuarioRepository{
 						findByName.get().getNests().add(nm.toPersistance(nest));
 					}
 				}
->>>>>>> hexagonal
 				
 				if(in.getAnts() != null) {
 					for (Ant ant : in.getAnts()) {
@@ -176,8 +172,6 @@ public class UsuarioService implements IUsuarioRepository{
 		return out;
 	}
 	
-<<<<<<< HEAD
-=======
 	/*@Override
 	public List<Usuario> findFriends(String name){
 		if(name != null) {
@@ -215,7 +209,6 @@ public class UsuarioService implements IUsuarioRepository{
 		return ok;
 	}
 	
->>>>>>> hexagonal
 	public boolean verify(Integer id) {
 		boolean ok = false;
 		
@@ -275,9 +268,6 @@ public class UsuarioService implements IUsuarioRepository{
 		
 		return ok;
 	}
-<<<<<<< HEAD
-}
-=======
 
 	@Override
 	public List<Usuario> findFriends() {
@@ -348,4 +338,3 @@ public class UsuarioService implements IUsuarioRepository{
 		return ok;
 	}
 }
->>>>>>> hexagonal
