@@ -76,9 +76,9 @@ public class AntV2ControllerTest {
         mockMvc.perform(get("/api/v2/ants/name/{name}", name)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.name").value(name))
-            .andExpect(jsonPath("$.type").value("AntType"));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON)
+            .andExpect(jsonPath("$.name").value(name)
+            .andExpect(jsonPath("$.type").value("AntType");
     }
 
     @Test

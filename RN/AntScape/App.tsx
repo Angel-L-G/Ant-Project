@@ -39,12 +39,14 @@ import Profile from './src/screens/Profile';
 import Game from './src/screens/Game';
 import AppContextProvider from './src/context/AppContextProvider';
 import Personal from './src/screens/Personal';
+import { User } from './src/components/types';
+import ProfileOther from './src/screens/ProfileOther';
 
 type SectionProps = PropsWithChildren<{
     title: string;
 }>;
 
-type RootStackParamList = {
+export type RootStackParamList = {
     Register: undefined,
     Login: undefined,
     Main: undefined,
@@ -54,7 +56,8 @@ type RootStackParamList = {
     NewHormiguero: undefined,
     Profile: undefined,
     Game: undefined,
-    Personal: undefined
+    Personal: undefined,
+    ProfileOther: {user: User},
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -76,6 +79,7 @@ function App(): JSX.Element {
                     <Stack.Screen name="NewHormiguero" component={NewHormiguero}/>
                     <Stack.Screen name="Outside" component={Outside}/>
                     <Stack.Screen name="Profile" component={Profile}/>
+                    <Stack.Screen name="ProfileOther" component={ProfileOther}/>
                     <Stack.Screen name="Main" component={Main}/>
                     <Stack.Screen name="Settings" component={Settings}/>
                     <Stack.Screen name="Social" component={Social}/>
