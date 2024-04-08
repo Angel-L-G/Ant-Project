@@ -27,7 +27,7 @@ public class NestLevelV2Controller {
 	
 	@PutMapping(path="/levelup/{id}")
 	public ResponseEntity<?> levelUp(@PathVariable Integer id) {
-		NestLevel findById = mainService.findById(id);
+		NestLevel findById = mainService.findByIdRel(id);
 		
 		findById.setLevel(findById.getLevel()+1);
 		
@@ -35,14 +35,19 @@ public class NestLevelV2Controller {
 
 		findById.setProduction(res.doubleValue());
 
-		findById.setCost(findById.getCost()*findById.getMultiplier().floatValue());
+		Float aditionToCost = (float) ((findById.getNest().getNestLevels().size()/10.0)+1.0);
+		Float newCost = (float) (Math.round(findById.getCost()*findById.getMultiplier().floatValue()*aditionToCost));
+		
+		findById.setCost(newCost);
+		
+		System.err.println(findById.getCost());
 		
 		boolean update = mainService.update(findById);
 		
 		if(update) {
 			return ResponseEntity.ok("Leveled Up Correctly");
 		}else {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong leveling up the nest"); 
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong leveling up the nest");
 		}
 	}
 

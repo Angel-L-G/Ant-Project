@@ -3,11 +3,8 @@ package es.iespto.algyjmcg.AntScape.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AdministrativeInfoEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
-import jakarta.persistence.ManyToMany;
 
 public class Usuario {
 	private Integer id;

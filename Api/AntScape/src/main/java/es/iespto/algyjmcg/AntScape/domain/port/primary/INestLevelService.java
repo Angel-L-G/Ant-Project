@@ -8,6 +8,6 @@ public interface INestLevelService {
 	Iterable<NestLevel> findAll();
 	void deleteById(Integer id);
 	boolean update(NestLevel u);
-	
-	public NestLevel findByName(String name);
+
+	public NestLevel findByIdRel(Integer id);
 }

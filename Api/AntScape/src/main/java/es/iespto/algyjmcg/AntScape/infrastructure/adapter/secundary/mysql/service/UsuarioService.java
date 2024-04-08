@@ -163,43 +163,6 @@ public class UsuarioService implements IUsuarioRepository{
 		return out;
 	}
 	
-	/*@Override
-	public List<Usuario> findFriends(String name){
-		if(name != null) {
-			Optional<UsuarioEntity> findByName = usuarioRepo.findByName(name);
-			
-			if(findByName.isPresent() && findByName.get().getAmigos() != null) {
-				
-				List<Usuario> list = new ArrayList<Usuario>();
-				for (UsuarioEntity u : findByName.get().getAmigos()) {
-					list.add(um.toDomain(u));
-				}
-				
-				return list;
-			}
-		}
-		return null;
-	}*/
-	
-	@Override
-	public boolean addFriend(String name, String nameFriend) {
-		boolean ok = false;
-		if(name != null && nameFriend != null) {
-			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
-			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
-			
-			if(user.isPresent() && friend.isPresent()) {
-				user.get().getAmigos().add(friend.get());
-				friend.get().getAmigos().add(user.get());
-				
-				usuarioRepo.save(user.get());
-				usuarioRepo.save(friend.get());
-				ok = true;
-			}
-		}
-		return ok;
-	}
-	
 	public boolean verify(Integer id) {
 		boolean ok = false;
 		
@@ -261,21 +224,15 @@ public class UsuarioService implements IUsuarioRepository{
 	}
 
 	@Override
-	public List<Usuario> findFriends() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean removeFriend(String name, String nameFriend) {
+	public boolean addFriend(String name, String nameFriend) {
 		boolean ok = false;
 		if(name != null && nameFriend != null) {
 			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
 			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
 			
 			if(user.isPresent() && friend.isPresent()) {
-				user.get().getAmigos().remove(friend.get());
-				friend.get().getAmigos().remove(user.get());
+				user.get().getFriends().add(friend.get());
+				friend.get().getFriends().add(user.get());
 				
 				usuarioRepo.save(user.get());
 				usuarioRepo.save(friend.get());
@@ -286,9 +243,60 @@ public class UsuarioService implements IUsuarioRepository{
 	}
 
 	@Override
-	public List<Usuario> findBloqued() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean removeFriend(String name, String nameFriend) {
+		boolean ok = false;
+		if(name != null && nameFriend != null) {
+			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
+			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
+			
+			if(user.isPresent() && friend.isPresent()) {
+				user.get().getFriends().remove(friend.get());
+				friend.get().getFriends().remove(user.get());
+				
+				usuarioRepo.save(user.get());
+				usuarioRepo.save(friend.get());
+				ok = true;
+			}
+		}
+		return ok;
+	}
+	
+	@Override
+	public List<Usuario> findFriends(Integer id) {
+		List<Usuario> out = null;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> findById = usuarioRepo.findById(id);
+			
+			if(findById.isPresent()) {
+				List<Usuario> aux = new ArrayList<>();
+				for (UsuarioEntity userEntity : findById.get().getFriends()) {
+					aux.add(um.toDomain(userEntity));
+				}
+				out = aux;
+			}
+		}
+		
+		return out;
+	}
+
+	@Override
+	public List<Usuario> findBloqued(Integer id) {
+		List<Usuario> out = null;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> findById = usuarioRepo.findById(id);
+			
+			if(findById.isPresent()) {
+				List<Usuario> aux = new ArrayList<>();
+				for (UsuarioEntity userEntity : findById.get().getBloqued()) {
+					aux.add(um.toDomain(userEntity));
+				}
+				out = aux;
+			}
+		}
+		
+		return out;
 	}
 
 	@Override

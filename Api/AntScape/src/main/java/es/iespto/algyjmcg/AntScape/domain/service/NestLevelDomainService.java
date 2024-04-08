@@ -38,8 +38,7 @@ public class NestLevelDomainService implements INestLevelService{
 	}
 
 	@Override
-	public NestLevel findByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public NestLevel findByIdRel(Integer id) {
+		return service.findByIdRel(id);
 	}
 }
