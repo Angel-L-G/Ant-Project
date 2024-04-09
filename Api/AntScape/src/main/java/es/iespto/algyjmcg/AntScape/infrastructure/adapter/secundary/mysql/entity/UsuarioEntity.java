@@ -228,15 +228,9 @@ public class UsuarioEntity implements Serializable {
 	public void setAnts(List<AntEntity> ants) {
 		this.ants = ants;
 	}
-<<<<<<< HEAD
-	
-	public List<UsuarioEntity> getAmigos() {
-		return amigos;
-=======
 
 	public List<UsuarioEntity> getFriends() {
 		return friends;
->>>>>>> hexagonal
 	}
 
 	public void setFriends(List<UsuarioEntity> friends) {
