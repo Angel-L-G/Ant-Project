@@ -62,6 +62,10 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 				</View>
 			</ImageBackground>
 
+			<View style={{position: 'absolute', top: 12, right: 30}}>
+				<Text style={{ color: "black", fontFamily: "MadimiOneRegular", fontSize: 18, textAlign: 'center' }}>Produc.: {actualLvl.production.toFixed(2)}</Text>
+			</View>
+
 			<Modal
 				animationType="slide"
 				transparent={true}

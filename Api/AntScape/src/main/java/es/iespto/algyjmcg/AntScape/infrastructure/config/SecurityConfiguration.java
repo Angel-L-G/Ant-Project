@@ -28,7 +28,7 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers("/", "/swagger-ui.html", "/swagger-ui/**", "/v2/**", "configuration/**",
-								"/swagger*/**", "/webjars/**", "/api/login", "/api/register", "/api/v1/**", "/v3/**",
+								"/swagger*/**", "/webjars/**", "/api/login", "/api/register", "/api/v1/**","/api/v2/**", "/v3/**",
 								"/websocket*/**", "/chat", "/topic/messages", "/graphql", "/graphiql")
 						.permitAll()
 						.requestMatchers("/api/v3/**").hasRole("ADMIN")
