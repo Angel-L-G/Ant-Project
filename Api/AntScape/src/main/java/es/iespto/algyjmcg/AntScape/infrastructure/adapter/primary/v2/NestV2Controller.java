@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
@@ -35,19 +33,26 @@ public class NestV2Controller {
 	@Autowired private JwtService jwtService;
 	
 	@GetMapping(path = "/own/{name}")
-	public ResponseEntity<?> findAllOwn(@PathVariable String name) {
+	public ResponseEntity<?> findAllOwn(@RequestHeader HttpHeaders headers, @PathVariable String name) {
 		if(name != null) {
-			//Arreglo temporal
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			if(!name.equals(username)) {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("False name");
+			}
+			
 			Usuario findByName = userService.findByName(name);
 			
 			List<Nest> find = nestService.findAllById(findByName.getId());
 			if(find != null) {
 				return ResponseEntity.ok(find);
 			}else {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Content Found");
 			}
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content On Request Body");
 		}
 	}
 

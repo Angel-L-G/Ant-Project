@@ -90,7 +90,7 @@ public class UsuarioEntity implements Serializable {
 	    joinColumns = @JoinColumn(name = "id_user"),
 	    inverseJoinColumns = @JoinColumn(name = "id_friend")
 	)
-	private List<UsuarioEntity> amigos;
+	private List<UsuarioEntity> friends;
 	
 	@ManyToMany
 	@JoinTable(
@@ -228,13 +228,19 @@ public class UsuarioEntity implements Serializable {
 	public void setAnts(List<AntEntity> ants) {
 		this.ants = ants;
 	}
+<<<<<<< HEAD
 	
 	public List<UsuarioEntity> getAmigos() {
 		return amigos;
+=======
+
+	public List<UsuarioEntity> getFriends() {
+		return friends;
+>>>>>>> hexagonal
 	}
 
-	public void setAmigos(List<UsuarioEntity> amigos) {
-		this.amigos = amigos;
+	public void setFriends(List<UsuarioEntity> friends) {
+		this.friends = friends;
 	}
 
 	public List<AdministrativeInfoEntity> getAdministrativeInfos() {

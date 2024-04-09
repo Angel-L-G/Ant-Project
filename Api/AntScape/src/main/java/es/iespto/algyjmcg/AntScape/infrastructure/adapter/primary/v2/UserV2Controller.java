@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -126,6 +128,62 @@ public class UserV2Controller {
 	@GetMapping
 	public ResponseEntity<?> findAll() {
 		Iterable<Usuario> findAll = userService.findAll();
+		
+		if(findAll != null) {
+			return ResponseEntity.ok(findAll);
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+		}
+	}
+	
+	@PostMapping(path="/{me}/friends/{name_friend}")
+	public ResponseEntity<?> addFriend(@PathVariable String me, @PathVariable String name_friend){
+		boolean added = userService.addFriend(me, name_friend);
+		
+		if(added) {
+			return ResponseEntity.ok("User Added Correctly");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something Went wrong");
+		}
+	}
+	
+	@PostMapping(path="/{me}/blocked/{name_blocked}")
+	public ResponseEntity<?> block(@PathVariable String me, @PathVariable String name_friend){
+		boolean blocked = userService.addFriend(name_friend, name_friend);
+		
+		if(blocked) {
+			return ResponseEntity.ok("User Bloqued Correctly");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something Went wrong");
+		}
+	}
+	
+	@GetMapping(path="/{id}/friends")
+	public ResponseEntity<?> findFriends(@RequestHeader HttpHeaders headers) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Iterable<Usuario> findAll = userService.findFriends(findByName.getId());
+		
+		if(findAll != null) {
+			return ResponseEntity.ok(findAll);
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+		}
+	}
+	
+	@GetMapping(path="/{id}/bloqued")
+	public ResponseEntity<?> findBloqued(@RequestHeader HttpHeaders headers) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Iterable<Usuario> findAll = userService.findBloqued(findByName.getId());
 		
 		if(findAll != null) {
 			return ResponseEntity.ok(findAll);

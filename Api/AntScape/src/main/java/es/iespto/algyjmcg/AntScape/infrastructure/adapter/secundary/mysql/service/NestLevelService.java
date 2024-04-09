@@ -113,8 +113,19 @@ public class NestLevelService implements INestLevelRepository{
 	}
 
 	@Override
-	public NestLevel findByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public NestLevel findByIdRel(Integer id) {
+		NestLevel out = null;
+		
+		if(id != null) {
+			Optional<NestLevelEntity> findById = mainRepository.findById(id);
+			
+			if(findById.isPresent()) {
+				out = mainMapper.toDomain(findById.get());
+				
+				out.setNest(nestMapper.toDomain(findById.get().getNest()));
+			}
+		}
+		
+		return out;
 	}
 }
