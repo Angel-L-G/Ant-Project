@@ -69,7 +69,7 @@ const ProfileOther = ({route, navigation}: Props) => {
     
     async function eliminarAmigo() {
         try {
-            const response = await axios.delete(ruta + "v2/users/" + user.id + "/friends/" + usu.id, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.delete(ruta + "v2/users/" + user.name + "/friends/" + usu.name, { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setAmigo(false);
         } catch (error) {
@@ -78,11 +78,23 @@ const ProfileOther = ({route, navigation}: Props) => {
     }
 
     async function bloquear() {
-
+        try {
+            const response = await axios.post(ruta + "v2/users/" + user.name + "/blocked/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
+            console.log(response.data);
+            setBloqueado(true);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async function eliminarBloqueo() {
-
+        try {
+            const response = await axios.delete(ruta + "v2/users/" + user.name + "/blocked/" + usu.name, { headers: { "Authorization": "Bearer " + token } });
+            console.log(response.data);
+            setBloqueado(false);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
