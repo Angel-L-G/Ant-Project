@@ -32,7 +32,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Register from './src/screens/Register';
 import Main from './src/screens/Main';
 import Social from './src/screens/Social';
-import Settings from './src/screens/Settings';
+import Ajustes from './src/screens/Ajustes';
 import Outside from './src/screens/Outside';
 import NewHormiguero from './src/screens/NewHormiguero';
 import Profile from './src/screens/Profile';
@@ -41,6 +41,7 @@ import AppContextProvider from './src/context/AppContextProvider';
 import Personal from './src/screens/Personal';
 import { User } from './src/components/types';
 import ProfileOther from './src/screens/ProfileOther';
+import Clan from './src/screens/Clan';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -51,13 +52,14 @@ export type RootStackParamList = {
     Login: undefined,
     Main: undefined,
     Social: undefined,
-    Settings: undefined,
+    Ajustes: undefined,
     Outside: undefined,
     NewHormiguero: undefined,
     Profile: undefined,
     Game: undefined,
     Personal: undefined,
     ProfileOther: {user: User},
+    Clan: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -81,9 +83,10 @@ function App(): JSX.Element {
                     <Stack.Screen name="Profile" component={Profile}/>
                     <Stack.Screen name="ProfileOther" component={ProfileOther}/>
                     <Stack.Screen name="Main" component={Main}/>
-                    <Stack.Screen name="Settings" component={Settings}/>
+                    <Stack.Screen name="Ajustes" component={Ajustes}/>
                     <Stack.Screen name="Social" component={Social}/>
                     <Stack.Screen name="Register" component={Register}/>
+                    <Stack.Screen name="Clan" component={Clan}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </AppContextProvider>

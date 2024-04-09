@@ -1,29 +1,44 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import styles from '../themes/styles'
 import { CheckBox } from 'react-native-elements'
 import SelectDropdown from 'react-native-select-dropdown'
+import NavBarTop from '../components/NavBarTop'
+import NavBarBotton from '../components/NavBarBotton'
 
-type Props = {}
+type Props = {
+    navigation: any
+}
 
-const Settings = (props: Props) => {
-    const [isOn, setIsOn] = useState(false);
-    const [selectValue, setSelectValue] = useState("");
-
-    const opciones = [
-        'Opción 1',
-        'Opción 2',
-        'Opción 3',
-        'Opción 4',
-        'Opción 5',
-    ];
-
+const Ajustes = ({navigation}: Props) => {
+    
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Settings</Text>
+            <NavBarTop navigation={navigation} />
 
-            <View>
-                <CheckBox
+            <View style={{ height: "93%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
+                <View style={{ height: "93%", width: "100%" }}>
+
+                </View>
+                <NavBarBotton navigation={navigation} icon='settings' />
+            </View>
+        </View>
+    );
+};
+
+export default Ajustes
+
+const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+    },
+
+});
+
+
+/*
+<CheckBox
                     title="Dark Mode"
                     checked={isOn}
                     onPress={() => setIsOn(!isOn)}
@@ -42,9 +57,4 @@ const Settings = (props: Props) => {
                     }}
                     defaultButtonText='Select an Option'
                 />
-            </View>
-        </View>
-    )
-}
-
-export default Settings
+*/

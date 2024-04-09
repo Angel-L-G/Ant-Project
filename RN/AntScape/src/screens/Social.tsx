@@ -60,15 +60,11 @@ const Social = ({ navigation }: Props) => {
     }
 
     return (
-        <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"} 
-        keyboardVerticalOffset={-1000} 
-        style={styles.container}
-        >
+        <View style={styles.container}>
             <NavBarTop navigation={navigation} />
 
-            <View style={{ height: "87%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
-                <View style={{ height: "100%", width: "100%" }}>
+            <View style={{ height: "93%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
+                <View style={{ height: "93%", width: "100%" }}>
                     <View style={styles.tabsContainer}>
                         <TouchableHighlight
                             style={[styles.tab, activeTab === 0 && styles.activeTab]}
@@ -80,14 +76,14 @@ const Social = ({ navigation }: Props) => {
                         <TouchableHighlight
                             style={[styles.tab, activeTab === 1 && styles.activeTab]}
                             onPress={() => handleTabPress(1)}
-                            underlayColor="#transparent"
+                            underlayColor="transparent"
                         >
                             <Text style={styles.tabText}>Amigos</Text>
                         </TouchableHighlight>
                         <TouchableHighlight
                             style={[styles.tab, activeTab === 2 && styles.activeTab]}
                             onPress={() => handleTabPress(2)}
-                            underlayColor="#transparent"
+                            underlayColor="transparent"
                         >
                             <Text style={styles.tabText}>Clan</Text>
                         </TouchableHighlight>
@@ -101,7 +97,7 @@ const Social = ({ navigation }: Props) => {
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}
                                     style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
-                                        <TouchableHighlight onPress={() => buscarUsuarios()} style={{justifyContent: 'center', width: 40}}>
+                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios()} style={{justifyContent: 'center', width: 40}}>
                                             <Icon name="search" size={30} color={"yellow"}></Icon>
                                         </TouchableHighlight>
                                     </LinearGradient>
@@ -112,7 +108,7 @@ const Social = ({ navigation }: Props) => {
                                         data={usuarios}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight onPress={() => navigation.navigate("ProfileOther", {user: item})}><UsuarioCard user={item}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {user: item})}><UsuarioCard user={item}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }
@@ -136,7 +132,7 @@ const Social = ({ navigation }: Props) => {
                 </View>
                 <NavBarBotton navigation={navigation} icon='social' />
             </View>
-        </KeyboardAvoidingView>
+        </View>
     );
 };
 

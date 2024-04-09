@@ -17,9 +17,9 @@ const UsuarioCard = ({user}: Props) => {
             <View style={{width: "61%"}}>
                 <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center', marginBottom: 10}}>{user.name}</Text>
                 {(user.id_guild == null) ? 
-                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Sin Guild</Text> 
+                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Sin Clan</Text> 
                 : 
-                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Con Guild</Text>
+                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Con Clan</Text>
                 }
             </View>
         </View>
