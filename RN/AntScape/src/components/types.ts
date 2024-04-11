@@ -97,5 +97,6 @@ export type Nest = {
 }
 
 export type Clan = {
-
+    name: string,
+    description: string,
 }

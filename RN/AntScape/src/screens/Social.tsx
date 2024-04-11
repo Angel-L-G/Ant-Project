@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableHighlight, TextInput, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableHighlight, TextInput, FlatList, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
 import { Icon } from 'react-native-elements';
@@ -46,10 +46,7 @@ const Social = ({ navigation }: Props) => {
 
         async function getC() {
             const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
-            const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
-                amigo.name.includes(valorInput) && amigo.name !== user.name
-            );
-            setAmigos(amigosFiltrados);
+            setClan(response.data);
         }
 
         getC();
@@ -103,7 +100,7 @@ const Social = ({ navigation }: Props) => {
     async function buscarClan() {
         try {
             const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
-
+            setClan(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -204,7 +201,41 @@ const Social = ({ navigation }: Props) => {
                         }
 
                         {(activeTab === 2) && 
-                            <Text>Clan</Text>
+                            (clan) ? 
+                                <View style={{height: "100%", width: "100%"}}>
+                                    <View style={{height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%"}}>
+                                        <View style={{width: "19%", marginHorizontal: "5%"}}>
+                                            <Image source={{uri: ruta + "v1/files/" + user.img}} style={{width: "100%", height: "80%", borderRadius: 100}} />
+                                        </View>
+                                        <View style={{width: "61%", backgroundColor: "red", marginHorizontal: "5%", flexDirection: 'column'}}>
+                                            <Text style={{color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center'}}>{clan.name}</Text>
+                                            <Text style={{color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular"}}>{clan.description}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{height: "10%", flexDirection: 'row', alignItems: 'center', width: "100%"}}>
+                                        <View style={{width: "57%", marginHorizontal: "5%", flexDirection: 'row', justifyContent: 'space-between'}}>
+                                            <TextInput style={{backgroundColor: "white", height: 35, width: "75%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                            <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                            start={{ x: 0.5, y: 0 }}
+                                            end={{ x: 0.5, y: 1 }}
+                                            style={{justifyContent: 'center'}}>
+                                                <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                                    <Icon name="search" size={30} color={"yellow"}></Icon>
+                                                </TouchableHighlight>
+                                            </LinearGradient>
+                                        </View>
+                                        <View style={{width: "23%", marginHorizontal: "5%", flexDirection: 'row'}}>
+                                            <TouchableHighlight style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
+                                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Abandonar</Text>
+                                            </TouchableHighlight>
+                                        </View>
+                                    </View>
+                                    <View style={{height: "76%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
+                                        
+                                    </View>
+                                </View>
+                            :
+                                <></>
                         }
                     </View>
                 </View>
