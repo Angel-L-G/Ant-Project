@@ -4,7 +4,7 @@ import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
 import { Icon } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
-import { User } from '../components/types';
+import { Clan, User } from '../components/types';
 import UsuarioCard from '../components/UsuarioCard';
 import Globals from '../components/Globals';
 import axios from 'axios';
@@ -20,6 +20,7 @@ const Social = ({ navigation }: Props) => {
     const [activeTab, setActiveTab] = useState(0);
     const [usuarios, setUsuarios] = useState<Array<User>>([]);
     const [amigos, setAmigos] = useState<Array<User>>([]);
+    const [clan, setClan] = useState<Clan>({} as Clan);
     const [valorInput, setValorInput] = useState('');
 
     useEffect(() => {
@@ -42,6 +43,16 @@ const Social = ({ navigation }: Props) => {
         }
 
         getA();
+
+        async function getC() {
+            const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
+            const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
+                amigo.name.includes(valorInput) && amigo.name !== user.name
+            );
+            setAmigos(amigosFiltrados);
+        }
+
+        getC();
     }, [])
     
 
@@ -53,6 +64,8 @@ const Social = ({ navigation }: Props) => {
             buscarUsuarios("");
         } else if (tabIndex === 1) {
             buscarAmigos("");
+        } else if (tabIndex === 2) {
+            buscarClan();
         }
     };
 
@@ -82,6 +95,15 @@ const Social = ({ navigation }: Props) => {
             );
             setAmigos(amigosFiltrados);
             console.log(amigosFiltrados);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function buscarClan() {
+        try {
+            const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
+
         } catch (error) {
             console.log(error);
         }
@@ -220,40 +242,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'MadimiOneRegular',
         color: 'yellow',
-    },
-
-    /*
-    <View style={styles.tabsContainer}>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 0 && styles.activeTab]}
-                    onPress={() => handleTabPress(0)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 1</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 1 && styles.activeTab]}
-                    onPress={() => handleTabPress(1)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 2</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 2 && styles.activeTab]}
-                    onPress={() => handleTabPress(2)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 3</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 3 && styles.activeTab]}
-                    onPress={() => handleTabPress(3)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 4</Text>
-                </TouchableHighlight>
-            </View>
-    */
+    }
 });
 
 export default Social;

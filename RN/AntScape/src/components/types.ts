@@ -95,3 +95,7 @@ export type Nest = {
     ant: Ant,
     user: User
 }
+
+export type Clan = {
+
+}

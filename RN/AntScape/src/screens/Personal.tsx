@@ -66,7 +66,6 @@ const Personal = ({ navigation }: Props) => {
         console.log(lastLevel);
 
         const coste = Math.round(lastLevel?.multiplier ** levels.length * 100);
-        const cantidadEggs = eggs;
         const cantidadEg = eg.current;
 
         const dineroRestante = Math.round(cantidadEg - coste);
