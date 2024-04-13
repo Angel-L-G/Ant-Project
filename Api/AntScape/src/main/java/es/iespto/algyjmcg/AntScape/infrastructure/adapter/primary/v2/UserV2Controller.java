@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -136,7 +137,7 @@ public class UserV2Controller {
 		}
 	}
 	
-	@PostMapping(path="/{me}/friends/add/{name_friend}")
+	@PostMapping(path="/{me}/friends/{name_friend}")
 	public ResponseEntity<?> addFriend(@PathVariable String me, @PathVariable String name_friend){
 		boolean added = userService.addFriend(me, name_friend);
 		
@@ -147,7 +148,7 @@ public class UserV2Controller {
 		}
 	}
 	
-	@PostMapping(path="/{me}/blocked/block/{name_blocked}")
+	@PostMapping(path="/{me}/blocked/{name_blocked}")
 	public ResponseEntity<?> block(@PathVariable String me, @PathVariable String name_friend){
 		boolean blocked = userService.block(me, name_friend);
 		
@@ -192,7 +193,7 @@ public class UserV2Controller {
 		}
 	}
 	
-	@PostMapping(path="/{me}/friends/remove/{name_friend}")
+	@DeleteMapping(path="/{me}/friends/{name_friend}")
 	public ResponseEntity<?> removeFriend(@PathVariable String me, @PathVariable String name_friend){
 		boolean added = userService.removeFriend(me, name_friend);
 		
@@ -203,7 +204,7 @@ public class UserV2Controller {
 		}
 	}
 	
-	@PostMapping(path="/{me}/blocked/unblock/{name_blocked}")
+	@DeleteMapping(path="/{me}/blocked/{name_blocked}")
 	public ResponseEntity<?> unblock(@PathVariable String me, @PathVariable String name_friend){
 		boolean blocked = userService.unblock(me, name_friend);
 		

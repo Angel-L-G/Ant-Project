@@ -3,7 +3,6 @@ package es.iespto.algyjmcg.AntScape.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AdministrativeInfoEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 
 public class Usuario {
@@ -23,7 +22,8 @@ public class Usuario {
 	private List<Ant> ants;
 	private List<Usuario> amigos;
 	private List<UsuarioEntity> bloqued;
-	private List<AdministrativeInfoEntity> administrativeInfos;
+	private List<AdministrativeInfo> administrativeInfos;
+	private List<Chat> chats;
 
 	public Usuario() {
 		nests = new ArrayList<Nest>();
@@ -172,11 +172,19 @@ public class Usuario {
 		this.bloqued = bloqued;
 	}
 
-	public List<AdministrativeInfoEntity> getAdministrativeInfos() {
+	public List<AdministrativeInfo> getAdministrativeInfos() {
 		return administrativeInfos;
 	}
 
-	public void setAdministrativeInfos(List<AdministrativeInfoEntity> administrativeInfos) {
+	public void setAdministrativeInfos(List<AdministrativeInfo> administrativeInfos) {
 		this.administrativeInfos = administrativeInfos;
+	}
+
+	public List<Chat> getChats() {
+		return chats;
+	}
+
+	public void setChats(List<Chat> chats) {
+		this.chats = chats;
 	}
 }

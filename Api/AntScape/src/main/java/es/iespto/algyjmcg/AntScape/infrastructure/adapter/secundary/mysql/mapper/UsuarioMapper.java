@@ -54,14 +54,6 @@ public class UsuarioMapper {
 			out.setEggs(in.getEggs());
 			out.setGoldenEggs(in.getGoldenEggs());
 			out.setImg(in.getImg());
-			
-			if(in.getNests() != null && in.getNests().size() != 0) {
-				List<Nest> lista = new ArrayList<Nest>();
-				for (NestEntity entity : in.getNests()) {
-					lista.add(nm.toDomain(entity));
-				}
-				out.setNests(lista);
-			}
 		}
 		
 		return out;

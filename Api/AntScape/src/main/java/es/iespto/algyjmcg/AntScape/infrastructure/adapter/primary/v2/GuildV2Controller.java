@@ -52,7 +52,7 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/joinguild/{id}")
+	@PutMapping(path="/joinguild/{id}/user/{id_user}")
 	public ResponseEntity<?> joinGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
 		if(id_guild != null) {
 			String token = headers.getFirst("Authorization");
@@ -73,7 +73,7 @@ public class GuildV2Controller {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
 			}
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content On Request Body");
 		}
 	}
 	
