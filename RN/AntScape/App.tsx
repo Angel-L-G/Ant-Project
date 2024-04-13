@@ -40,7 +40,7 @@ import Profile from './src/screens/Profile';
 import Game from './src/screens/Game';
 import AppContextProvider from './src/components/AppContextProvider';
 import Personal from './src/screens/Personal';
-import ChatScreen from './src/screens/ChatScreen';
+import NuevoChat from './src/screens/NuevoChat';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -51,7 +51,7 @@ type RootStackParamList = {
     Login: undefined,
     Main: undefined,
     Social: undefined,
-    ChatScreen: undefined,
+    NuevoChat: undefined,
     Settings: undefined,
     Outside: undefined,
     NewHormiguero: undefined,
@@ -73,7 +73,7 @@ function App(): JSX.Element {
         <AppContextProvider>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown: false}}>
-                    <Stack.Screen name="ChatScreen" component={ChatScreen}/>
+                    <Stack.Screen name="NuevoChat" component={NuevoChat}/>
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Game" component={Game}/>
