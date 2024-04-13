@@ -96,7 +96,7 @@ export type Nest = {
     user: User
 }
 
-export type Clan = {
+export type ClanType = {
     name: string,
     description: string,
 }

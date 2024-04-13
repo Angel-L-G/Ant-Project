@@ -4,54 +4,86 @@ import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
 import { Icon } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
-import { Clan, User } from '../components/types';
+import { ClanType, User } from '../components/types';
 import UsuarioCard from '../components/UsuarioCard';
 import Globals from '../components/Globals';
 import axios from 'axios';
 import { AppContext } from '../context/AppContextProvider';
+import ClanCard from '../components/ClanCard';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-type Props = {
-    navigation: any,
-}
+type Props = NativeStackScreenProps<RootStackParamList, "Social">;
 
-const Social = ({ navigation }: Props) => {
+const Social = ({ navigation, route }: Props) => {
     const {ruta} = Globals();
     const {token, user} = useContext(AppContext);
     const [activeTab, setActiveTab] = useState(0);
     const [usuarios, setUsuarios] = useState<Array<User>>([]);
     const [amigos, setAmigos] = useState<Array<User>>([]);
-    const [clan, setClan] = useState<Clan>({} as Clan);
+    const [clan, setClan] = useState<ClanType>({} as ClanType);
+    const [tieneClan, setTieneClan] = useState(false);
+    const [clanes, setClanes] = useState<Array<ClanType>>([]);
     const [valorInput, setValorInput] = useState('');
+    const tabNumber = route.params.tab;
 
     useEffect(() => {
         async function getU() {
-            const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
-            const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
-                usuario.name.includes(valorInput) && usuario.name !== user.name
-            );
-            setUsuarios(usuariosFiltrados);
+            try {
+                const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
+                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
+                    usuario.name.includes(valorInput) && usuario.name !== user.name
+                );
+                setUsuarios(usuariosFiltrados);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         getU();
 
         async function getA() {
-            const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
-            const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
-                amigo.name.includes(valorInput) && amigo.name !== user.name
-            );
-            setAmigos(amigosFiltrados);
+            try {
+                const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
+                const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
+                    amigo.name.includes(valorInput) && amigo.name !== user.name
+                );
+                setAmigos(amigosFiltrados);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         getA();
 
         async function getC() {
-            const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
-            setClan(response.data);
+            try {
+                const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].id === user.id_guild) {
+                        setClan(response.data[i]);
+                        setTieneClan(true);
+                    }
+                }
+                const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) => 
+                    c.name.includes(valorInput) && c !== clan
+                );
+                setClanes(clanesFiltrados);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         getC();
     }, [])
     
+    useEffect(() => {
+        setActiveTab(tabNumber);
+    }, [tabNumber])
+
+    function passToChildren() {
+
+    }
 
     const handleTabPress = (tabIndex: number) => {
         setActiveTab(tabIndex);
@@ -63,6 +95,7 @@ const Social = ({ navigation }: Props) => {
             buscarAmigos("");
         } else if (tabIndex === 2) {
             buscarClan();
+            buscarClanes("");
         }
     };
 
@@ -101,6 +134,18 @@ const Social = ({ navigation }: Props) => {
         try {
             const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
             setClan(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function buscarClanes(texto: string) {
+        try {
+            const response = await axios.get(ruta + "v2/guilds/", { headers: { "Authorization": "Bearer " + token } });
+            const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) => 
+                c.name.includes(valorInput) && c !== clan
+            );
+            setClanes(clanesFiltrados);
         } catch (error) {
             console.log(error);
         }
@@ -194,14 +239,14 @@ const Social = ({ navigation }: Props) => {
                                         style={{}}
                                         />
                                     :
-                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center', width: "70%", textAlign: 'center'}}>No se han encontrado amigos con ese nombre</Text>
+                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center', width: "70%", textAlign: 'center'}}>No se han encontrado amigos</Text>
                                     }
                                 </View>
                             </View>
                         }
 
                         {(activeTab === 2) && 
-                            (clan) ? 
+                            (tieneClan) ? 
                                 <View style={{height: "100%", width: "100%"}}>
                                     <View style={{height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%"}}>
                                         <View style={{width: "19%", marginHorizontal: "5%"}}>
@@ -235,7 +280,35 @@ const Social = ({ navigation }: Props) => {
                                     </View>
                                 </View>
                             :
-                                <></>
+                                <View style={{height: "100%", width: "100%"}}>
+                                    <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
+                                        <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                        start={{ x: 0.5, y: 0 }}
+                                        end={{ x: 0.5, y: 1 }}
+                                        style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
+                                            <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarClanes(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                                <Icon name="search" size={30} color={"yellow"}></Icon>
+                                            </TouchableHighlight>
+                                        </LinearGradient>
+                                    </View>
+                                    <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
+                                        {(clanes.length > 0) ? 
+                                            <FlatList
+                                            data={clanes}
+                                            renderItem={({ item }) =>
+                                                <View>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", {clan: item})}><ClanCard clan={item}/></TouchableHighlight>
+                                                    <View style={{height: 1, backgroundColor: "black"}}></View>
+                                                </View>
+                                            }
+                                            style={{}}
+                                            />
+                                        :
+                                            <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado clanes</Text>
+                                        }
+                                    </View>
+                            </View>
                         }
                     </View>
                 </View>
