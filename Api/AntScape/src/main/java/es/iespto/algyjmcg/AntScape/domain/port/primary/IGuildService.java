@@ -8,4 +8,7 @@ public interface IGuildService {
 	Iterable<Guild> findAll();
 	void deleteById(Integer id);
 	boolean update(Guild in);
+	
+	boolean giveOwnership(Integer idGuild, Integer idNewOwner);
+	boolean removeUser(Integer idGuild, Integer idRemoved);
 }

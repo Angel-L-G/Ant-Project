@@ -5,9 +5,11 @@ import java.util.List;
 
 public class Guild {
 	private Integer id;
+	private Integer leader;
 	private Integer defenseNumber;
 	private Integer defenseRange;
 	private String name;
+	private String decription;
 	private Integer quantity;
 	private Integer trophys;
 	private List<GuildLevel> guildLevels;
@@ -108,5 +110,21 @@ public class Guild {
 		usuario.setGuild(null);
 
 		return usuario;
+	}
+
+	public Integer getLeader() {
+		return leader;
+	}
+
+	public void setLeader(Integer leader) {
+		this.leader = leader;
+	}
+
+	public String getDecription() {
+		return decription;
+	}
+
+	public void setDecription(String decription) {
+		this.decription = decription;
 	}
 }

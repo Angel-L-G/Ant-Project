@@ -19,8 +19,10 @@ DROP TABLE IF EXISTS `administrative_info`;
 
 CREATE TABLE `guild` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `leader` INT NOT NULL,
   `name` varchar(45),
-  `trophys` INT NOT NULL DEFAULT(1),
+  `description` TEXT,
+  `trophys` INT NOT NULL DEFAULT(10),
   `quantity` INT DEFAULT(1),
   `defense_range` INT DEFAULT(1-6),
   `defense_number` INT DEFAULT(null),
@@ -135,8 +137,8 @@ CREATE TABLE `bosses` (
   CONSTRAINT pk_boss PRIMARY KEY(id)
 );
 
-INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 15, 7, 2, 5);
-INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (1, 'Guild2', 15, 7, 2, 5);
+INSERT INTO guild (id, leader, description, name, trophys, quantity, defense_range, defense_number) VALUES (2, 1, "desc", 'Guild2', 15, 7, 2, 5);
+INSERT INTO guild (id, leader, description, name, trophys, quantity, defense_range, defense_number) VALUES (1, 2, "desc",'Guild2', 15, 7, 2, 5);
 
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1);
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2);
@@ -145,8 +147,6 @@ INSERT INTO administrative_info (usuario_id, informacion, last_login)
 VALUES (1, 'Información administrativa para el usuario 1', '2024-03-25 15:30:00');
 INSERT INTO administrative_info (usuario_id, informacion, last_login) 
 VALUES (2, 'Información administrativa para el usuario 2', '2024-03-26 10:45:00');
-INSERT INTO administrative_info (usuario_id, informacion, last_login) 
-VALUES (3, 'Información administrativa para el usuario 3', '2024-03-24 18:20:00');
 
 INSERT INTO guild_levels (id, id_guild, name, cost, level, efect) VALUES (1, 1, 'Level1', 100, 1, 'Efecto nivel 1');
 INSERT INTO guild_levels (id, id_guild, name, cost, level, efect) VALUES (2, 1, 'Level2', 200, 2, 'Efecto nivel 2');
