@@ -21,6 +21,8 @@ public class GuildMapper {
 			out.setDefenseRange(in.getDefenseRange());
 			out.setQuantity(in.getQuantity());
 			out.setTrophys(in.getTrophys());
+			out.setDecription(in.getDecription());
+			out.setLeader(in.getLeader());
 			
 			if(in.getGuildLevels() != null) {
 				List<GuildLevelEntity> list = new ArrayList<GuildLevelEntity>();
@@ -44,6 +46,8 @@ public class GuildMapper {
 			out.setDefenseRange(in.getDefenseRange());
 			out.setQuantity(in.getQuantity());
 			out.setTrophys(in.getTrophys());
+			out.setDecription(in.getDecription());
+			out.setLeader(in.getLeader());
 			
 			if(in.getGuildLevels() != null) {
 				for (GuildLevelEntity entity : in.getGuildLevels()) {

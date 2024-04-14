@@ -36,4 +36,14 @@ public class GuildDomainService implements IGuildService{
 	public boolean update(Guild in) {
 		return service.update(in);
 	}
+
+	@Override
+	public boolean giveOwnership(Integer idGuild, Integer idNewOwner) {
+		return service.giveOwnership(idGuild, idNewOwner);
+	}
+
+	@Override
+	public boolean removeUser(Integer idGuild, Integer idRemoved) {
+		return service.removeUser(idGuild, idRemoved);
+	}
 }

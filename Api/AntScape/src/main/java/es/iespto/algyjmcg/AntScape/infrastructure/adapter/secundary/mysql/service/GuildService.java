@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IGuildRepository;
+import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.GuildEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.GuildJPARepository;
@@ -18,6 +20,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.reposi
 @Service
 public class GuildService implements IGuildRepository{
 	@Autowired private GuildJPARepository repository;
+	@Autowired private IUsuarioRepository userService;
 	private GuildMapper gm = new GuildMapper();
 	private UsuarioMapper um = new UsuarioMapper();
 
@@ -94,6 +97,50 @@ public class GuildService implements IGuildRepository{
 				}
 				
 				ok = true;
+			}
+		}
+		
+		return ok;
+	}
+
+	@Override
+	public boolean giveOwnership(Integer idGuild, Integer idNewOwner) {
+		boolean ok = false;
+		
+		if(idGuild != null && idNewOwner != null) {
+			Usuario newOwner = userService.findById(idNewOwner); 
+			Optional<GuildEntity> guild = repository.findById(idGuild);
+		
+			if(newOwner != null && guild.isPresent()) {
+				guild.get().setLeader(idNewOwner);
+				
+				GuildEntity save = repository.save(guild.get());
+				
+				if(save != null) {
+					ok = true;
+				}
+			}
+		}
+		
+		return ok;
+	}
+
+	@Override
+	public boolean removeUser(Integer idGuild, Integer idRemoved) {
+		boolean ok = false;
+		
+		if(idGuild != null && idRemoved != null) {
+			Usuario removed = userService.findById(idRemoved); 
+			Optional<GuildEntity> guild = repository.findById(idGuild);
+			
+			if(removed != null && guild.isPresent()) {
+				UsuarioEntity removedEntity = um.toPersistance(removed);
+				
+				guild.get().getUsuarios().remove(removedEntity);
+				repository.save(guild.get());
+			
+				removed.setGuild(null);
+				userService.save(removed);
 			}
 		}
 		

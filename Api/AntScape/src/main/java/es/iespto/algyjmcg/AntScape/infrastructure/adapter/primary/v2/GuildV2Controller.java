@@ -3,14 +3,16 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
@@ -52,6 +54,42 @@ public class GuildV2Controller {
 		}
 	}
 	
+	@PutMapping(path="/kick/{idGuild}/user/{idKicked}")
+	public ResponseEntity<?> kickPlayer(@PathVariable Integer idGuild, @RequestParam Integer idKicked, @RequestHeader HttpHeaders headers){
+		if(idGuild != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			Usuario byId = userService.findById(idKicked);
+			
+			Guild guild = mainService.findById(idGuild);
+			
+			if(user!=null && byId!=null && guild!=null) {
+				if(guild.getLeader() == user.getId()) {
+					guild.getUsuarios().remove(byId);
+					byId.setGuild(null);
+					
+					Guild guildSaved = mainService.save(guild);
+					Usuario userSaved = userService.save(byId);
+					
+					if(guildSaved!=null && userSaved!=null) {
+						return ResponseEntity.ok("User Kicked Correctly");
+					}else {
+						return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong, and user could not be kicked");
+					}
+				} else {
+					return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only the leader can kick people from the clan");
+				}
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Guild or Users found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
 	@PutMapping(path="/joinguild/{id}")
 	public ResponseEntity<?> joinGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
 		if(id_guild != null) {
@@ -77,25 +115,60 @@ public class GuildV2Controller {
 		}
 	}
 	
+	@PutMapping(path="/giveOwnership/{id}")
+	public ResponseEntity<?> giveOwnership(@PathVariable Integer id, @RequestParam Integer newLeaderId, @RequestHeader HttpHeaders headers){
+		if(id != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			Usuario newLeader = userService.findById(id);
+			
+			Guild guild = mainService.findById(id);
+			
+			boolean giveOwnership = false;
+			
+			if(guild.getLeader() == user.getId()) {
+				if(guild.getUsuarios().contains(user) && guild.getUsuarios().contains(newLeader)) {
+					giveOwnership = mainService.giveOwnership(id, newLeaderId);
+				}
+			}
+			
+			if(giveOwnership) {
+				return ResponseEntity.ok("Leadership Correctly Given");
+			}else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't give the ownership");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
 	@PutMapping(path="/leaveguild/{id}")
-	public ResponseEntity<?> leaveGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
-		if(id_guild != null) {
+	public ResponseEntity<?> leaveGuild(@PathVariable Integer id, @RequestParam Integer newLeader, @RequestHeader HttpHeaders headers){
+		if(id != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
 			
 			Usuario user = userService.findByName(username);
 			
-			Guild guild = mainService.findById(id_guild);
+			Guild guild = mainService.findById(id);
 			
-			guild.removeUsuario(user);
+			if(guild.getLeader() == user.getId()) {
+				if(guild.getUsuarios().size() == 0) {
+					mainService.deleteById(id);
+				}else {
+					mainService.giveOwnership(id, newLeader);
+				}
+			} else {
+				guild.removeUsuario(user);
+			}
 			
 			Guild save = mainService.save(guild);
 			
 			if(save != null && save.getUsuarios().contains(user)) {
-				if(guild.getUsuarios().size() == 0) {
-					mainService.deleteById(id_guild);
-				}
 				return ResponseEntity.ok("User Leaved The Guild Correctly");
 			}else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't leave the guild");
@@ -105,9 +178,9 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/createguild")
-	public ResponseEntity<?> createGuild(@RequestHeader HttpHeaders headers, @RequestBody String guild_name){
-		if(guild_name != null) {
+	@PostMapping()
+	public ResponseEntity<?> createGuild(@RequestHeader HttpHeaders headers, @RequestParam String guildName, @RequestParam String guildDescription){
+		if(guildName != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
@@ -116,7 +189,12 @@ public class GuildV2Controller {
 			
 			Guild guild = new Guild();
 			
-			guild.setName(guild_name);
+			if(guildDescription == null || guildDescription.isBlank()) {
+				guildDescription = "Default Description";
+			}
+			
+			guild.setName(guildName);
+			guild.setDecription(guildDescription);
 			guild.getUsuarios().add(user);
 			guild.setTrophys(10);
 			
@@ -131,4 +209,6 @@ public class GuildV2Controller {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
+	
+	
 }

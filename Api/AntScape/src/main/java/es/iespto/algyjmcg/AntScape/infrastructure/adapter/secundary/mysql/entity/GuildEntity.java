@@ -28,6 +28,8 @@ public class GuildEntity implements Serializable {
 	@Column(unique=true, nullable=false)
 	private Integer id;
 
+	private Integer leader;
+	
 	@Column(name="defense_number")
 	private Integer defenseNumber;
 
@@ -36,6 +38,8 @@ public class GuildEntity implements Serializable {
 
 	@Column(length=45)
 	private String name;
+	
+	private String decription;
 
 	private Integer quantity;
 
@@ -143,5 +147,21 @@ public class GuildEntity implements Serializable {
 		usuario.setGuild(null);
 
 		return usuario;
+	}
+
+	public Integer getLeader() {
+		return leader;
+	}
+
+	public void setLeader(Integer leader) {
+		this.leader = leader;
+	}
+
+	public String getDecription() {
+		return decription;
+	}
+
+	public void setDecription(String decription) {
+		this.decription = decription;
 	}
 }
