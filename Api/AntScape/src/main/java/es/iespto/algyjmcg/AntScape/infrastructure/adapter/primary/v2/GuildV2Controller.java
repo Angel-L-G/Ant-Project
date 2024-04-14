@@ -3,6 +3,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,42 @@ public class GuildV2Controller {
 				return ResponseEntity.ok(find);
 			}else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@PutMapping(path="/kick/{idGuild}/user/{idKicked}")
+	public ResponseEntity<?> kickPlayer(@PathVariable Integer idGuild, @RequestParam Integer idKicked, @RequestHeader HttpHeaders headers){
+		if(idGuild != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			Usuario byId = userService.findById(idKicked);
+			
+			Guild guild = mainService.findById(idGuild);
+			
+			if(user!=null && byId!=null && guild!=null) {
+				if(guild.getLeader() == user.getId()) {
+					guild.getUsuarios().remove(byId);
+					byId.setGuild(null);
+					
+					Guild guildSaved = mainService.save(guild);
+					Usuario userSaved = userService.save(byId);
+					
+					if(guildSaved!=null && userSaved!=null) {
+						return ResponseEntity.ok("User Kicked Correctly");
+					}else {
+						return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong, and user could not be kicked");
+					}
+				} else {
+					return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only the leader can kick people from the clan");
+				}
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Guild or Users found");
 			}
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
