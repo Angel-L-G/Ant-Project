@@ -5,11 +5,9 @@ import java.sql.Timestamp;
 public class Message {
 	private Integer id;
 	private String body;
-	private Integer guildId;
 	private Timestamp sentAt;
 	private Chat chat;
-	private Usuario sender;
-	private Usuario reciever;
+	private Integer senderId;
 	
 	public Message() {}
 	
@@ -20,21 +18,13 @@ public class Message {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public String getBody() {
 		return body;
 	}
-	
+
 	public void setBody(String body) {
 		this.body = body;
-	}
-
-	public Integer getGuildId() {
-		return guildId;
-	}
-
-	public void setGuildId(Integer guildId) {
-		this.guildId = guildId;
 	}
 
 	public Timestamp getSentAt() {
@@ -53,19 +43,12 @@ public class Message {
 		this.chat = chat;
 	}
 
-	public Usuario getSender() {
-		return sender;
+	public Integer getSenderId() {
+		return senderId;
 	}
 
-	public void setSender(Usuario sender) {
-		this.sender = sender;
+	public void setSenderId(Integer senderId) {
+		this.senderId = senderId;
 	}
-
-	public Usuario getReciever() {
-		return reciever;
-	}
-
-	public void setReciever(Usuario reciever) {
-		this.reciever = reciever;
-	}
+	
 }

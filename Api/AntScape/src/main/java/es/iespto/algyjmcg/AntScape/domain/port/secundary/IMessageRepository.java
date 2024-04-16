@@ -8,4 +8,6 @@ public interface IMessageRepository {
 	Iterable<Message> findAll();
 	void deleteById(Integer id);
 	boolean update(Message in);
+	
+	Iterable<Message> findByChatId(Integer id);
 }

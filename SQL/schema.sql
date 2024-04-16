@@ -140,7 +140,13 @@ CREATE TABLE `bosses` (
 
 CREATE TABLE chats (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100)
+    last_message Text,
+    id_guild INT NULL,
+    id_user1 INT NULL,
+    id_user2 INT NULL,
+    FOREIGN KEY (id_guild) REFERENCES guild(id),
+    FOREIGN KEY (id_user1) REFERENCES usuarios(id),
+    FOREIGN KEY (id_user2) REFERENCES usuarios(id)
 );
 
 -- Tabla intermedia para la relación de usuarios con chats
@@ -157,15 +163,11 @@ CREATE TABLE user_chats (
 CREATE TABLE messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     chat_id INT NULL,
-    guild_id INT NULL,
     sender_id INT,
-    receiver_id INT,
-    body VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (chat_id) REFERENCES chats(id),
-    FOREIGN KEY (guild_id) REFERENCES guild(id),
-    FOREIGN KEY (sender_id) REFERENCES usuarios(id),
-    FOREIGN KEY (receiver_id) REFERENCES usuarios(id)
+    FOREIGN KEY (sender_id) REFERENCES usuarios(id)
 );
 
 INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 15, 7, 2, 5);
@@ -209,9 +211,18 @@ INSERT INTO nest_levels (id, nest_id, name, production, cost, level, multiplier)
 INSERT INTO bosses (id, name, life, damage, reward) VALUES (1, 'Boss1', 100, 20, 500);
 INSERT INTO bosses (id, name, life, damage, reward) VALUES (2, 'Boss2', 150, 30, 750);
 
-INSERT INTO chats (name) VALUES ('Chat entre Juan y María');
+INSERT INTO chats (last_message, id_guild, id_user1, id_user2) VALUES 
+('Hola, ¿cómo estás?', NULL, 1, 2),
+('Estoy emocionado por el nuevo proyecto.', 1, NULL, NULL);
 
-INSERT INTO user_chats (user_id, chat_id) VALUES (1, 1);
-INSERT INTO user_chats (user_id, chat_id) VALUES (2, 1);
+INSERT INTO user_chats (user_id, chat_id) VALUES 
+(1, 1),
+(1, 2);
 
-INSERT INTO messages (id, sender_id, receiver_id, body) VALUES (1, 1, 2, 'Hola María, ¿cómo estás?');
+INSERT INTO messages (chat_id, sender_id, body) VALUES 
+(1, 1, 'Todo bien, gracias. ¿Y tú?'),
+(1, 2, 'Bien, preparando unas cosas para la universidad.'),
+(2, 2, 'Aún no lo sé, ¿tienes alguna sugerencia?'),
+(2, 2, 'Podríamos ir al cine o salir a cenar.'),
+(2, 1, 'Sí, el proyecto parece muy interesante.'),
+(1, 1, 'Estoy ansioso por empezar.');

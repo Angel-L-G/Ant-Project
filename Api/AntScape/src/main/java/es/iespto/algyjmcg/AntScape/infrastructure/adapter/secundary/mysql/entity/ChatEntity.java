@@ -3,11 +3,16 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -25,35 +30,71 @@ public class ChatEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	@Column(unique=true, nullable=false)
+	private Integer id;
 
-	private String name;
+	@Column(nullable=true)
+	@JsonIgnore
+	private Integer idGuild;
+
+	@Lob
+	private String lastMessage;
+
+	//bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name="id_user1")
+	private UsuarioEntity usuario1;
+
+	//bi-directional many-to-one association to Usuario
+	@ManyToOne
+	@JoinColumn(name="id_user2")
+	private UsuarioEntity usuario2;
 
 	//bi-directional many-to-one association to Message
 	@OneToMany(mappedBy="chat")
 	private List<MessageEntity> messages;
 
-	//bi-directional many-to-many association to Usuario
-	@ManyToMany(mappedBy="chats")
-	private List<UsuarioEntity> usuarios;
-
 	public ChatEntity() {
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return this.name;
+	public Integer getIdGuild() {
+		return this.idGuild;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setIdGuild(Integer idGuild) {
+		this.idGuild = idGuild;
+	}
+
+	public String getLastMessage() {
+		return this.lastMessage;
+	}
+
+	public void setLastMessage(String lastMessage) {
+		this.lastMessage = lastMessage;
+	}
+
+	public UsuarioEntity getUsuario1() {
+		return this.usuario1;
+	}
+
+	public void setUsuario1(UsuarioEntity usuario1) {
+		this.usuario1 = usuario1;
+	}
+
+	public UsuarioEntity getUsuario2() {
+		return this.usuario2;
+	}
+
+	public void setUsuario2(UsuarioEntity usuario2) {
+		this.usuario2 = usuario2;
 	}
 
 	public List<MessageEntity> getMessages() {
@@ -76,14 +117,6 @@ public class ChatEntity implements Serializable {
 		message.setChat(null);
 
 		return message;
-	}
-
-	public List<UsuarioEntity> getUsuarios() {
-		return this.usuarios;
-	}
-
-	public void setUsuarios(List<UsuarioEntity> usuarios) {
-		this.usuarios = usuarios;
 	}
 
 }

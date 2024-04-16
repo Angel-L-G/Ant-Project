@@ -8,7 +8,7 @@ import AppContextProvider, { AppContext } from '../components/AppContextProvider
 
 type Props = {
     navigation:any
-  }
+}
   
 const UseSesion = () => {
     const {setUser,setToken,setRol,token} = useContext(AppContext);
