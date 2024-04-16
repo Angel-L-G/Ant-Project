@@ -3,7 +3,6 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,6 +101,7 @@ public class GuildV2Controller {
 			Guild guild = mainService.findById(id_guild);
 			
 			guild.addUsuario(user);
+			guild.setQuantity(guild.getUsuarios().size());
 			
 			Guild save = mainService.save(guild);
 			
@@ -111,7 +111,7 @@ public class GuildV2Controller {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
 			}
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content On Request Body");
 		}
 	}
 	
@@ -166,6 +166,8 @@ public class GuildV2Controller {
 				guild.removeUsuario(user);
 			}
 			
+			guild.setQuantity(guild.getUsuarios().size());
+			
 			Guild save = mainService.save(guild);
 			
 			if(save != null && save.getUsuarios().contains(user)) {
@@ -199,13 +201,22 @@ public class GuildV2Controller {
 			guild.setTrophys(10);
 			guild.setQuantity(1);
 			guild.setLeader(user.getId());
+<<<<<<< HEAD
+=======
+			
+			boolean update = userService.update(user);
+>>>>>>> hexagonal
 			
 			Guild save = mainService.save(guild);
 			
 			user.setGuild(guild);
+<<<<<<< HEAD
 
 			boolean update = userService.update(user);
 
+=======
+			
+>>>>>>> hexagonal
 			if(save != null && update) {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
 			}else {

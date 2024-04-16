@@ -1,65 +1,113 @@
 import { View, Text } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
+<<<<<<< HEAD
 import Globals from '../components/Globals'
+=======
+import { Client } from '@stomp/stompjs'
+>>>>>>> hexagonal
 
-type Props = {
-    navigation: any
-}
+const UseChat = () => {
+    const stompRef = useRef({} as Client);
+    const [token, setToken] = useState("");
+    const [conectado, setConectado] = useState(false);
+    const [historico, setHistorico] = useState<string[]>(new Array<string>());
+    const ip = "192.168.1.15:8080";
 
+<<<<<<< HEAD
 const UseChat = (props: Props) => {
     const {ruta} = Globals();
 
     const [chats, setChats] = useState<Array<Chat>>([] as Array<Chat>);
+=======
+    function conectar() {
+        stompRef.current = new Client({
+            brokerURL: 'ws://' + ip + '/websocket',
+            connectHeaders: {
+                Authorization: 'Bearer ' + token,
+            },
+            debug: function (str) {
+                console.log(str);
+            },
+            onConnect: conectarOK,
+            onWebSocketError: (error) => console.log(error),
+            onStompError: (frame) => {
+                console.log('Additional details: ' + frame.body);
+            },
+            forceBinaryWSFrames: true,
+            appendMissingNULLonIncoming: true,
+        });
+>>>>>>> hexagonal
 
-    useEffect(() => {
-        async function getAll(){
-            await findAll();
-        }
-        
-        getAll();
-    }, [])
-    
-    async function findAll(){
-        try{
-            const response = await axios.get(ruta);
-            setChats(response.data);
-        } catch (error){
-            console.log(error);
-        }
-    }
-
-    async function findByid(id: number){
-        chats.map((chat)=>{
-            if(chat.id == id){
-                return chat;
-            }
-        })
-        return null;
-    }
-
-    async function save(newChat: Chat){
-        const axiospost = async (ruta: string) => {
-            try{
-                const response = await axios.post(ruta, newChat);
-            } catch (error){
-                console.log(error);
-            }
+        function conectarOK() {
+            setConectado(true);
+            console.log("entra en conectarOK");
+            let stompClient = stompRef.current;
+            stompClient.subscribe('/salas/general', onPublicMessageReceived);
+            stompClient.subscribe('/usuarios/cola/mensajes', onPrivateMessageReceived);
         }
 
-        axiospost(ruta);
+        function conectarError() {
+
+        }
+
+        stompRef.current.activate();
     }
 
-    async function drop(){}
+    function onPublicMessageReceived(datos: any) {
+        console.log("datos: " + datos);
+        //setRecibido(datos.body);
+        let nuevoMensaje = JSON.parse(datos.body);
+        console.log(nuevoMensaje);
+        let arr = historico;
+        arr.push(nuevoMensaje.author + " dice a todos: " + nuevoMensaje.content);
+        setHistorico([...arr]);
+    }
 
-    async function update(){}
+    function onPrivateMessageReceived(datos: any) {
+        console.log("datos: " + datos);
+        //setRecibido(datos.body);
+        let nuevoMensaje = JSON.parse(datos.body);
+        console.log(nuevoMensaje);
+        let arr = historico;
+        arr.push(nuevoMensaje.author + " te dice en privado: " + nuevoMensaje.content);
+        setHistorico([...arr]);
+    }
+
+    function enviar(autor: string, mensaje: string) {
+        let stompClient = stompRef.current;
+        let messageTo = {
+            author: autor,
+            receiver: "no hay receptor específico",
+            content: mensaje
+        };
+
+        stompClient.publish({ destination: "/app/mensajegeneral", body: JSON.stringify(messageTo) });
+        console.log("enviado público");
+    }
+
+    function enviarPrivado(autor: string, receptor:string, mensaje: string) {
+        let stompClient = stompRef.current;
+        let messageTo = {
+            author: autor,
+            receiver: receptor,
+            content: mensaje
+
+        };
+        stompClient.publish({ destination: "/app/privado", body: JSON.stringify(messageTo) });
+        console.log("enviado privado");
+
+        let arr = historico;
+        arr.push("le dices a  " + messageTo.receiver + ": " + messageTo.content);
+        setHistorico([...arr]);
+    }
 
     return {
-        findAll,
-        findByid,
-        save,
-        drop,
-        update
+        conectar,
+        enviar,
+        enviarPrivado,
+        conectado,
+        historico
     }
 }
 

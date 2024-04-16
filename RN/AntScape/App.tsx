@@ -8,7 +8,6 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 import type { PropsWithChildren } from 'react';
-
 import {
     SafeAreaView,
     ScrollView,
@@ -39,12 +38,16 @@ import Profile from './src/screens/Profile';
 import Game from './src/screens/Game';
 import AppContextProvider from './src/context/AppContextProvider';
 import Personal from './src/screens/Personal';
+<<<<<<< HEAD
 import ProfileOther from './src/screens/ProfileOther';
 import { ClanType, User } from './src/components/types';
 import Clan from './src/screens/Clan';
 import Ajustes from './src/screens/Ajustes';
 import ClanProfile from './src/screens/ClanProfile';
 import CrearClan from './src/screens/CrearClan';
+=======
+import NuevoChat from './src/screens/NuevoChat';
+>>>>>>> hexagonal
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -53,7 +56,16 @@ type SectionProps = PropsWithChildren<{
 export type RootStackParamList = {
     Register: undefined,
     Login: undefined,
+<<<<<<< HEAD
     Social: {tab: number},
+=======
+    Main: undefined,
+    Social: undefined,
+    NuevoChat: undefined,
+    Settings: undefined,
+    Outside: undefined,
+    NewHormiguero: undefined,
+>>>>>>> hexagonal
     Profile: undefined,
     Personal: undefined,
     ProfileOther: {usu: User},
@@ -70,7 +82,12 @@ function App(): JSX.Element {
     return (
         <AppContextProvider>
             <NavigationContainer>
+<<<<<<< HEAD
                 <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
+=======
+                <Stack.Navigator screenOptions={{headerShown: false}}>
+                    <Stack.Screen name="NuevoChat" component={NuevoChat}/>
+>>>>>>> hexagonal
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Profile" component={Profile}/>

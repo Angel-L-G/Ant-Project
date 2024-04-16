@@ -37,6 +37,14 @@ public class UsuarioService implements IUsuarioRepository{
 			
 			if(findById.isPresent()) {
 				out = um.toDomain(findById.get());
+				
+				if(findById.get().getNests() != null && findById.get().getNests().size() != 0) {
+					List<Nest> lista = new ArrayList<Nest>();
+					for (NestEntity entity : findById.get().getNests()) {
+						lista.add(nm.toDomain(entity));
+					}
+					out.setNests(lista);
+				}
 			}
 		}
 		
@@ -144,12 +152,6 @@ public class UsuarioService implements IUsuarioRepository{
 			
 			if(findById.isPresent()) {
 				out = um.toDomain(findById.get());
-				
-				List<Nest> list = new ArrayList<Nest>();
-				for (NestEntity nest : findById.get().getNests()) {
-					list.add(nm.toDomain(nest));
-				}
-				out.setNests(list);
 			}
 		}
 		

@@ -39,6 +39,10 @@ public class GuildEntity implements Serializable {
 	@Column(length=45)
 	private String name;
 	
+<<<<<<< HEAD
+=======
+	@Column(name="description")
+>>>>>>> hexagonal
 	private String description;
 
 	private Integer quantity;

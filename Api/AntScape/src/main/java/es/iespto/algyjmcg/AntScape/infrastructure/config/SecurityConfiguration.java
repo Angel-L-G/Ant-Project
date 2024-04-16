@@ -28,8 +28,13 @@ public class SecurityConfiguration {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers("/", "/swagger-ui.html", "/swagger-ui/**", "/v2/**", "configuration/**",
+<<<<<<< HEAD
 								"/swagger*/**", "/webjars/**", "/api/login", "/api/register", "/api/v1/**","/api/v2/**", "/v3/**",
 								"/websocket*/**", "/chat", "/topic/messages", "/graphql", "/graphiql")
+=======
+								"/swagger*/**", "/webjars/**", "/api/login", "/api/register", "/api/v1/**", "/v3/**",
+								"/websocket*/**", "/index.html", "/chat", "/topic/messages", "/graphql", "/graphiql")
+>>>>>>> hexagonal
 						.permitAll()
 						.requestMatchers("/api/v3/**").hasRole("ADMIN")
 						.requestMatchers("/api/v2/**").hasAnyRole("ADMIN","USER")

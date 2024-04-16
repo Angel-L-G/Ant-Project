@@ -99,6 +99,17 @@ public class UsuarioEntity implements Serializable {
 	    inverseJoinColumns = @JoinColumn(name = "id_blocked")
 	)
 	private List<UsuarioEntity> bloqued;
+	
+	@ManyToMany
+	@JoinTable(
+		    name = "user_chats",
+		    joinColumns = @JoinColumn(name = "user_id"),
+		    inverseJoinColumns = @JoinColumn(name = "chat_id")
+		)
+	private List<ChatEntity> chats;
+	
+	@OneToMany(mappedBy="sender")
+	private List<MessageEntity> messages;
 
 	public UsuarioEntity() {
 	}
@@ -251,5 +262,21 @@ public class UsuarioEntity implements Serializable {
 
 	public void setBloqued(List<UsuarioEntity> bloqued) {
 		this.bloqued = bloqued;
+	}
+	
+	public List<ChatEntity> getChats() {
+		return this.chats;
+	}
+
+	public void setChats(List<ChatEntity> chats) {
+		this.chats = chats;
+	}
+
+	public List<MessageEntity> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<MessageEntity> messages) {
+		this.messages = messages;
 	}
 }
