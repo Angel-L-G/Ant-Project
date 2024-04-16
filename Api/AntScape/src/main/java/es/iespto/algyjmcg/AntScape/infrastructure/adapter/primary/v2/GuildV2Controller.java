@@ -194,9 +194,11 @@ public class GuildV2Controller {
 			}
 			
 			guild.setName(guildName);
-			guild.setDecription(guildDescription);
+			guild.setDescription(guildDescription);
 			guild.getUsuarios().add(user);
 			guild.setTrophys(10);
+			guild.setQuantity(1);
+			guild.setLeader(user.getId());
 			
 			Guild save = mainService.save(guild);
 			

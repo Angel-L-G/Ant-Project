@@ -39,7 +39,7 @@ public class GuildEntity implements Serializable {
 	@Column(length=45)
 	private String name;
 	
-	private String decription;
+	private String description;
 
 	private Integer quantity;
 
@@ -157,11 +157,11 @@ public class GuildEntity implements Serializable {
 		this.leader = leader;
 	}
 
-	public String getDecription() {
-		return decription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDecription(String decription) {
-		this.decription = decription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

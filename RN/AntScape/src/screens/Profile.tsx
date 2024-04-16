@@ -94,13 +94,13 @@ const Profile = ({navigation}: Props) => {
                             </TouchableOpacity>
                         </LinearGradient>
                     </View>
-                    <View>
-                        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+                    <View style={{position: 'absolute'}}>
+                        <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                         start={{ x: 0.5, y: 0 }}
                         end={{ x: 0.5, y: 1 }}
-                        style={{marginBottom: 40}}>
-                            <TouchableOpacity onPress={volver} style={styles.button}>
-                                <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 22}}>Volver</Text>
+                        style={{width: 40, height: 40, borderRadius: 100, bottom: 16, left: 167}}>
+                            <TouchableOpacity onPress={volver} style={{width: 40, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)"}}>
+                                <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 26}}>X</Text>
                             </TouchableOpacity>
                         </LinearGradient>
                     </View>

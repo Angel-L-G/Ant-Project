@@ -55,7 +55,7 @@ const Clan = ({navigation}: Props) => {
                                 <Text style={{fontFamily: "MadimiOneRegular", fontSize: 26, color: "yellow", textAlign: 'center'}}>Unete a uno ahora o crea el tuyo propio</Text>
                             </View>
                             <View style={{marginTop: 100, flexDirection: "row", justifyContent: 'space-evenly'}}>
-                            <TouchableHighlight underlayColor={"transparent"} onPress={() => navigation.navigate("CrearClan")} style={{height: 60, width: 90, borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", borderRadius: 25, justifyContent: "center", alignItems: 'center'}}>
+                                <TouchableHighlight underlayColor={"transparent"} onPress={() => navigation.navigate("CrearClan")} style={{height: 60, width: 90, borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", borderRadius: 25, justifyContent: "center", alignItems: 'center'}}>
                                     <Text style={{fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", textAlign: 'center'}}>Crear       Clan</Text>
                                 </TouchableHighlight>
 

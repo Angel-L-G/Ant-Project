@@ -11,15 +11,17 @@ type Props = {
 
 const CrearClan = ({navigation}: Props) => {
     const {ruta} = Globals();
-    const {token} = useContext(AppContext);
+    const {token, setUser, user} = useContext(AppContext);
 
     async function crearClan() {
         try {
-            const body = {
-                guild_name: "Prueba"
+            const params = {
+                guildName: "Prueba",
+                guildDescription: "Esto es un clan de prueba",
             }
-            const response = await axios.post(ruta + "v2/guilds/createguild", body, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.post(ruta + "v2/guilds", null, { params: params, headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
+            setUser({...user, id_guild: response.data.id});
             navigation.navigate("Social", {tab: 2});
         } catch (error) {
             console.log(error);

@@ -28,6 +28,8 @@ const Social = ({ navigation, route }: Props) => {
     const tabNumber = route.params.tab;
 
     useEffect(() => {
+        setActiveTab(tabNumber);
+
         async function getU() {
             try {
                 const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
@@ -75,10 +77,6 @@ const Social = ({ navigation, route }: Props) => {
         }
 
         getC();
-    }, [])
-    
-    useEffect(() => {
-        setActiveTab(tabNumber);
     }, [tabNumber])
 
     function passToChildren() {
@@ -132,8 +130,13 @@ const Social = ({ navigation, route }: Props) => {
 
     async function buscarClan() {
         try {
-            const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
-            setClan(response.data);
+            if (user.id_guild != undefined) {
+                const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
+                setClan(response.data);
+                setTieneClan(true);
+            } else {
+                setTieneClan(false);
+            }
         } catch (error) {
             console.log(error);
         }
@@ -141,7 +144,7 @@ const Social = ({ navigation, route }: Props) => {
 
     async function buscarClanes(texto: string) {
         try {
-            const response = await axios.get(ruta + "v2/guilds/", { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
             const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) => 
                 c.name.includes(valorInput) && c !== clan
             );
