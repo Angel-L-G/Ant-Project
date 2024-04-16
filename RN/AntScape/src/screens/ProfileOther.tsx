@@ -60,8 +60,10 @@ const ProfileOther = ({route, navigation}: Props) => {
     }, [])
 
     async function aniadirAmigo() {
+        console.log("Añadiendo amigo");
+        
         try {
-            const response = await axios.post(ruta + "v2/users/" + user.name + "/friends/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.post(ruta + "v2/users/" + user.name + "/friends/add/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setAmigo(true);
         } catch (error) {
@@ -219,6 +221,16 @@ const ProfileOther = ({route, navigation}: Props) => {
                             <TouchableOpacity onPress={volver} style={styles.button}>
                                 <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 22}}>Volver</Text>
                             </TouchableOpacity>
+                        </LinearGradient>
+                    </View>
+                    <View style={{position: 'absolute'}}>
+                        <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={{width: 40, height: 40, borderRadius: 100, bottom: "50%", left: "430%"}}>
+                            <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={volver} style={{width: 40, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)"}}>
+                                <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 26}}>X</Text>
+                            </TouchableHighlight>
                         </LinearGradient>
                     </View>
                 </View>

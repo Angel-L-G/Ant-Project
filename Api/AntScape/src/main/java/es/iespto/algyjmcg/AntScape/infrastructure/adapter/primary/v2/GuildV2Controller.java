@@ -202,7 +202,11 @@ public class GuildV2Controller {
 			
 			Guild save = mainService.save(guild);
 			
-			if(save != null) {
+			user.setGuild(guild);
+
+			boolean update = userService.update(user);
+
+			if(save != null && update) {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
 			}else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Error while creating the guild try later");
