@@ -19,67 +19,69 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
-import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.service.UsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
-
-
 
 @Configuration
 @EnableWebSocketMessageBroker
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-	
-	@Autowired JwtService jwtService;
-	@Autowired private IUsuarioService usuarioservice;
-	
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/websocket").setAllowedOriginPatterns("*")
-        //.withSockJS()
-        ;
-    }
+	@Autowired
+	JwtService jwtService;
+	@Autowired
+	private UsuarioService usuarioservice;
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/salas","/cola"); // aquí a lo que nos suscribimos. Para temas libres: /salas/chatroom etc. Para particulares /users/queue/messages
-        registry.setApplicationDestinationPrefixes("/app"); //para enviar mensajes generales desde el cliente debe empezar por: /app
-        registry.setUserDestinationPrefix("/usuarios"); //para recibir mensajes particulares en el cliente la suscripción debe empezar por: /users
-    }
-    
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor =
-                        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                System.out.println("Headers: "+ accessor);
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/websocket").setAllowedOriginPatterns("*")
+		// .withSockJS()
+		;
+	}
 
-                assert accessor != null;
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		// aquí a lo que nos suscribimos. Para temas libres: /topic/chatroom etc.
+		// Para particulares /users/queue/messages
+		registry.enableSimpleBroker("/topic", "/queue");
+		// para enviar mensajes generales desde el cliente debe empezar por: /app
+		registry.setApplicationDestinationPrefixes("/app");
+		// para recibir mensajes particulares en el cliente la suscripción
+		// debe empezar por: /users
+		registry.setUserDestinationPrefix("/users");
+	}
 
-                    String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
-                    assert authorizationHeader != null;
-                    String token = authorizationHeader.substring(7);
-
-                    String username = jwtService.extractUsername(token);
-                    Usuario usuario = usuarioservice.findByName(username);
-                    UserDetailsLogin userDetails = new UserDetailsLogin();
-                    userDetails.setUsername(username);
-                    userDetails.setPassword(usuario.getPassword());
-                    userDetails.setRole(usuario.getRol());
-               
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-
-                    accessor.setUser(usernamePasswordAuthenticationToken);
-                }
-
-                return message;
-            }
-
-        });
-    }    
+	@Override
+	public void configureClientInboundChannel(ChannelRegistration registration) {
+		registration.interceptors(new ChannelInterceptor() {
+			@Override
+			public Message<?> preSend(Message<?> message, MessageChannel channel) {
+				StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+				System.out.println("Headers: " + accessor);
+				assert accessor != null;
+				if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+					String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
+					assert authorizationHeader != null;
+					
+					String token = authorizationHeader.substring(7);
+					String username = jwtService.extractUsername(token);
+					Usuario usuario = usuarioservice.findByName(username);
+					
+					UserDetailsLogin userDetails = new UserDetailsLogin();
+					userDetails.setUsername(username);
+					userDetails.setPassword(usuario.getPassword());
+					userDetails.setRole(usuario.getRol());
+					
+					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+					accessor.setUser(usernamePasswordAuthenticationToken);
+					
+					System.err.println(message);
+				}
+				return message;
+			}
+		});
+	}
 }

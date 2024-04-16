@@ -123,7 +123,7 @@ public class LoginController {
 		}
 	}
 	
-	@GetMapping("/{token}")
+	/*@GetMapping("/{token}")
 	public ResponseEntity<?> getRol(@PathVariable String token){
 		if(token != null) {
 			String rol = service.getRol(token);
@@ -131,7 +131,7 @@ public class LoginController {
 		}else {
 			return (ResponseEntity<?>) ResponseEntity.noContent();
 		}
-	}
+	}*/
 }
 
 class UserInputRegisterDTO{

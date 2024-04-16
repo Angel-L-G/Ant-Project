@@ -3,7 +3,6 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -111,7 +110,7 @@ public class GuildV2Controller {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
 			}
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content On Request Body");
 		}
 	}
 	
@@ -200,7 +199,11 @@ public class GuildV2Controller {
 			
 			Guild save = mainService.save(guild);
 			
-			if(save != null) {
+			user.setGuild(guild);
+			
+			boolean update = userService.update(user);
+			
+			if(save != null && update) {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
 			}else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Error while creating the guild try later");

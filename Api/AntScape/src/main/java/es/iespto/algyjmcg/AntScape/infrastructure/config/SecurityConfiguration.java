@@ -29,7 +29,7 @@ public class SecurityConfiguration {
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers("/", "/swagger-ui.html", "/swagger-ui/**", "/v2/**", "configuration/**",
 								"/swagger*/**", "/webjars/**", "/api/login", "/api/register", "/api/v1/**", "/v3/**",
-								"/websocket*/**", "/chat", "/topic/messages", "/graphql", "/graphiql")
+								"/websocket*/**", "/index.html", "/chat", "/topic/messages", "/graphql", "/graphiql")
 						.permitAll()
 						.requestMatchers("/api/v3/**").hasRole("ADMIN")
 						.requestMatchers("/api/v2/**").hasAnyRole("ADMIN","USER")
