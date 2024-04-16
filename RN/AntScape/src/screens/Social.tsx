@@ -4,7 +4,7 @@ import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
 import { Icon } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
-import { ClanType, User } from '../components/types';
+import { ClanType, User } from '../types/types';
 import UsuarioCard from '../components/UsuarioCard';
 import Globals from '../components/Globals';
 import axios from 'axios';
@@ -203,7 +203,7 @@ const Social = ({ navigation, route }: Props) => {
                                         data={usuarios}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }
@@ -235,7 +235,7 @@ const Social = ({ navigation, route }: Props) => {
                                         data={amigos}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }

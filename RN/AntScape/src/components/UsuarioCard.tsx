@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React from 'react'
-import { User } from './types'
+import { User } from '../types/types'
 import { Image } from 'react-native-elements'
 import Globals from './Globals';
 
 type Props = {
-    user: User
+    user: User,
+    navigation: any
 }
 
-const UsuarioCard = ({user}: Props) => {
+const UsuarioCard = ({user, navigation}: Props) => {
     const {ruta} = Globals();
 
     return (
@@ -21,6 +22,11 @@ const UsuarioCard = ({user}: Props) => {
                 : 
                     <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Con Clan</Text>
                 }
+            </View>
+            <View style={{width: "20%"}}>
+                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("NuevoChat")} style={{justifyContent: 'center', alignItems: 'center', height: "100%", borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3"}}>
+                    <Text style={{color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18}}>Chat</Text>
+                </TouchableHighlight>
             </View>
         </View>
     )

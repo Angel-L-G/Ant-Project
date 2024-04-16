@@ -1,11 +1,7 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-<<<<<<< HEAD
-import Globals from '../components/Globals'
-=======
 import { Client } from '@stomp/stompjs'
->>>>>>> hexagonal
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
@@ -14,12 +10,6 @@ const UseChat = () => {
     const [historico, setHistorico] = useState<string[]>(new Array<string>());
     const ip = "192.168.1.15:8080";
 
-<<<<<<< HEAD
-const UseChat = (props: Props) => {
-    const {ruta} = Globals();
-
-    const [chats, setChats] = useState<Array<Chat>>([] as Array<Chat>);
-=======
     function conectar() {
         stompRef.current = new Client({
             brokerURL: 'ws://' + ip + '/websocket',
@@ -37,7 +27,6 @@ const UseChat = (props: Props) => {
             forceBinaryWSFrames: true,
             appendMissingNULLonIncoming: true,
         });
->>>>>>> hexagonal
 
         function conectarOK() {
             setConectado(true);

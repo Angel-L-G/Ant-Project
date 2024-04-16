@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, TextInput, Dimensions, ImageBackgr
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import UseUser from '../hooks/UseUser'
-import { UserRegister } from '../components/types'
+import { UserRegister } from '../types/types'
 import UseSesion from '../hooks/UseSesion'
 import LinearGradient from 'react-native-linear-gradient'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'

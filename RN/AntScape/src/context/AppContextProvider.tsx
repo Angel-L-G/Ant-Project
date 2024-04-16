@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useContext, createContext, useState } from 'react'
-import { ContextUser, User, UserLogin } from '../components/types';
+import { ContextUser, User, UserLogin } from '../types/types';
 
 type Props = {}
 

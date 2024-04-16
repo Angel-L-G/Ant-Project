@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableHighlight } from 'react-native'
 import React, { useEffect } from 'react'
 import styles from '../themes/styles'
-import { AlmacenImg, NestDetails } from './types'
+import { AlmacenImg, NestDetails } from '../types/types'
 
 type Props = {
     showModal: Function,

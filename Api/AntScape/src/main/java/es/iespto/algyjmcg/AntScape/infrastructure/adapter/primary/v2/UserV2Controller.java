@@ -149,13 +149,8 @@ public class UserV2Controller {
 	}
 	
 	@PostMapping(path="/{me}/blocked/{name_blocked}")
-<<<<<<< HEAD
 	public ResponseEntity<?> block(@PathVariable String me, @PathVariable String name_blocked){
 		boolean blocked = userService.block(me, name_blocked);
-=======
-	public ResponseEntity<?> block(@PathVariable String me, @PathVariable String name_friend){
-		boolean blocked = userService.block(me, name_friend);
->>>>>>> hexagonal
 		
 		if(blocked) {
 			return ResponseEntity.ok("User Bloqued Correctly");
@@ -210,13 +205,8 @@ public class UserV2Controller {
 	}
 	
 	@DeleteMapping(path="/{me}/blocked/{name_blocked}")
-<<<<<<< HEAD
 	public ResponseEntity<?> unblock(@PathVariable String me, @PathVariable String name_blocked){
 		boolean blocked = userService.unblock(me, name_blocked);
-=======
-	public ResponseEntity<?> unblock(@PathVariable String me, @PathVariable String name_friend){
-		boolean blocked = userService.unblock(me, name_friend);
->>>>>>> hexagonal
 		
 		if(blocked) {
 			return ResponseEntity.ok("User Unblocked Correctly");

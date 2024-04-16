@@ -201,22 +201,12 @@ public class GuildV2Controller {
 			guild.setTrophys(10);
 			guild.setQuantity(1);
 			guild.setLeader(user.getId());
-<<<<<<< HEAD
-=======
 			
 			boolean update = userService.update(user);
->>>>>>> hexagonal
 			
 			Guild save = mainService.save(guild);
 			
 			user.setGuild(guild);
-<<<<<<< HEAD
-
-			boolean update = userService.update(user);
-
-=======
-			
->>>>>>> hexagonal
 			if(save != null && update) {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
 			}else {

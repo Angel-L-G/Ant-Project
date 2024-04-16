@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext, useEffect } from 'react'
-import { ClanType } from './types'
+import { ClanType } from '../types/types'
 import { Image } from 'react-native-elements'
 import Globals from './Globals'
 import { AppContext } from '../context/AppContextProvider'

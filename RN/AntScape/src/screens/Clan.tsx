@@ -5,7 +5,7 @@ import NavBarBotton from '../components/NavBarBotton'
 import Globals from '../components/Globals'
 import axios from 'axios'
 import { AppContext } from '../context/AppContextProvider'
-import { ClanType } from '../components/types'
+import { ClanType } from '../types/types'
 
 type Props = {
     navigation: any,

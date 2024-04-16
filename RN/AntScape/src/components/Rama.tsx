@@ -1,7 +1,7 @@
 import { Alert, ImageBackground, Modal, Pressable, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import ProgressBar from './ProgressBar'
-import { NestLevel } from './types'
+import { NestLevel } from '../types/types'
 import LinearGradient from 'react-native-linear-gradient'
 import axios from 'axios'
 import Globals from './Globals'

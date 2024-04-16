@@ -2,7 +2,7 @@ import { View, Text, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import styles from '../themes/styles'
 import { Button } from 'react-native-elements'
-import { AlmacenImg, NestDetails } from './types'
+import { AlmacenImg, NestDetails } from '../types/types'
 
 type Props = {
     hormiguero: NestDetails,

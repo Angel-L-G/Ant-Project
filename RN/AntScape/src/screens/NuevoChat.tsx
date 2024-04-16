@@ -23,7 +23,7 @@ const NuevoChat = () => {
                 <View style={chatStyles.profilePicContainer}>
                     <Image
                         style={chatStyles.profilePic}
-                        source={require('../img/profile.png')}
+                        source={require('../assets/imgs/profile.png')}
                     />
                 </View>
 

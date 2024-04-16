@@ -1,6 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, ToastAndroid } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
-import { User } from '../components/types'
+import { User } from '../types/types'
 import LinearGradient from 'react-native-linear-gradient'
 import { Image } from 'react-native-elements'
 import styles from '../themes/styles'

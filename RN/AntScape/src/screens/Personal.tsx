@@ -5,7 +5,7 @@ import { ImageBackground } from 'react-native';
 import Rama from '../components/Rama';
 import axios from 'axios';
 import { AppContext } from '../context/AppContextProvider';
-import { Nest, NestLevel } from '../components/types';
+import { Nest, NestLevel } from '../types/types';
 import Globals from '../components/Globals';
 import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
