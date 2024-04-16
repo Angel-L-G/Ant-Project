@@ -101,6 +101,7 @@ public class GuildV2Controller {
 			Guild guild = mainService.findById(id_guild);
 			
 			guild.addUsuario(user);
+			guild.setQuantity(guild.getUsuarios().size());
 			
 			Guild save = mainService.save(guild);
 			
@@ -165,6 +166,8 @@ public class GuildV2Controller {
 				guild.removeUsuario(user);
 			}
 			
+			guild.setQuantity(guild.getUsuarios().size());
+			
 			Guild save = mainService.save(guild);
 			
 			if(save != null && save.getUsuarios().contains(user)) {
@@ -193,15 +196,17 @@ public class GuildV2Controller {
 			}
 			
 			guild.setName(guildName);
-			guild.setDecription(guildDescription);
+			guild.setDescription(guildDescription);
 			guild.getUsuarios().add(user);
 			guild.setTrophys(10);
+			guild.setQuantity(1);
+			guild.setLeader(user.getId());
+			
+			boolean update = userService.update(user);
 			
 			Guild save = mainService.save(guild);
 			
 			user.setGuild(guild);
-			
-			boolean update = userService.update(user);
 			
 			if(save != null && update) {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);

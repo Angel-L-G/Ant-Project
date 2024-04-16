@@ -9,7 +9,7 @@ public class Guild {
 	private Integer defenseNumber;
 	private Integer defenseRange;
 	private String name;
-	private String decription;
+	private String description;
 	private Integer quantity;
 	private Integer trophys;
 	private List<GuildLevel> guildLevels;
@@ -120,11 +120,11 @@ public class Guild {
 		this.leader = leader;
 	}
 
-	public String getDecription() {
-		return decription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDecription(String decription) {
-		this.decription = decription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

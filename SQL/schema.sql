@@ -172,8 +172,8 @@ CREATE TABLE messages (
     FOREIGN KEY (sender_id) REFERENCES usuarios(id)
 );
 
-INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 15, 7, 2, 5);
-INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (1, 'Guild2', 15, 7, 2, 5);
+INSERT INTO guild (id, name, description, leader, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 'desc', 1, 15, 7, 2, 5);
+INSERT INTO guild (id, name, description, leader, trophys, quantity, defense_range, defense_number) VALUES (1, 'Guild2', 'desc', 2, 15, 7, 2, 5);
 
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1);
 INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2);

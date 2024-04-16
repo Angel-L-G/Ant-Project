@@ -21,7 +21,7 @@ public class GuildMapper {
 			out.setDefenseRange(in.getDefenseRange());
 			out.setQuantity(in.getQuantity());
 			out.setTrophys(in.getTrophys());
-			out.setDecription(in.getDecription());
+			out.setDescription(in.getDescription());
 			out.setLeader(in.getLeader());
 			
 			if(in.getGuildLevels() != null) {
@@ -46,7 +46,7 @@ public class GuildMapper {
 			out.setDefenseRange(in.getDefenseRange());
 			out.setQuantity(in.getQuantity());
 			out.setTrophys(in.getTrophys());
-			out.setDecription(in.getDecription());
+			out.setDescription(in.getDescription());
 			out.setLeader(in.getLeader());
 			
 			if(in.getGuildLevels() != null) {
