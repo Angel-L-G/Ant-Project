@@ -1,24 +1,64 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import NavBarTop from '../components/NavBarTop';
-import NavBarBotton from '../components/NavBarBotton';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import React, { useContext, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import LinearGradient from 'react-native-linear-gradient';
+import { Icon } from 'react-native-elements';
+import { AppContext } from '../context/AppContextProvider';
+import Globals from '../components/Globals';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfile">;
 
 const ClanProfile = ({navigation, route}: Props) => {
     const clan = route.params.clan;
+    const {ruta} = Globals();
+    const {token, user} = useContext(AppContext);
+    const [valorInput, setValorInput] = useState('');
+
+    const handleChangeInput = (text: string) => {
+        setValorInput(text);
+        console.log(valorInput);
+    };
+
+    async function buscarUsuarios(texto: string) {
+        
+    }
 
     return (
         <View style={styles.container}>
-            <NavBarTop navigation={navigation} />
-
-            <View style={{ height: "93%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
-                <View style={{ height: "93%", width: "100%" }}>
-
+            <View style={{ height: "100%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
+                <View style={{ height: "100%", width: "100%" }}>
+                    <View style={{height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%"}}>
+                        <View style={{width: "19%", height: "100%", marginHorizontal: "5%", justifyContent: 'center'}}>
+                            <Image source={{uri: ruta + "v1/files/" + user.img}} style={{width: "100%", height: "65%", borderRadius: 100}} />
+                        </View>
+                        <View style={{width: "66%", height: "75%", marginRight: "5%", flexDirection: 'column'}}>
+                            <Text style={{color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center'}}>{clan.name}</Text>
+                            <Text style={{color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular", textAlign: "center"}} numberOfLines={2} ellipsizeMode='tail'>{clan.description}</Text>
+                        </View>
+                    </View>
+                    <View style={{height: "8%", flexDirection: 'row', alignItems: 'center', width: "100%"}}>
+                        <View style={{width: "57%", marginHorizontal: "5%", marginTop: -10, flexDirection: 'row', justifyContent: 'space-between'}}>
+                            <TextInput style={{backgroundColor: "white", height: 35, width: "75%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                            <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                            start={{ x: 0.5, y: 0 }}
+                            end={{ x: 0.5, y: 1 }}
+                            style={{justifyContent: 'center'}}>
+                                <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                    <Icon name="search" size={30} color={"yellow"}></Icon>
+                                </TouchableHighlight>
+                            </LinearGradient>
+                        </View>
+                        <View style={{width: "23%", marginHorizontal: "5%", flexDirection: 'row', marginTop: -10}}>
+                            <TouchableHighlight style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
+                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Abandonar</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                    <View style={{height: "78%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
+                        
+                    </View>
                 </View>
-                <NavBarBotton navigation={navigation} icon='' />
             </View>
         </View>
     );
