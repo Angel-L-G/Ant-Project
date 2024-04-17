@@ -1,9 +1,12 @@
 package es.iespto.algyjmcg.AntScape.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildService;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IGuildRepository;
 
@@ -45,5 +48,10 @@ public class GuildDomainService implements IGuildService{
 	@Override
 	public boolean removeUser(Integer idGuild, Integer idRemoved) {
 		return service.removeUser(idGuild, idRemoved);
+	}
+
+	@Override
+	public List<Usuario> findGuildUsersByGuildId(Integer id) {
+		return service.findGuildUsersByGuildId(id);
 	}
 }
