@@ -1,6 +1,9 @@
 package es.iespto.algyjmcg.AntScape.domain.port.primary;
 
+import java.util.List;
+
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 
 public interface IGuildService {
 	Guild findById(Integer id);
@@ -11,4 +14,5 @@ public interface IGuildService {
 	
 	boolean giveOwnership(Integer idGuild, Integer idNewOwner);
 	boolean removeUser(Integer idGuild, Integer idRemoved);
+	List<Usuario> findGuildUsersByGuildId(Integer id);
 }

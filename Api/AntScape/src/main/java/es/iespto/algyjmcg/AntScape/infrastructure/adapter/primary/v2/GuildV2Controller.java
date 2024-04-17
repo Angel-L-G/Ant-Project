@@ -1,5 +1,8 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,6 +48,32 @@ public class GuildV2Controller {
 			Guild find = mainService.findById(id);
 			if(find != null) {
 				return ResponseEntity.ok(find);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@GetMapping(path = "/{id}/users")
+	public ResponseEntity<?> findGuildUsersByGuildId(@PathVariable Integer id) {
+		if(id != null) {
+			List<Usuario> list = mainService.findGuildUsersByGuildId(id);
+			if(list != null && !list.isEmpty()) {
+				List<GuildUserOutputDTO> out = new ArrayList<GuildUserOutputDTO>();
+				
+				for (Usuario u : list) {
+					GuildUserOutputDTO output = new GuildUserOutputDTO();
+					
+					output.setId(u.getId());
+					output.setImg(u.getImg());
+					output.setName(u.getName());
+					
+					out.add(output);
+				}
+				
+				return ResponseEntity.ok(out);
 			}else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
 			}
@@ -216,6 +245,36 @@ public class GuildV2Controller {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
+}
+
+class GuildUserOutputDTO {
+	private Integer id;
+	private String name;
+	private String img; 
 	
-	
+	public GuildUserOutputDTO() {}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
 }
