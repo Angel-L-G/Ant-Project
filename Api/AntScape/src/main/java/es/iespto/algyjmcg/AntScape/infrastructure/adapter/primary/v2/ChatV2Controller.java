@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Chat;
@@ -26,7 +28,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v2/chat")
+@RequestMapping("/api/v2/chats")
 public class ChatV2Controller {
 	@Autowired private JwtService jwtService;
 	@Autowired private IUsuarioService userService;
@@ -125,13 +127,48 @@ public class ChatV2Controller {
 	}
 	
 	@GetMapping(path="/{id}/messages")
-	public ResponseEntity<?> findAllByChatId(@PathVariable Integer id, @RequestHeader HttpHeaders headers) {
+	public ResponseEntity<?> findAllMessagesByChatId(@PathVariable Integer id, @RequestHeader HttpHeaders headers) {
 		Iterable<Message> findAll = messageService.findByChatId(id);
 		
 		if(findAll != null) {
 			return ResponseEntity.ok(findAll);
 		}else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+		}
+	}
+	
+	@PostMapping(path="/{id}/messages")
+	public ResponseEntity<?> saveMessages(@RequestParam String message, @PathVariable Integer id, @RequestHeader HttpHeaders headers){
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		Usuario user = userService.findByName(username);
+		
+		System.err.println("MSG: " + message + " bool: " + message.isBlank());
+		
+		if(!message.isBlank()) {
+			Chat chat = chatService.findById(id);
+			Message m = new Message();
+			
+			m.setBody(message);
+			m.setSenderId(user.getId());
+			m.setChat(chat);
+			
+			long currentTimeMillis = System.currentTimeMillis();
+			m.setSentAt(new Timestamp(currentTimeMillis));
+			
+			chat.setLastMessage(message);
+			
+			boolean update = chatService.update(chat);
+			Message save = messageService.save(m);
+			
+			if(save != null && update) {
+				return ResponseEntity.status(HttpStatus.OK).body("Message Save Successfully");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Message Not Saves Check The Data");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
 }
