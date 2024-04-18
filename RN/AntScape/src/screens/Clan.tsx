@@ -57,7 +57,7 @@ const Clan = ({ navigation }: Props) => {
 
     }, [])
 
-    async function getClan(id: number) {
+    async function getClan(id: Number) {
         try {
             const response = await axios.get(ruta + "v2/guilds/" + id, { headers: { "Authorization": "Bearer " + token } });
             setClan(response.data);

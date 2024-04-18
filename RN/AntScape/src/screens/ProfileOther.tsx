@@ -149,7 +149,7 @@ const ProfileOther = ({route, navigation}: Props) => {
                         {(usu.id_guild == null) ?
                             <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: -----</Text>
                         :
-                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {usu.id_guild}</Text>
+                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {String(usu.id_guild)}</Text>
                         }
                         <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Eggs: {usu.eggs}</Text>
                     </View>

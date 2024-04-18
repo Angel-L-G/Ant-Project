@@ -279,10 +279,16 @@ const Social = ({ navigation, route }: Props) => {
                                         <FlatList
                                         data={clanes}
                                         renderItem={({ item }) =>
-                                            <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", {clan: item})}><ClanCard clan={item} navigation={navigation}/></TouchableHighlight>
-                                                <View style={{height: 1, backgroundColor: "black"}}></View>
-                                            </View>
+                                            (user.id_guild === item.id || item.leader === user.id) ?
+                                                <View>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", {clan: item})}><ClanCard clan={item} navigation={navigation}/></TouchableHighlight>
+                                                    <View style={{height: 1, backgroundColor: "black"}}></View>
+                                                </View>
+                                            :
+                                                <View>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfileOther", {clan: item})}><ClanCard clan={item} navigation={navigation}/></TouchableHighlight>
+                                                    <View style={{height: 1, backgroundColor: "black"}}></View>
+                                                </View>
                                         }
                                         style={{}}
                                         />

@@ -8,9 +8,9 @@ import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 import axios from 'axios';
 
-type Props = NativeStackScreenProps<RootStackParamList, "ClanProfile">;
+type Props = NativeStackScreenProps<RootStackParamList, "ClanProfileOther">;
 
-const ClanProfile = ({navigation, route}: Props) => {
+const ClanProfileOther = ({navigation, route}: Props) => {
     const clan = route.params.clan;
     const {ruta} = Globals();
     const {token, user, setUser} = useContext(AppContext);
@@ -23,13 +23,13 @@ const ClanProfile = ({navigation, route}: Props) => {
 
     async function buscarUsuarios(texto: string) {
         
-    }
+    };
 
-    async function abandonar() {
+    async function unirse() {
         try {
-            const response = await axios.post(ruta + "v2/guilds/leaveguild/" + clan.id, null, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.post(ruta + "v2/guilds/joinguild/" + clan.id, null, { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
-            setUser({...user, id_guild: undefined});
+            setUser({...user, id_guild: clan.id});
         } catch (error) {
             console.log(error);
         }
@@ -61,8 +61,8 @@ const ClanProfile = ({navigation, route}: Props) => {
                             </LinearGradient>
                         </View>
                         <View style={{width: "23%", marginHorizontal: "5%", flexDirection: 'row', marginTop: -10}}>
-                            <TouchableHighlight style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
-                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Abandonar</Text>
+                            <TouchableHighlight onPress={() => unirse()} style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
+                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Unirse</Text>
                             </TouchableHighlight>
                         </View>
                     </View>
@@ -75,7 +75,7 @@ const ClanProfile = ({navigation, route}: Props) => {
     );
 };
 
-export default ClanProfile
+export default ClanProfileOther
 
 const styles = StyleSheet.create({
 

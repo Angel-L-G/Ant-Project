@@ -85,7 +85,7 @@ export type User = {
     img: string,
     name: string,
     nests: Array<Nest>,
-    id_guild: number
+    id_guild: number | undefined
 }
 
 export type Nest = {
@@ -97,7 +97,9 @@ export type Nest = {
 }
 
 export type ClanType = {
+    id: number,
     name: string,
     description: string,
     quantity: number,
+    leader: number
 }
