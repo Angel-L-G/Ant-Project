@@ -82,8 +82,8 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/kick/{idGuild}/user/{idKicked}")
-	public ResponseEntity<?> kickPlayer(@PathVariable Integer idGuild, @RequestParam Integer idKicked, @RequestHeader HttpHeaders headers){
+	@PutMapping(path="{idGuild}/kick/users/{idKicked}")
+	public ResponseEntity<?> kickPlayer(@PathVariable Integer idGuild, @PathVariable Integer idKicked, @RequestHeader HttpHeaders headers){
 		if(idGuild != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
@@ -118,7 +118,7 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/joinguild/{id}")
+	@PutMapping(path="/{id}/joinguild")
 	public ResponseEntity<?> joinGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
 		if(id_guild != null) {
 			String token = headers.getFirst("Authorization");
@@ -144,15 +144,15 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/giveOwnership/{id}")
-	public ResponseEntity<?> giveOwnership(@PathVariable Integer id, @RequestParam Integer newLeaderId, @RequestHeader HttpHeaders headers){
+	@PutMapping(path="/{id}/giveOwnership/{newLeaderId}")
+	public ResponseEntity<?> giveOwnership(@PathVariable Integer id, @PathVariable Integer newLeaderId, @RequestHeader HttpHeaders headers){
 		if(id != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
 			
 			Usuario user = userService.findByName(username);
-			Usuario newLeader = userService.findById(id);
+			Usuario newLeader = userService.findById(newLeaderId);
 			
 			Guild guild = mainService.findById(id);
 			
@@ -174,7 +174,7 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/leaveguild/{id}")
+	@PutMapping(path="/{id}/leaveguild")
 	public ResponseEntity<?> leaveGuild(@PathVariable Integer id, @RequestParam Integer newLeader, @RequestHeader HttpHeaders headers){
 		if(id != null) {
 			String token = headers.getFirst("Authorization");
