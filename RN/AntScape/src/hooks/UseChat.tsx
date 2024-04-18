@@ -44,6 +44,7 @@ const UseChat = () => {
     }
 
     function onPublicMessageReceived(datos: any) {
+        console.log("Publico");
         console.log("datos: " + datos);
         //setRecibido(datos.body);
         let nuevoMensaje = JSON.parse(datos.body);
@@ -54,6 +55,7 @@ const UseChat = () => {
     }
 
     function onPrivateMessageReceived(datos: any) {
+        console.log("Privado");
         console.log("datos: " + datos);
         //setRecibido(datos.body);
         let nuevoMensaje = JSON.parse(datos.body);

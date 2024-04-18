@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
-import { Chat } from '../types/chatTypes';
+import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
 import { AppContext } from '../context/AppContextProvider';
 
 const UseChatHistory = () => {
     const ruta = "http://192.168.1.15:8080/api/";
     const { token, user } = useContext(AppContext);
-    const [historico, setHistorico] = useState<Chat[]>(new Array<Chat>());
+    const [chats, setChats] = useState<Chat[]>(new Array<Chat>());
 
     useEffect(() => {
         findUserChats();
@@ -14,9 +14,9 @@ const UseChatHistory = () => {
 
     async function findUserChats() {
         try {
-            const response = await axios.get(ruta + "/v2/chat/me", { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.get(ruta + "/v2/chats/me", { headers: { "Authorization": "Bearer " + token } });
 
-            setHistorico(response.data);
+            setChats(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -24,7 +24,43 @@ const UseChatHistory = () => {
 
     async function findById(id: number) {
         try {
-            const response = await axios.get(ruta + "/v2/chat/" + id, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.get(ruta + "/v2/chats/" + id, { headers: { "Authorization": "Bearer " + token } });
+
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function save(chat: ChatInputSaveDTO): Promise<Chat | undefined> {
+        try {
+            // Realiza la solicitud POST y espera la respuesta
+            const response = await axios.post(ruta + "/v2/chats", chat, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+    
+            // Devuelve los datos de la respuesta
+            return response.data;
+        } catch (error) {
+            // Maneja los errores si la solicitud falla
+            console.log(error);
+            return undefined; // Devuelve undefined en caso de error
+        }
+    }
+
+    async function findAllMessagesByChatId(id: number) {
+        try {
+            const response = await axios.get(ruta + "/v2/chats/" + id + "/messages", { headers: { "Authorization": "Bearer " + token } });
+
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function saveMessages(id: number, message: string) {
+        try {
+            const response = await axios.post(ruta + "/v2/chats" + id + "messages", { params: {message: message}, headers: { "Authorization": "Bearer " + token } }, );
 
             return response.data;
         } catch (error) {
@@ -33,7 +69,12 @@ const UseChatHistory = () => {
     }
 
     return {
-
+        chats,
+        findAllMessagesByChatId,
+        findById,
+        findUserChats,
+        save,
+        saveMessages
     }
 }
 
