@@ -38,8 +38,7 @@ const UseChatHistory = () => {
             const response = await axios.post(ruta + "/v2/chats", chat, {
                 headers: { "Authorization": "Bearer " + token }
             });
-    
-            // Devuelve los datos de la respuesta
+
             return response.data;
         } catch (error) {
             // Maneja los errores si la solicitud falla

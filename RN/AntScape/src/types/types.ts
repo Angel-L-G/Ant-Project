@@ -44,17 +44,6 @@ export type Hormiguero = {
     biome: string,
 }
 
-export type Chat = {
-    id: number,
-    name: string,
-    messages: Array<Message>
-}
-
-export type Message = {
-    idUser: number,
-    message: string
-}
-
 export type AlmacenImg ={
     nombre: string;
     ubicacion: ReturnType<any>;

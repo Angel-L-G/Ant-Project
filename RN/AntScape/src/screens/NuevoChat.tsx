@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import UseChat from '../hooks/UseChat'
 import chatStyles from '../themes/chatStyles';
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, FlatList } from 'react-native';
 import { AppContext } from '../context/AppContextProvider';
 import UseChatHistory from '../hooks/UseChatHistory';
-import { ChatInputSaveDTO } from '../types/chatTypes';
-import { Chat } from '../types/types';
+import { Chat, ChatInputSaveDTO, Message } from '../types/chatTypes';
 
 type Props = {
     navigation: any,
@@ -18,13 +17,14 @@ const NuevoChat = ({navigation,nameOtherUser}: Props) => {
     const {token, user} = useContext(AppContext);
     const ruta = "http://192.168.1.15:8080/api/";
     const [img, setImg] = useState(ruta + "v1/files/" + user.img);
-    const chatActual = useRef({});
+    const chatActual = useRef<Chat>();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         conectar();
 
         if(conectado == true){
-            const chatEncontrado = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser);
+            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;
 
             if (chatEncontrado) {
                 console.log("Chat encontrado:", chatEncontrado);
@@ -35,7 +35,19 @@ const NuevoChat = ({navigation,nameOtherUser}: Props) => {
                     nameUser2: nameOtherUser
                 }
 
-                const chat: Chat = save(chatInput);
+                const fetchData = async() => {
+                    try {
+                        const chatData: Chat | undefined = await save(chatInput) as Chat | undefined;
+
+                        chatActual.current = chatData;
+                    } catch (error) {
+                        console.error('Error al obtener el chat:', error);
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+
+                fetchData();
             }
         }else {
             console.log("Fallo de conexion");
@@ -62,9 +74,23 @@ const NuevoChat = ({navigation,nameOtherUser}: Props) => {
             </View>
 
             <View style={chatStyles.messageContainer}>
-                {chatActual.messages.map((mensaje, index) => (
-                    <li key={index}>{mensaje.text}</li>
-                ))}
+
+                {(loading) 
+                    ? <View>
+                            <Text>Cargando...</Text>
+                        </View>
+                    :   <FlatList
+                            data={chatActual.current?.messages}
+                            renderItem={({item}) =>
+                                <View>
+                                    <Text>{item.body}</Text>
+                                </View>
+                            }
+                        />
+                }
+
+
+                
             </View>
         </View>
     )
