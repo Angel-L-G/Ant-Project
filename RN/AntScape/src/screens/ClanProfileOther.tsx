@@ -1,5 +1,5 @@
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import LinearGradient from 'react-native-linear-gradient';
@@ -7,6 +7,8 @@ import { Icon } from 'react-native-elements';
 import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 import axios from 'axios';
+import { User } from '../types/types';
+import UsuarioCard from '../components/UsuarioCard';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfileOther">;
 
@@ -15,6 +17,24 @@ const ClanProfileOther = ({navigation, route}: Props) => {
     const {ruta} = Globals();
     const {token, user, setUser} = useContext(AppContext);
     const [valorInput, setValorInput] = useState('');
+    const [users, setUsers] = useState<Array<User>>([]);
+
+    useEffect(() => {
+        async function getClanUsers() {
+            try {
+                const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
+                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
+                    usuario.id_guild == clan.id || usuario.id == clan.leader
+                );
+                setUsers(usuariosFiltrados);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getClanUsers();
+    }, [])
+    
 
     const handleChangeInput = (text: string) => {
         setValorInput(text);
@@ -67,7 +87,21 @@ const ClanProfileOther = ({navigation, route}: Props) => {
                         </View>
                     </View>
                     <View style={{height: "78%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
-                        
+                        <FlatList
+                            data={users}
+                            renderItem={({item}) => 
+                                (item.id == user.id) ?
+                                    <View>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("Profile")}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                        <View style={{height: 1, backgroundColor: "black"}}></View>
+                                    </View>
+                                :
+                                    <View>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                        <View style={{height: 1, backgroundColor: "black"}}></View>
+                                    </View>
+                            }
+                        />
                     </View>
                 </View>
             </View>

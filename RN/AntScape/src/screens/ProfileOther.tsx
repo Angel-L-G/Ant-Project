@@ -57,6 +57,18 @@ const ProfileOther = ({route, navigation}: Props) => {
         }
 
         buscarBloqueados();
+
+        async function buscarClanes() {
+            try {
+                const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+                console.log(response.data);
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        buscarClanes();
     }, [])
 
     async function aniadirAmigo() {
