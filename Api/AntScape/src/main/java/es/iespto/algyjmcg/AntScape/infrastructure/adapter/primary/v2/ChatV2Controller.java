@@ -145,7 +145,7 @@ public class ChatV2Controller {
 		String resultado = token.substring(7);
 		String username = jwtService.extractUsername(resultado);
 		Usuario user = userService.findByName(username);
-		
+
 		if(!message.isBlank()) {
 			Chat chat = chatService.findById(id);
 			Message m = new Message();
@@ -170,7 +170,7 @@ public class ChatV2Controller {
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
-	} 
+	}
 }
 
 class ChatInPutDTO {

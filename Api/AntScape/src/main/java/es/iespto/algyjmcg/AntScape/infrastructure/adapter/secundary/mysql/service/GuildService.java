@@ -146,5 +146,22 @@ public class GuildService implements IGuildRepository{
 		
 		return ok;
 	}
-
+	
+	@Override
+	public List<Usuario> findGuildUsersByGuildId(Integer id){
+		Optional<GuildEntity> guild = repository.findById(id);
+		List<Usuario> out = null;
+		
+		if(guild.isPresent()) {
+			List<UsuarioEntity> usuarios = guild.get().getUsuarios();
+			
+			out = new ArrayList<>();
+			
+			for (UsuarioEntity u : usuarios) {
+				out.add(um.toDomain(u));
+			}
+		}
+		
+		return out;
+	}
 }

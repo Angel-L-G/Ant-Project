@@ -11,6 +11,7 @@ import es.iespto.algyjmcg.AntScape.domain.model.Message;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IMessageRepository;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.MessageEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.ChatMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.MessageMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.MessageJPARepository;
@@ -18,9 +19,10 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.reposi
 @Service
 public class MessageService implements IMessageRepository{
 	@Autowired private IUsuarioRepository userRepository;
-	private MessageJPARepository repository;
+	@Autowired private MessageJPARepository repository;
 	private MessageMapper mem = new MessageMapper();
 	private UsuarioMapper um = new UsuarioMapper();
+	private ChatMapper cm = new ChatMapper();
 
 	@Override
 	public Message findById(Integer id) {
@@ -45,6 +47,7 @@ public class MessageService implements IMessageRepository{
 			MessageEntity persistance = mem.toPersistance(in);
 			
 			persistance.setSender(um.toPersistance(userRepository.findById(in.getSenderId())));
+			persistance.setChat(cm.toPersistance(in.getChat()));
 			
 			MessageEntity save = repository.save(persistance);
 			

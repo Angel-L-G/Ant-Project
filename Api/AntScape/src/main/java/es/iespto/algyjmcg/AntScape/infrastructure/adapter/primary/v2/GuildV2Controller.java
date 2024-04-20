@@ -1,5 +1,8 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -53,8 +56,34 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/kick/{idGuild}/user/{idKicked}")
-	public ResponseEntity<?> kickPlayer(@PathVariable Integer idGuild, @RequestParam Integer idKicked, @RequestHeader HttpHeaders headers){
+	@GetMapping(path = "/{id}/users")
+	public ResponseEntity<?> findGuildUsersByGuildId(@PathVariable Integer id) {
+		if(id != null) {
+			List<Usuario> list = mainService.findGuildUsersByGuildId(id);
+			if(list != null && !list.isEmpty()) {
+				List<GuildUserOutputDTO> out = new ArrayList<GuildUserOutputDTO>();
+				
+				for (Usuario u : list) {
+					GuildUserOutputDTO output = new GuildUserOutputDTO();
+					
+					output.setId(u.getId());
+					output.setImg(u.getImg());
+					output.setName(u.getName());
+					
+					out.add(output);
+				}
+				
+				return ResponseEntity.ok(out);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@PutMapping(path="{idGuild}/kick/users/{idKicked}")
+	public ResponseEntity<?> kickPlayer(@PathVariable Integer idGuild, @PathVariable Integer idKicked, @RequestHeader HttpHeaders headers){
 		if(idGuild != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
@@ -89,7 +118,7 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/joinguild/{id}")
+	@PutMapping(path="/{id}/joinguild")
 	public ResponseEntity<?> joinGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
 		if(id_guild != null) {
 			String token = headers.getFirst("Authorization");
@@ -115,15 +144,15 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/giveOwnership/{id}")
-	public ResponseEntity<?> giveOwnership(@PathVariable Integer id, @RequestParam Integer newLeaderId, @RequestHeader HttpHeaders headers){
+	@PutMapping(path="/{id}/giveOwnership/{newLeaderId}")
+	public ResponseEntity<?> giveOwnership(@PathVariable Integer id, @PathVariable Integer newLeaderId, @RequestHeader HttpHeaders headers){
 		if(id != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
 			
 			Usuario user = userService.findByName(username);
-			Usuario newLeader = userService.findById(id);
+			Usuario newLeader = userService.findById(newLeaderId);
 			
 			Guild guild = mainService.findById(id);
 			
@@ -145,7 +174,7 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/leaveguild/{id}")
+	@PutMapping(path="/{id}/leaveguild")
 	public ResponseEntity<?> leaveGuild(@PathVariable Integer id, @RequestParam Integer newLeader, @RequestHeader HttpHeaders headers){
 		if(id != null) {
 			String token = headers.getFirst("Authorization");
@@ -216,6 +245,36 @@ public class GuildV2Controller {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
 	}
+}
+
+class GuildUserOutputDTO {
+	private Integer id;
+	private String name;
+	private String img; 
 	
-	
+	public GuildUserOutputDTO() {}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
 }
