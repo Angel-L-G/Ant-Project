@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
+import es.iespto.algyjmcg.AntScape.domain.model.GuildLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildLevelService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
@@ -29,6 +32,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 public class GuildV2Controller {
 	@Autowired private IGuildService mainService;
 	@Autowired private IUsuarioService userService;
+	@Autowired private IGuildLevelService guildLevelService;
 	@Autowired private JwtService jwtService;
 	
 	@GetMapping
@@ -244,6 +248,47 @@ public class GuildV2Controller {
 			}
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
+	@PutMapping(path="/{idGuild}/levelUp/{nameLevel}")
+	public ResponseEntity<?> levelUpGuildLevel(@RequestHeader HttpHeaders headers, @PathVariable Integer idGuild, @PathVariable String nameLevel){
+		if(idGuild != null && nameLevel != null && !nameLevel.isBlank()) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			Guild guild = mainService.findById(idGuild);
+			GuildLevel guildLevel = null;
+			
+			for (GuildLevel gl : guild.getGuildLevels()) {
+				if(gl.getName().equals(nameLevel)) {
+					guildLevel = gl;
+				}
+			}
+			
+			if(Double.parseDouble(user.getGoldenEggs()) >= guildLevel.getCost()) {
+				guildLevel.setCost(guildLevel.getCost()*1.5);
+				guildLevel.setLevel(guildLevel.getLevel()+1);
+				
+				double goldenEggs = Double.parseDouble(user.getGoldenEggs()) - guildLevel.getCost();
+				
+				user.setGoldenEggs(Math.round(goldenEggs)+"");
+				
+				boolean userUpdate = userService.update(user);
+				boolean guildLevelUpdate = guildLevelService.update(guildLevel);
+				
+				if(userUpdate && guildLevelUpdate) {
+					return ResponseEntity.status(HttpStatus.OK).body("Leveled Up Correctly");
+				} else {
+					return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
+				}
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Not Enought Eggs");
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
 		}
 	}
 }
