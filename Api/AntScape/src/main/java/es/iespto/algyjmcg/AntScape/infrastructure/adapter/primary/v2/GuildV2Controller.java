@@ -291,6 +291,28 @@ public class GuildV2Controller {
 		}
 	}
 	
+	@GetMapping(path="/{idGuild}/seekChallenger")
+	public ResponseEntity<?> seekChallenger(@RequestHeader HttpHeaders headers, @PathVariable Integer idGuild){
+		if(idGuild != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			Guild guild = mainService.findById(idGuild);
+			
+			Guild oponent = nearestGuild(guild);
+			
+			if(oponent != null) {
+				return ResponseEntity.status(HttpStatus.OK).body(oponent);
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something Went Wrong, Try Again Later");
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
+		}
+	}
+	
 	@PutMapping(path="/{idAtacker}/atack/{idDefender}")
 	public ResponseEntity<?> atackGuild(@RequestHeader HttpHeaders headers, @PathVariable Integer idAtacker, @PathVariable Integer idDefender, @RequestParam Integer atackNumber){
 		if(idAtacker != null && idDefender != null && atackNumber != null) {
@@ -315,6 +337,26 @@ public class GuildV2Controller {
 		}
 		
 		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("");
+	}
+	
+	
+	private Guild nearestGuild(Guild seeker) {
+		Iterable<Guild> allGuilds = mainService.findAll();
+		Guild out = null;
+		Integer pos = 999999999; 
+		
+		for (Guild g : allGuilds) {
+			Integer actual = Math.abs(seeker.getTrophys() - g.getTrophys());
+			
+			if(pos > actual) {
+				if(!(g.getId() == seeker.getId())) {
+					pos = actual;
+					out = g;
+				}
+			}
+		}
+		
+		return out;
 	}
 }
 
