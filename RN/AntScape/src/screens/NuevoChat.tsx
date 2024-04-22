@@ -5,6 +5,7 @@ import { View, Image, Text, FlatList } from 'react-native';
 import { AppContext } from '../context/AppContextProvider';
 import UseChatHistory from '../hooks/UseChatHistory';
 import { Chat, ChatInputSaveDTO, Message } from '../types/chatTypes';
+import Globals from '../components/Globals';
 
 type Props = {
     navigation: any,
@@ -15,14 +16,16 @@ const NuevoChat = ({navigation,nameOtherUser}: Props) => {
     const {conectar, conectado, historico, enviarPrivado} = UseChat();
     const {chats, save, saveMessages, findAllMessagesByChatId} = UseChatHistory();
     const {token, user} = useContext(AppContext);
-    const ruta = "http://192.168.1.15:8080/api/";
+    const {ruta} = Globals();
     const [img, setImg] = useState(ruta + "v1/files/" + user.img);
     const chatActual = useRef<Chat>();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         conectar();
+    }, []);
 
+    useEffect(() => {
         if(conectado == true){
             const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;
 
@@ -52,9 +55,8 @@ const NuevoChat = ({navigation,nameOtherUser}: Props) => {
         }else {
             console.log("Fallo de conexion");
         }
-    }, [])
+    }, [conectado]);
     
-
     return (
         <View style={chatStyles.container}>
             <View style={chatStyles.upperBar}>

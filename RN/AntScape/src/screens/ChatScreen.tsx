@@ -23,8 +23,8 @@ const ChatScreen = (props: Props) => {
     const [token, setToken] = useState("");
     const [conectado, setConectado] = useState("desconectado");
 
-    let ip = "192.168.1.15:8080";
-    //let ip = "192.168.1.229:8080";
+    //let ip = "192.168.1.15:8080";
+    let ip = "192.168.1.229:8080";
 
     //npm install @stomp/stompjs
     //hay problema con encoding de react-native:
