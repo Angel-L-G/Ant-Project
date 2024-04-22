@@ -26,6 +26,7 @@ public class UsuarioMapper {
 			out.setEggs(in.getEggs());
 			out.setGoldenEggs(in.getGoldenEggs());
 			out.setImg(in.getImg());
+			out.setTotalMoneyGenerated(in.getTotalMoneyGenerated());
 			
 			if(in.getNests() != null && in.getNests().size() != 0) {
 				List<NestEntity> lista = new ArrayList<NestEntity>();
@@ -54,6 +55,7 @@ public class UsuarioMapper {
 			out.setEggs(in.getEggs());
 			out.setGoldenEggs(in.getGoldenEggs());
 			out.setImg(in.getImg());
+			out.setTotalMoneyGenerated(in.getTotalMoneyGenerated());
 		}
 		
 		return out;

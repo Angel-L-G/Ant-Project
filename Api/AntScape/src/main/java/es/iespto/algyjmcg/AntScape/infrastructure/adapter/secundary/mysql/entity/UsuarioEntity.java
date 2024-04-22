@@ -61,12 +61,13 @@ public class UsuarioEntity implements Serializable {
 
 	@Column(nullable=false, length=45)
 	private String rol;
+	
+	@Column(name="total_money_generated", length=255)
+	private String totalMoneyGenerated;
 
-	//bi-directional many-to-one association to Nest
 	@OneToMany(mappedBy="usuario")
 	private List<NestEntity> nests;
 
-	//bi-directional many-to-one association to Guild
 	@ManyToOne
 	@JoinColumn(name="id_guild")
 	private GuildEntity guild;
@@ -202,6 +203,14 @@ public class UsuarioEntity implements Serializable {
 
 	public void setRol(String rol) {
 		this.rol = rol;
+	}
+
+	public String getTotalMoneyGenerated() {
+		return totalMoneyGenerated;
+	}
+
+	public void setTotalMoneyGenerated(String totalMoneyGenerated) {
+		this.totalMoneyGenerated = totalMoneyGenerated;
 	}
 
 	public List<NestEntity> getNests() {

@@ -1,6 +1,5 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -290,6 +289,32 @@ public class GuildV2Controller {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
 		}
+	}
+	
+	@PutMapping(path="/{idAtacker}/atack/{idDefender}")
+	public ResponseEntity<?> atackGuild(@RequestHeader HttpHeaders headers, @PathVariable Integer idAtacker, @PathVariable Integer idDefender, @RequestParam Integer atackNumber){
+		if(idAtacker != null && idDefender != null && atackNumber != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario user = userService.findByName(username);
+			Guild defender = mainService.findById(idDefender);
+			Guild atacker = mainService.findById(idAtacker);
+			
+			if(atackNumber == defender.getDefenseNumber()) {
+				Double aux = Integer.parseInt(user.getEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.20);
+				
+				
+			} else {
+				
+			}
+			
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
+		}
+		
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("");
 	}
 }
 
