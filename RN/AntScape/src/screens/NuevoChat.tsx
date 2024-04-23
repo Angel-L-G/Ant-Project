@@ -16,14 +16,20 @@ import LinearGradient from 'react-native-linear-gradient';
 
 type Props = NativeStackScreenProps<RootStackParamList, "NuevoChat">;
 
-const NuevoChat = ({navigation,nameOtherUser, route}: Props) => {
+const NuevoChat = ({navigation, route}: Props) => {
+    const idOtherUser = route.params.idOtherUser;
+    const nameOtherUser = route.params.nameOtherUser;
+    
     const {conectar, conectado, historico, enviarPrivado} = UseChat();
     const {chats, save, saveMessages, findAllMessagesByChatId} = UseChatHistory();
     const {token, user} = useContext(AppContext);
     const {ruta} = Globals();
     const [img, setImg] = useState(ruta + "v1/files/" + user.img);
-    const chatActual = useRef<Chat>();
     const [loading, setLoading] = useState(true);
+
+    const chatActual = useRef<Chat>();    
+    const [mensajes, setMensajes] = useState<Array<Message>>([]);
+    const [mensaje, setMensaje] = useState("");
 
     useEffect(() => {
         conectar();
