@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import UseChat from '../hooks/UseChat'
 import chatStyles from '../themes/chatStyles';
-import { View, Image, Text, FlatList, StyleSheet, TextInput } from 'react-native';
+import { View, Image, Text, FlatList, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
 import { AppContext } from '../context/AppContextProvider';
 import UseChatHistory from '../hooks/UseChatHistory';
 import { Chat, ChatInputSaveDTO, Message } from '../types/chatTypes';
@@ -13,6 +13,7 @@ import { RootStackParamList } from '../../App';
 import { format, formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import LinearGradient from 'react-native-linear-gradient';
+import { Icon } from 'react-native-elements';
 
 type Props = NativeStackScreenProps<RootStackParamList, "NuevoChat">;
 
@@ -37,12 +38,12 @@ const NuevoChat = ({navigation, route}: Props) => {
 
     useEffect(() => {
         if(conectado == true){
-            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;
+             
+            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;            
 
             if (chatEncontrado) {
-                console.log("Chat encontrado:", chatEncontrado);
-
                 chatActual.current = chatEncontrado;
+
             } else {
                 const chatInput: ChatInputSaveDTO = {
                     nameUser2: nameOtherUser
@@ -66,6 +67,11 @@ const NuevoChat = ({navigation, route}: Props) => {
             console.log("Fallo de conexion");
         }
     }, [conectado]);
+    
+    function sendMessage() {
+        saveMessages(chatActual.current?.id as number, mensaje);
+        enviarPrivado(user.name, nameOtherUser, mensaje);
+    }
 
     return (
         <View style={chatStyles.container}>
@@ -89,9 +95,9 @@ const NuevoChat = ({navigation, route}: Props) => {
                 start={{ x: 0.5, y: 0 }}
                 end={{ x: 0.5, y: 1 }}
                 style={chatStyles.messageContainer}>
-                <View style={{height: "92%", backgroundColor: "red"}}>
+                <View style={{height: "92%"}}>
                     <FlatList
-                        data={mensajes}
+                        data={chatActual.current?.messages}
                         renderItem={({ item }) =>
                             (item.senderId === user.id) ?
                                 <View style={{ alignSelf: 'flex-end' }}>
@@ -112,13 +118,11 @@ const NuevoChat = ({navigation, route}: Props) => {
                     />
                 </View>
                 <View style={{height: "8%"}}>
-                    <View style={{flexDirection: "row"}}>
-                        <TextInput
-                            multiline
-                            onChangeText={setMensaje}
-                            value={mensaje}
-                            style={{borderWidth: 1, borderColor: '#ccc', borderRadius: 4, padding: 8, fontSize: 16, textAlignVertical: 'top',}}
-                        />
+                    <View style={{height: "100%", flexDirection: "row", justifyContent: 'space-between'}}>
+                        <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", paddingHorizontal: 20, fontSize: 16, backgroundColor: "white", height: "80%", alignSelf: "center", marginLeft: "2%"}}/>
+                        <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: "80%", borderRadius: 20, alignSelf: 'center', marginRight: "2%"}}>
+                            <Icon name="send" size={30} color={"yellow"}></Icon>
+                        </TouchableHighlight>
                     </View>
                 </View>
             </LinearGradient>

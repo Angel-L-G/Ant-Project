@@ -15,17 +15,18 @@ const UseChatHistory = () => {
 
     async function findUserChats() {
         try {
-            const response = await axios.get(ruta + "/v2/chats/me", { headers: { "Authorization": "Bearer " + token } });
-
+            const response = await axios.get(ruta + "v2/chats/me", { headers: { "Authorization": "Bearer " + token } });
+            console.log("Holaaaaaaaaaaaaaaaaaa" + response.data);
+            
             setChats(response.data);
         } catch (error) {
-            console.log(error);
+            console.log(error + "putaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         }
     }
 
     async function findById(id: number) {
         try {
-            const response = await axios.get(ruta + "/v2/chats/" + id, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.get(ruta + "v2/chats/" + id, { headers: { "Authorization": "Bearer " + token } });
 
             return response.data;
         } catch (error) {
@@ -36,7 +37,7 @@ const UseChatHistory = () => {
     async function save(chat: ChatInputSaveDTO): Promise<Chat | undefined> {
         try {
             // Realiza la solicitud POST y espera la respuesta
-            const response = await axios.post(ruta + "/v2/chats", chat, {
+            const response = await axios.post(ruta + "v2/chats", chat, {
                 headers: { "Authorization": "Bearer " + token }
             });
 
@@ -50,7 +51,7 @@ const UseChatHistory = () => {
 
     async function findAllMessagesByChatId(id: number) {
         try {
-            const response = await axios.get(ruta + "/v2/chats/" + id + "/messages", { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.get(ruta + "v2/chats/" + id + "/messages", { headers: { "Authorization": "Bearer " + token } });
 
             return response.data;
         } catch (error) {
@@ -60,9 +61,10 @@ const UseChatHistory = () => {
 
     async function saveMessages(id: number, message: string) {
         try {
-            const response = await axios.post(ruta + "/v2/chats" + id + "messages", { params: {message: message}, headers: { "Authorization": "Bearer " + token } }, );
+            const response = await axios.post(ruta + "v2/chats/" + id + "/messages", {}, { params: {message: message}, headers: { "Authorization": "Bearer " + token } } );
 
-            return response.data;
+            console.log(response.data);
+            
         } catch (error) {
             console.log(error);
         }

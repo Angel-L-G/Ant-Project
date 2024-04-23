@@ -22,7 +22,7 @@ const UseChat = () => {
         console.log("entra en conectar");
 
         stompRef.current = new Client({
-            brokerURL: 'ws://' + ruta + '/websocket',
+            brokerURL: 'ws://' + ip + '/websocket',
             connectHeaders: {
                 Authorization: 'Bearer ' + token,
             },
