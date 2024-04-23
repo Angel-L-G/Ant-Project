@@ -16,174 +16,50 @@ import LinearGradient from 'react-native-linear-gradient';
 
 type Props = NativeStackScreenProps<RootStackParamList, "NuevoChat">;
 
-const NuevoChat = ({ navigation, route }: Props) => {
-    const { idOtherUser, nameOtherUser } = route.params;
-    const { token, user } = useContext(AppContext);
-    const { ruta } = Globals();
+const NuevoChat = ({navigation,nameOtherUser, route}: Props) => {
+    const {conectar, conectado, historico, enviarPrivado} = UseChat();
+    const {chats, save, saveMessages, findAllMessagesByChatId} = UseChatHistory();
+    const {token, user} = useContext(AppContext);
+    const {ruta} = Globals();
     const [img, setImg] = useState(ruta + "v1/files/" + user.img);
     const chatActual = useRef<Chat>();
     const [loading, setLoading] = useState(true);
-    const [chat, setChat] = useState<Chat>({} as Chat);
-    const [mensajes, setMensajes] = useState<Array<Message>>([]);
-    const [mensaje, setMensaje] = useState("");
-
-    const stompRef = useRef({} as Client);
-    const [conectado, setConectado] = useState(false);
-    const [historico, setHistorico] = useState<string[]>(new Array<string>());
-
-    function conectar() {
-        stompRef.current = new Client({
-            brokerURL: 'ws://' + ruta + '/websocket',
-            connectHeaders: {
-                Authorization: 'Bearer ' + token,
-            },
-            debug: function (str) {
-                console.log(str);
-            },
-            onConnect: conectarOK,
-            onWebSocketError: (error) => console.log(error),
-            onStompError: (frame) => {
-                console.log('Additional details: ' + frame.body);
-            },
-            forceBinaryWSFrames: true,
-            appendMissingNULLonIncoming: true,
-        });
-
-        function conectarOK() {
-            setConectado(true);
-            console.log("entra en conectarOK");
-            let stompClient = stompRef.current;
-            stompClient.subscribe('/salas/general', onPublicMessageReceived);
-            stompClient.subscribe('/usuarios/cola/mensajes', onPrivateMessageReceived);
-        }
-
-        function conectarError() {
-
-        }
-
-        stompRef.current.activate();
-    }
-
-    function onPublicMessageReceived(datos: any) {
-        console.log("Publico");
-        console.log("datos: " + datos);
-        //setRecibido(datos.body);
-        let nuevoMensaje = JSON.parse(datos.body);
-        console.log(nuevoMensaje);
-        let arr = historico;
-        arr.push(nuevoMensaje.author + " dice a todos: " + nuevoMensaje.content);
-        setHistorico([...arr]);
-    }
-
-    function onPrivateMessageReceived(datos: any) {
-        console.log("Privado");
-        console.log("datos: " + datos);
-        //setRecibido(datos.body);
-        let nuevoMensaje = JSON.parse(datos.body);
-        console.log(nuevoMensaje);
-        let arr = historico;
-        arr.push(nuevoMensaje.author + " te dice en privado: " + nuevoMensaje.content);
-        setHistorico([...arr]);
-    }
-
-    function enviar(autor: string, mensaje: string) {
-        let stompClient = stompRef.current;
-        let messageTo = {
-            author: autor,
-            receiver: "no hay receptor específico",
-            content: mensaje
-        };
-
-        stompClient.publish({ destination: "/app/mensajegeneral", body: JSON.stringify(messageTo) });
-        console.log("enviado público");
-    }
-
-    function enviarPrivado(autor: string, receptor: string, mensaje: string) {
-        let stompClient = stompRef.current;
-        let messageTo = {
-            author: autor,
-            receiver: receptor,
-            content: mensaje
-
-        };
-        stompClient.publish({ destination: "/app/privado", body: JSON.stringify(messageTo) });
-        console.log("enviado privado");
-
-        let arr = historico;
-        arr.push("le dices a  " + messageTo.receiver + ": " + messageTo.content);
-        setHistorico([...arr]);
-    }
-
-    async function findById(id: number) {
-        try {
-            const response = await axios.get(ruta + "/v2/chats/" + id, { headers: { "Authorization": "Bearer " + token } });
-
-            return response.data;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async function save(chat: ChatInputSaveDTO): Promise<Chat | undefined> {
-        try {
-            // Realiza la solicitud POST y espera la respuesta
-            const response = await axios.post(ruta + "/v2/chats", chat, {
-                headers: { "Authorization": "Bearer " + token }
-            });
-
-            return response.data;
-        } catch (error) {
-            // Maneja los errores si la solicitud falla
-            console.log(error);
-            return undefined; // Devuelve undefined en caso de error
-        }
-    }
-
-    async function findAllMessagesByChatId(id: number) {
-        try {
-            const response = await axios.get(ruta + "/v2/chats/" + id + "/messages", { headers: { "Authorization": "Bearer " + token } });
-            setMensajes(response.data)
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async function saveMessages(id: number, message: string) {
-        try {
-            const response = await axios.post(ruta + "/v2/chats" + id + "messages", { params: { message: message }, headers: { "Authorization": "Bearer " + token } },);
-
-            return response.data;
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     useEffect(() => {
-        console.log(idOtherUser);
+        conectar();
+    }, []);
 
-        async function findUserChats() {
-            try {
-                const response = await axios.get(ruta + "v2/chats/me", { headers: { "Authorization": "Bearer " + token } });
+    useEffect(() => {
+        if(conectado == true){
+            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;
 
-                const chatFiltrado: Array<Chat> = response.data.filter((chat: Chat) =>
-                    chat.nameUser1 === user.name && chat.nameUser2 === nameOtherUser || chat.nameUser1 === nameOtherUser && chat.nameUser2 === user.name
-                );
+            if (chatEncontrado) {
+                console.log("Chat encontrado:", chatEncontrado);
 
-                setChat(chatFiltrado[0]);
-                setMensajes(chatFiltrado[0].messages);
-                console.log(chatFiltrado[0].messages);
+                chatActual.current = chatEncontrado;
+            } else {
+                const chatInput: ChatInputSaveDTO = {
+                    nameUser2: nameOtherUser
+                }
 
-            } catch (error) {
-                console.log(error);
+                const fetchData = async() => {
+                    try {
+                        const chatData: Chat | undefined = await save(chatInput) as Chat | undefined;
+
+                        chatActual.current = chatData;
+                    } catch (error) {
+                        console.error('Error al obtener el chat:', error);
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+
+                fetchData();
             }
+        }else {
+            console.log("Fallo de conexion");
         }
-
-        findUserChats();
-
-        console.log(mensajes);
-
-    }, [])
+    }, [conectado]);
 
     return (
         <View style={chatStyles.container}>

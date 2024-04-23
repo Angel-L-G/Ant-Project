@@ -1,17 +1,27 @@
 import { View, Text } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { Client } from '@stomp/stompjs'
 import Globals from '../components/Globals'
+import * as encoding from 'text-encoding';
+import { AppContext } from '../context/AppContextProvider';
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
-    const [token, setToken] = useState("");
+    const {token, user} = useContext(AppContext);
     const [conectado, setConectado] = useState(false);
     const [historico, setHistorico] = useState<string[]>(new Array<string>());
     const {ruta} = Globals();
+    const ip = "192.168.1.229:8080";
+
+    Object.assign(global, {
+        TextEncoder: encoding.TextEncoder,
+        TextDecoder: encoding.TextDecoder,
+    });
 
     function conectar() {
+        console.log("entra en conectar");
+
         stompRef.current = new Client({
             brokerURL: 'ws://' + ruta + '/websocket',
             connectHeaders: {
@@ -38,7 +48,8 @@ const UseChat = () => {
         }
 
         function conectarError() {
-
+            console.log("Error en el websocket");
+            
         }
 
         stompRef.current.activate();
