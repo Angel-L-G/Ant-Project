@@ -2,17 +2,18 @@ import { View, Text } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { Client } from '@stomp/stompjs'
+import Globals from '../components/Globals'
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
     const [token, setToken] = useState("");
     const [conectado, setConectado] = useState(false);
     const [historico, setHistorico] = useState<string[]>(new Array<string>());
-    const ip = "192.168.1.15:8080";
+    const {ruta} = Globals();
 
     function conectar() {
         stompRef.current = new Client({
-            brokerURL: 'ws://' + ip + '/websocket',
+            brokerURL: 'ws://' + ruta + '/websocket',
             connectHeaders: {
                 Authorization: 'Bearer ' + token,
             },

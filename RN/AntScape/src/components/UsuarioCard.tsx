@@ -24,7 +24,7 @@ const UsuarioCard = ({user, navigation}: Props) => {
                 }
             </View>
             <View style={{width: "20%"}}>
-                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("NuevoChat")} style={{justifyContent: 'center', alignItems: 'center', height: "100%", borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3"}}>
+                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("NuevoChat", {idOtherUser: user.id, nameOtherUser: user.name})} style={{justifyContent: 'center', alignItems: 'center', height: "100%", borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3"}}>
                     <Text style={{color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18}}>Chat</Text>
                 </TouchableHighlight>
             </View>

@@ -1,8 +1,8 @@
 export type Message = {
     id: number,
     body: string,
-    sendAt?: Date,
-    sender: number,
+    sentAt?: Date,
+    senderId: number,
 }
 
 export type Chat = {

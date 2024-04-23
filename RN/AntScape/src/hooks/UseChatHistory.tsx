@@ -2,9 +2,10 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
 import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
 import { AppContext } from '../context/AppContextProvider';
+import Globals from '../components/Globals';
 
 const UseChatHistory = () => {
-    const ruta = "http://192.168.1.15:8080/api/";
+    const {ruta} = Globals();
     const { token, user } = useContext(AppContext);
     const [chats, setChats] = useState<Chat[]>(new Array<Chat>());
 

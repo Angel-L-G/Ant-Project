@@ -54,7 +54,7 @@ export type RootStackParamList = {
     Register: undefined,
     Login: undefined,
     Social: {tab: number},
-    NuevoChat: undefined,
+    NuevoChat: {idOtherUser: number, nameOtherUser: string},
     Profile: undefined,
     Personal: undefined,
     ProfileOther: {usu: User},
