@@ -11,8 +11,7 @@ const UseChat = () => {
     const {token, user} = useContext(AppContext);
     const [conectado, setConectado] = useState(false);
     const [historico, setHistorico] = useState<string[]>(new Array<string>());
-    const {ruta} = Globals();
-    const ip = "192.168.1.229:8080";
+    const {ruta, ip} = Globals();
 
     Object.assign(global, {
         TextEncoder: encoding.TextEncoder,
