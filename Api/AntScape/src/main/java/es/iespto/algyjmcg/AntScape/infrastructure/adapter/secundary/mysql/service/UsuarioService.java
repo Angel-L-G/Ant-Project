@@ -93,8 +93,8 @@ public class UsuarioService implements IUsuarioRepository{
 		}
 	}
 
-	@Transactional
 	@Override
+	@Transactional
 	public boolean update(Usuario in) {
 		boolean ok = false;
 		

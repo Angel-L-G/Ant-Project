@@ -16,6 +16,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.GuildJPARepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class GuildService implements IGuildRepository{
@@ -40,6 +41,7 @@ public class GuildService implements IGuildRepository{
 	}
 
 	@Override
+	@Transactional
 	public Guild save(Guild in) {
 		Guild out = null;
 		

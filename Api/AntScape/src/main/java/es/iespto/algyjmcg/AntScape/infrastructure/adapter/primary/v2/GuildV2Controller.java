@@ -119,23 +119,30 @@ public class GuildV2Controller {
 	}
 	
 	@PutMapping(path="/{id}/joinguild")
-	public ResponseEntity<?> joinGuild(@PathVariable Integer id_guild, @RequestHeader HttpHeaders headers){
-		if(id_guild != null) {
+	public ResponseEntity<?> joinGuild(@PathVariable Integer id, @RequestHeader HttpHeaders headers){
+		if(id != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
 			
 			Usuario user = userService.findByName(username);
 			
-			Guild guild = mainService.findById(id_guild);
+			Guild guild = mainService.findById(id);
 			
 			guild.addUsuario(user);
 			guild.setQuantity(guild.getUsuarios().size());
 			
 			Guild save = mainService.save(guild);
 			
-			if(save != null && save.getUsuarios().contains(user)) {
-				return ResponseEntity.ok("User Joined The Guild Correctly");
+			if(save != null) {
+				user.setGuild(save);
+				boolean update = userService.update(user);
+				
+				if (update){
+					return ResponseEntity.ok("User Joined The Guild Correctly");
+				} else {
+					return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
+				}
 			}else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
 			}
@@ -231,12 +238,9 @@ public class GuildV2Controller {
 			guild.setQuantity(1);
 			guild.setLeader(user.getId());
 			
-			boolean update = userService.update(user);
-			
 			Guild save = mainService.save(guild);
 			
-			user.setGuild(guild);
-			if(save != null && update) {
+			if(save != null) {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
 			}else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Error while creating the guild try later");

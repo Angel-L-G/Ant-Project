@@ -8,7 +8,7 @@ import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 import axios from 'axios';
 import { User } from '../types/types';
-import UsuarioCard from '../components/UsuarioCard';
+import UsuarioCardClan from '../components/UsuarioCardClan';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfileOther">;
 
@@ -47,7 +47,7 @@ const ClanProfileOther = ({navigation, route}: Props) => {
 
     async function unirse() {
         try {
-            const response = await axios.post(ruta + "v2/guilds/joinguild/" + clan.id, null, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/joinguild", { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setUser({...user, id_guild: clan.id});
         } catch (error) {
@@ -92,12 +92,12 @@ const ClanProfileOther = ({navigation, route}: Props) => {
                             renderItem={({item}) => 
                                 (item.id == user.id) ?
                                     <View>
-                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("Profile")}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("Profile")}><UsuarioCardClan usu={item} navigation={navigation} clan={clan}/></TouchableHighlight>
                                         <View style={{height: 1, backgroundColor: "black"}}></View>
                                     </View>
                                 :
                                     <View>
-                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCardClan usu={item} navigation={navigation} clan={clan}/></TouchableHighlight>
                                         <View style={{height: 1, backgroundColor: "black"}}></View>
                                     </View>
                             }

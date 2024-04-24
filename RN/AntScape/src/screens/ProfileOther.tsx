@@ -75,7 +75,7 @@ const ProfileOther = ({route, navigation}: Props) => {
         console.log("Añadiendo amigo");
         
         try {
-            const response = await axios.post(ruta + "v2/users/" + user.name + "/friends/add/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.post(ruta + "v2/users/" + user.name + "/friends/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setAmigo(true);
         } catch (error) {

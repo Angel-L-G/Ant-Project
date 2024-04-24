@@ -9,6 +9,7 @@ import Globals from '../components/Globals';
 import axios from 'axios';
 import { User } from '../types/types';
 import UsuarioCard from '../components/UsuarioCard';
+import UsuarioCardClan from '../components/UsuarioCardClan';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfile">;
 
@@ -45,8 +46,9 @@ const ClanProfile = ({navigation, route}: Props) => {
     }
 
     async function abandonar() {
+
         try {
-            const response = await axios.post(ruta + "v2/guilds/leaveguild/" + clan.id, null, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {params: {newLeader: null}, headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setUser({...user, id_guild: undefined});
         } catch (error) {
@@ -80,7 +82,7 @@ const ClanProfile = ({navigation, route}: Props) => {
                             </LinearGradient>
                         </View>
                         <View style={{width: "23%", marginHorizontal: "5%", flexDirection: 'row', marginTop: -10}}>
-                            <TouchableHighlight style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
+                            <TouchableHighlight underlayColor={"transparent"} onPress={abandonar} style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
                                 <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Abandonar</Text>
                             </TouchableHighlight>
                         </View>
@@ -91,12 +93,12 @@ const ClanProfile = ({navigation, route}: Props) => {
                             renderItem={({item}) => 
                                 (item.id == user.id) ?
                                     <View>
-                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("Profile")}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("Profile")}><UsuarioCardClan usu={item} navigation={navigation} clan={clan}/></TouchableHighlight>
                                         <View style={{height: 1, backgroundColor: "black"}}></View>
                                     </View>
                                 :
                                     <View>
-                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCardClan usu={item} navigation={navigation} clan={clan}/></TouchableHighlight>
                                         <View style={{height: 1, backgroundColor: "black"}}></View>
                                     </View>
                             }

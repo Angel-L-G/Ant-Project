@@ -216,7 +216,7 @@ const Social = ({ navigation, route }: Props) => {
                                         data={usuarios}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard usu={item} navigation={navigation}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }
@@ -248,7 +248,7 @@ const Social = ({ navigation, route }: Props) => {
                                         data={amigos}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard usu={item} navigation={navigation}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }
