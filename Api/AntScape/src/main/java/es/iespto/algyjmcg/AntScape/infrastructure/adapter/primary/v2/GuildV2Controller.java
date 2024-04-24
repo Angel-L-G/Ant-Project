@@ -212,9 +212,9 @@ public class GuildV2Controller {
 			user.setGuild(null);
 			
 			if(guild.getLeader() == user.getId()) {
-				if(guild.getUsuarios().size() == 1) {
-					mainService.deleteById(id);
+				if(guild.getUsuarios().size() == 0) {
 					boolean updateUser = userService.updateGuild(user);
+					mainService.deleteById(id);
 					
 					if(updateUser) {
 						return ResponseEntity.ok("User Leaved The Guild Correctly, and due to the lack of players the guild has been deleted");
