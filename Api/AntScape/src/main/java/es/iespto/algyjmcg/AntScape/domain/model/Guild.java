@@ -7,7 +7,7 @@ public class Guild {
 	private Integer id;
 	private Integer leader;
 	private Integer defenseNumber;
-	private Integer defenseRange;
+	private String defenseRange;
 	private String name;
 	private String description;
 	private Integer quantity;
@@ -36,11 +36,11 @@ public class Guild {
 		this.defenseNumber = defenseNumber;
 	}
 
-	public Integer getDefenseRange() {
+	public String getDefenseRange() {
 		return this.defenseRange;
 	}
 
-	public void setDefenseRange(Integer defenseRange) {
+	public void setDefenseRange(String defenseRange) {
 		this.defenseRange = defenseRange;
 	}
 

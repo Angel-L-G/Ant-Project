@@ -15,6 +15,7 @@ public class Usuario {
 	private String name;
 	private String password;
 	private String rol;
+	private String totalMoneyGenerated;
 	private Guild guild;
 	private List<Nest> nests;
 	private List<Ant> ants;
@@ -193,5 +194,13 @@ public class Usuario {
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+
+	public String getTotalMoneyGenerated() {
+		return totalMoneyGenerated;
+	}
+
+	public void setTotalMoneyGenerated(String totalMoneyGenerated) {
+		this.totalMoneyGenerated = totalMoneyGenerated;
 	}
 }
