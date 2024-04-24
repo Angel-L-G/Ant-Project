@@ -138,24 +138,13 @@ public class GuildV2Controller {
 			
 			Guild save = mainService.save(guild);
 			
-<<<<<<< HEAD
-			if(save != null) {
-				user.setGuild(save);
-				boolean update = userService.update(user);
-				
-				if (update){
-					return ResponseEntity.ok("User Joined The Guild Correctly");
-				} else {
-					return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
-				}
-=======
+
 			user.setGuild(guild);
 			
 			boolean update = userService.update(user);
 			
 			if(save != null && update) {
 				return ResponseEntity.ok("User Joined The Guild Correctly");
->>>>>>> hexagonal
 			}else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
 			}
@@ -225,9 +214,11 @@ public class GuildV2Controller {
 			
 			if(guild.getLeader() == user.getId()) {
 				if(guild.getUsuarios().size() == 1) {
-					mainService.deleteById(id);
-					boolean updateUser = userService.updateGuild(user);
 					
+					boolean updateUser = userService.updateGuild(user);
+					mainService.deleteById(id);
+					System.err.println(updateUser);
+					System.err.println(id);
 					if(updateUser) {
 						return ResponseEntity.ok("User Leaved The Guild Correctly, and due to the lack of players the guild has been deleted");
 					} else {
@@ -288,15 +279,11 @@ public class GuildV2Controller {
 			
 			Guild save = mainService.save(guild);
 			
-<<<<<<< HEAD
-			if(save != null) {
-=======
 			user.setGuild(save);
 			
 			boolean updateGuild = userService.updateGuild(user);
 			
 			if(save != null && updateGuild) {
->>>>>>> hexagonal
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
 			}else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Error while creating the guild try later");

@@ -23,11 +23,8 @@ const ClanProfile = ({navigation, route}: Props) => {
     useEffect(() => {
         async function getClanUsers() {
             try {
-                const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
-                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
-                    usuario.id_guild == clan.id || usuario.id == clan.leader
-                );
-                setUsers(usuariosFiltrados);
+                const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/users", { headers: { "Authorization": "Bearer " + token } });
+                setUsers(response.data);
             } catch (error) {
                 console.log(error);
             }
@@ -48,7 +45,7 @@ const ClanProfile = ({navigation, route}: Props) => {
     async function abandonar() {
 
         try {
-            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {params: {newLeader: null}, headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {params: {newLeader: 2}, headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setUser({...user, id_guild: undefined});
         } catch (error) {

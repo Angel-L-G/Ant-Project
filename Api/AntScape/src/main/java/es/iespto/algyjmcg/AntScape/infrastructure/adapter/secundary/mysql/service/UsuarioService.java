@@ -111,18 +111,9 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setEggs(persistance.getEggs());
 				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
 				findByName.get().setImg(persistance.getImg());
-<<<<<<< HEAD
-								
-				if(in.getNests() != null ) {
-					for (Nest nest : in.getNests()) {
-						findByName.get().getNests().add(nm.toPersistance(nest));
-					}
-				}
-								
-=======
+
 				findByName.get().setTotalMoneyGenerated(persistance.getTotalMoneyGenerated());
 				
->>>>>>> hexagonal
 				if(in.getGuild() != null) {
 					findByName.get().setGuild(gm.toPersistance(in.getGuild()));
 				}

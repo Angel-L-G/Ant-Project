@@ -24,13 +24,6 @@ const CrearClan = ({navigation}: Props) => {
             const response = await axios.post(ruta + "v2/guilds", null, { params: params, headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setUser({...user, id_guild: response.data.id});
-
-            try {
-                
-            } catch (error) {
-                
-            }
-
             navigation.navigate("Social", {tab: 2});
         } catch (error) {
             console.log(error);
