@@ -141,7 +141,11 @@ public class GuildService implements IGuildRepository{
 					findByName.get().getUsuarios().add(um.toPersistance(domain));
 				}
 				
-				ok = true;
+				GuildEntity save = repository.save(findByName.get());
+				
+				if(save != null) {
+					ok = true;
+				}
 			}
 		}
 		

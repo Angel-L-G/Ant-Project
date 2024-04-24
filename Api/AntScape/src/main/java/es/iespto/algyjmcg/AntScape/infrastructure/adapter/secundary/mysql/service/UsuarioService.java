@@ -108,6 +108,7 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setEggs(persistance.getEggs());
 				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
 				findByName.get().setImg(persistance.getImg());
+				findByName.get().setTotalMoneyGenerated(persistance.getTotalMoneyGenerated());
 				
 				if(in.getGuild() != null) {
 					findByName.get().setGuild(gm.toPersistance(in.getGuild()));
@@ -126,6 +127,29 @@ public class UsuarioService implements IUsuarioRepository{
 				}
 				
 				usuarioRepo.save(findByName.get());
+				
+				ok = true;
+			}
+		}
+		
+		return ok;
+	}
+	
+	@Override
+	public boolean updateGuild(Usuario in) {
+		boolean ok = false;
+		
+		if(in != null) {
+			Optional<UsuarioEntity> find = usuarioRepo.findById(in.getId());
+			
+			if(find.isPresent()) {
+				if(in.getGuild() != null) {
+					find.get().setGuild(gm.toPersistance(in.getGuild()));
+				}else {
+					find.get().setGuild(null);
+				}
+				
+				usuarioRepo.save(find.get());
 				
 				ok = true;
 			}
