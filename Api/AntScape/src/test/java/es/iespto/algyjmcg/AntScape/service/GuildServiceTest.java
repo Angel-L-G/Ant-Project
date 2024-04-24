@@ -56,7 +56,7 @@ class GuildServiceTest {
     	guild.setName("Test");
     	guild.setTrophys(1);
     	guild.setQuantity(2);
-    	guild.setDefenseRange(3);
+    	guild.setDefenseRange("3-3");
     	guild.setDefenseNumber(4);
     	
     	Guild save = service.save(guild);
@@ -77,7 +77,7 @@ class GuildServiceTest {
     	guild.setName("Updated");
     	guild.setTrophys(1);
     	guild.setQuantity(2);
-    	guild.setDefenseRange(3);
+    	guild.setDefenseRange("3-3");
     	guild.setDefenseNumber(4);
     	
     	boolean update = service.update(guild);

@@ -1,8 +1,8 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -247,7 +247,7 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<?> createGuild(@RequestHeader HttpHeaders headers, @RequestParam String guildName, @RequestParam String guildDescription){
 		if(guildName != null) {
 			String token = headers.getFirst("Authorization");
@@ -262,20 +262,25 @@ public class GuildV2Controller {
 				guildDescription = "Default Description";
 			}
 			
+			Random rnd = new Random();
+			int num = rnd.nextInt(6) + 1;
+			
 			guild.setName(guildName);
 			guild.setDescription(guildDescription);
+			guild.setDefenseRange("1-6");
+			guild.setDefenseNumber(num);
 			guild.getUsuarios().add(user);
 			guild.setTrophys(10);
 			guild.setQuantity(1);
 			guild.setLeader(user.getId());
 			
-			boolean update = userService.update(user);
-			
 			Guild save = mainService.save(guild);
 			
-			user.setGuild(guild);
+			user.setGuild(save);
 			
-			if(save != null && update) {
+			boolean updateGuild = userService.updateGuild(user);
+			
+			if(save != null && updateGuild) {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
 			}else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Error while creating the guild try later");
