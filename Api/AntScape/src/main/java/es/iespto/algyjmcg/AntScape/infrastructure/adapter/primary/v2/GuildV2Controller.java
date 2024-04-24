@@ -213,7 +213,9 @@ public class GuildV2Controller {
 			user.setGuild(null);
 			
 			if(guild.getLeader() == user.getId()) {
-				if(guild.getUsuarios().size() == 1) {
+				if(guild.getUsuarios().size() == 0) {
+					boolean updateUser = userService.updateGuild(user);
+					mainService.deleteById(id);
 					
 					boolean updateUser = userService.updateGuild(user);
 					mainService.deleteById(id);
