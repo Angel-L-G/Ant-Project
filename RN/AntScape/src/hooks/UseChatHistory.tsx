@@ -16,11 +16,11 @@ const UseChatHistory = () => {
     async function findUserChats() {
         try {
             const response = await axios.get(ruta + "v2/chats/me", { headers: { "Authorization": "Bearer " + token } });
-            console.log("Holaaaaaaaaaaaaaaaaaa" + response.data);
+            console.log(response.data);
             
             setChats(response.data);
         } catch (error) {
-            console.log(error + "putaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            console.log(error);
         }
     }
 
@@ -63,8 +63,7 @@ const UseChatHistory = () => {
         try {
             const response = await axios.post(ruta + "v2/chats/" + id + "/messages", {}, { params: {message: message}, headers: { "Authorization": "Bearer " + token } } );
 
-            console.log(response.data);
-            
+            return response.status;
         } catch (error) {
             console.log(error);
         }

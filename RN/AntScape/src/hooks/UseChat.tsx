@@ -5,12 +5,14 @@ import { Client } from '@stomp/stompjs'
 import Globals from '../components/Globals'
 import * as encoding from 'text-encoding';
 import { AppContext } from '../context/AppContextProvider';
+import { Message, websocketMessage } from '../types/chatTypes'
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
     const {token, user} = useContext(AppContext);
     const [conectado, setConectado] = useState(false);
-    const [historico, setHistorico] = useState<string[]>(new Array<string>());
+    const [historico, setHistorico] = useState<Message[]>(new Array<Message>());
+    //const [historico, setHistorico] = useState<string[]>(new Array<string>());
     const {ruta, ip} = Globals();
 
     Object.assign(global, {
@@ -19,8 +21,6 @@ const UseChat = () => {
     });
 
     function conectar() {
-        console.log("entra en conectar");
-
         stompRef.current = new Client({
             brokerURL: 'ws://' + ip + '/websocket',
             connectHeaders: {
@@ -48,7 +48,6 @@ const UseChat = () => {
 
         function conectarError() {
             console.log("Error en el websocket");
-            
         }
 
         stompRef.current.activate();
@@ -57,50 +56,84 @@ const UseChat = () => {
     function onPublicMessageReceived(datos: any) {
         console.log("Publico");
         console.log("datos: " + datos);
-        //setRecibido(datos.body);
-        let nuevoMensaje = JSON.parse(datos.body);
+        
+        let nuevoMensaje = JSON.parse(datos.content);
         console.log(nuevoMensaje);
+
+        let messageRecieved: Message = {
+            body: datos.content,
+            sentAt: datos.sentAt,
+            senderId: datos.senderId
+        };
+
         let arr = historico;
-        arr.push(nuevoMensaje.author + " dice a todos: " + nuevoMensaje.content);
+        arr.push(messageRecieved);
         setHistorico([...arr]);
     }
 
     function onPrivateMessageReceived(datos: any) {
         console.log("Privado");
         console.log("datos: " + datos);
-        //setRecibido(datos.body);
-        let nuevoMensaje = JSON.parse(datos.body);
+        
+        let nuevoMensaje = JSON.parse(datos.content);
         console.log(nuevoMensaje);
+
+        let messageRecieved: Message = {
+            body: datos.content,
+            sentAt: datos.sentAt,
+            senderId: datos.senderId
+        };
+
         let arr = historico;
-        arr.push(nuevoMensaje.author + " te dice en privado: " + nuevoMensaje.content);
+        arr.push(messageRecieved);
         setHistorico([...arr]);
     }
 
-    function enviar(autor: string, mensaje: string) {
+    function enviar(autor: string, mensaje: string, senderId: number) {
         let stompClient = stompRef.current;
-        let messageTo = {
+        let messageTo: websocketMessage = {
             author: autor,
             receiver: "no hay receptor específico",
-            content: mensaje
+            content: mensaje,
+            sentAt: new Date(),
+            senderId: senderId
         };
 
         stompClient.publish({ destination: "/app/mensajegeneral", body: JSON.stringify(messageTo) });
         console.log("enviado público");
+
+        let messageRecieved: Message = {
+            body: messageTo.content,
+            sentAt: messageTo.sentAt,
+            senderId: messageTo.senderId
+        };
+
+        let arr = historico;
+        arr.push(messageRecieved);
+        setHistorico([...arr]);
     }
 
-    function enviarPrivado(autor: string, receptor:string, mensaje: string) {
+    function enviarPrivado(autor: string, receptor:string, mensaje: string, senderId: number) {
         let stompClient = stompRef.current;
-        let messageTo = {
+        let messageTo: websocketMessage = {
             author: autor,
             receiver: receptor,
-            content: mensaje
-
+            content: mensaje,
+            sentAt: new Date(),
+            senderId: senderId
         };
+
         stompClient.publish({ destination: "/app/privado", body: JSON.stringify(messageTo) });
         console.log("enviado privado");
 
+        let messageRecieved: Message = {
+            body: messageTo.content,
+            sentAt: messageTo.sentAt,
+            senderId: messageTo.senderId
+        };
+
         let arr = historico;
-        arr.push("le dices a  " + messageTo.receiver + ": " + messageTo.content);
+        arr.push(messageRecieved);
         setHistorico([...arr]);
     }
 
@@ -109,7 +142,8 @@ const UseChat = () => {
         enviar,
         enviarPrivado,
         conectado,
-        historico
+        historico,
+        setHistorico
     }
 }
 

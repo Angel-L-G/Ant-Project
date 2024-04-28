@@ -1,8 +1,15 @@
 export type Message = {
-    id: number,
     body: string,
     sentAt?: Date,
     senderId: number,
+}
+
+export type websocketMessage ={
+    author: string,
+	receiver: string,
+	content: string,
+	sentAt: Date,
+    senderId: number
 }
 
 export type Chat = {

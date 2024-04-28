@@ -69,7 +69,7 @@ public class LoginController {
 					return ResponseEntity.ok(token);
 				}
 			}else {
-				return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Necesario activar a traves del email antes y que la administracion confirme su cuenta");
+				return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Es necesario activar a traves del email");
 			}
 		}else {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Banned User");
