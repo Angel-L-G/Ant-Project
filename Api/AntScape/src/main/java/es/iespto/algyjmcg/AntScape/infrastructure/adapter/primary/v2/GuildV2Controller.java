@@ -217,10 +217,6 @@ public class GuildV2Controller {
 					boolean updateUser = userService.updateGuild(user);
 					mainService.deleteById(id);
 					
-					boolean updateUser = userService.updateGuild(user);
-					mainService.deleteById(id);
-					System.err.println(updateUser);
-					System.err.println(id);
 					if(updateUser) {
 						return ResponseEntity.ok("User Leaved The Guild Correctly, and due to the lack of players the guild has been deleted");
 					} else {
