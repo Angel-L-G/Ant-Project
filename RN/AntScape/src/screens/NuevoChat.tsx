@@ -73,7 +73,7 @@ const NuevoChat = ({navigation, route}: Props) => {
     
     function sendMessage() {
         saveMessages(chatActual.current?.id as number, mensaje);
-        enviarPrivado(user.name, nameOtherUser, mensaje);
+        enviarPrivado(user.name, nameOtherUser, mensaje, user.id);
     }
 
     return (
