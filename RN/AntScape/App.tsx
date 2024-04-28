@@ -46,6 +46,7 @@ import ClanProfile from './src/screens/ClanProfile';
 import CrearClan from './src/screens/CrearClan';
 import NuevoChat from './src/screens/NuevoChat';
 import ClanProfileOther from './src/screens/ClanProfileOther';
+import Atacar from './src/screens/Atacar';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -64,6 +65,7 @@ export type RootStackParamList = {
     ClanProfile: {clan: ClanType},
     CrearClan: undefined,
     ClanProfileOther: {clan: ClanType},
+    Atacar: {clan: ClanType},
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -86,6 +88,7 @@ function App(): JSX.Element {
                     <Stack.Screen name="Ajustes" component={Ajustes}/>
                     <Stack.Screen name="CrearClan" component={CrearClan}/>
                     <Stack.Screen name="NuevoChat" component={NuevoChat}/>
+                    <Stack.Screen name="Atacar" component={Atacar}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </AppContextProvider>

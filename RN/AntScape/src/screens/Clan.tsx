@@ -6,6 +6,7 @@ import Globals from '../components/Globals'
 import axios from 'axios'
 import { AppContext } from '../context/AppContextProvider'
 import { ClanType } from '../types/types'
+import { Icon, Image } from 'react-native-elements';
 
 type Props = {
     navigation: any,
@@ -67,18 +68,27 @@ const Clan = ({ navigation }: Props) => {
     }
 
     return (
+
         <View style={{ width: "100%", height: "100%" }}>
             <NavBarTop navigation={navigation} />
 
             <View style={{ height: "93%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
                 {(tieneClan) ?
                     <View style={{ height: "93%", width: "100%" }}>
+                        
+                        <View style={{position: "absolute", width: "20%", height: "15%", bottom: 0, right: 10, justifyContent: 'center', alignItems: 'center'}}>
+                            <TouchableHighlight underlayColor={"orange"} onPress={() => navigation.navigate("Atacar", {clan: clan})} style={{width: 70, height: 70, backgroundColor: "yellow", borderRadius: 100, elevation: 10, justifyContent: 'center'}}>
+                                <Image source={require('../assets/imgs/sword.png')} style={{ width: "70%", height: "80%", marginLeft: 10, marginTop: 5}} />
+                            </TouchableHighlight>
+                        </View>
+
                         <View style={{position: "absolute", top: 10, left: 10}}>
                             <TouchableHighlight underlayColor={"rgb(24, 50, 150)"} onPress={() => navigation.navigate("ClanProfile", {clan: clan})} style={{width: 100, height: 30, backgroundColor: "rgba(20, 40, 140, 1)", borderRadius: 20, justifyContent: "center", alignContent: 'center', elevation: 10}}>
                                 <Text style={{textAlign: 'center', fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow"}}>Clan</Text>
                             </TouchableHighlight>
                         </View>
                     </View>
+                    
                     :
                     <View style={{ height: "93%", width: "100%" }}>
                         <View style={{ alignItems: 'center', marginTop: 180 }}>
@@ -96,7 +106,6 @@ const Clan = ({ navigation }: Props) => {
                         </View>
                     </View>
                 }
-
                 <NavBarBotton navigation={navigation} icon='clan' />
             </View>
         </View>

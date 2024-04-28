@@ -45,7 +45,9 @@ const ClanProfile = ({navigation, route}: Props) => {
     async function abandonar() {
 
         try {
-            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {params: {newLeader: 2}, headers: { "Authorization": "Bearer " + token } });
+            console.log(ruta + "v2/guilds/" + clan.id + "/leaveguild");
+            
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {params: {newLeader: -1}, headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setUser({...user, id_guild: undefined});
         } catch (error) {
