@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableHighlight, Touchable } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import NavBarTop from '../components/NavBarTop'
 import NavBarBotton from '../components/NavBarBotton'
@@ -7,6 +7,8 @@ import axios from 'axios'
 import { AppContext } from '../context/AppContextProvider'
 import { ClanType, GuildLevel } from '../types/types'
 import { Icon, Image } from 'react-native-elements';
+import { get } from 'http';
+import LinearGradient from 'react-native-linear-gradient';
 
 type Props = {
     navigation: any,
@@ -27,7 +29,6 @@ const Clan = ({ navigation }: Props) => {
 
     useEffect(() => {
         console.log(user);
-        
 
         async function carga() {
             console.log("UseEffect");
@@ -77,26 +78,35 @@ const Clan = ({ navigation }: Props) => {
     }
 
     function abrirModalUno() {
+        getGuild();
+
         setModalConstruccionUno(true);
     }
 
     function abrirModalDos() {
+        getGuild();
+
         setModalConstruccionDos(true);
     }
 
     function abrirModalTres() {
+        getGuild();
+
         setModalConstruccionTres(true);
     }
 
     async function getGuild() {
+        console.log("ASDASDAS " + user.id_guild);
+        
+
         try {
-            const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
-            setGuildLevelUno(response.data[0]);
-            setGuildLevelDos(response.data[0]);
-            setGuildLevelTres(response.data[0]);
+            const response = await axios.get(ruta + "v2/guilds/" + clanId, { headers: { "Authorization": "Bearer " + token } });
+            setGuildLevelUno(response.data.guildLevels[0]);
+            setGuildLevelDos(response.data.guildLevels[1]);
+            setGuildLevelTres(response.data.guildLevels[2]);
             console.log(response.data);
         } catch (error) {
-            
+            console.log(error);
         }
     }
 
@@ -158,9 +168,119 @@ const Clan = ({ navigation }: Props) => {
                 }
                 <NavBarBotton navigation={navigation} icon='clan' />
             </View>
+
+            <Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalConstruccionUno}
+				onRequestClose={() => {
+					Alert.alert('Modal has been closed.');
+					setModalConstruccionUno(!modalConstruccionUno);
+				}}>
+				<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                    start={{ x: 0.5, y: 0 }}
+                    end={{ x: 0.5, y: 1.25 }}
+                    style={stylesModal.modalView}>
+                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                                
+                            </View>
+                            <View style={{flexDirection: 'row'}}>
+                                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => setModalConstruccionUno(false)} style={{ width: 40, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 26 }}>X</Text>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
+                    </LinearGradient>
+				</View>
+			</Modal>
+
+            <Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalConstruccionDos}
+				onRequestClose={() => {
+					Alert.alert('Modal has been closed.');
+					setModalConstruccionUno(!modalConstruccionDos);
+				}}>
+				<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                    start={{ x: 0.5, y: 0 }}
+                    end={{ x: 0.5, y: 1.25 }}
+                    style={stylesModal.modalView}>
+                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                                
+                            </View>
+                            <View style={{flexDirection: 'row'}}>
+                                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => setModalConstruccionDos(false)} style={{ width: 40, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 26 }}>X</Text>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
+                    </LinearGradient>
+				</View>
+			</Modal>
+
+            <Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalConstruccionTres}
+				onRequestClose={() => {
+					Alert.alert('Modal has been closed.');
+					setModalConstruccionUno(!modalConstruccionTres);
+				}}>
+				<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                    start={{ x: 0.5, y: 0 }}
+                    end={{ x: 0.5, y: 1.25 }}
+                    style={stylesModal.modalView}>
+                        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                            <View style={{height: "90%", width: "100%"}}>
+                                <View style={{width: "100%", height: "100%"}}>
+                                    <View style={{width: "100%", height: "30%", justifyContent: 'space-between', flexDirection: "row"}}>
+                                        <View style={{width: "40%", height: "100%"}}>
+                                            <Image source={require('../assets/imgs/Background.png')} style={{width: "100%", height: "100%"}} />
+                                        </View>
+                                        <View style={{width: "5%"}}></View>
+                                        <View style={{width: "55%", borderLeftWidth: 2, alignItems: "center"}}>
+                                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", textAlign: "center", textDecorationLine: 'underline'}}>{guildLevelTres.name}</Text>
+                                            <Text style={{width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center", marginTop: 10}}>Aumenta el robo de recursos</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{width: "100%", height: "70%", alignItems: "center", marginTop: "7%"}}>
+                                        <Text style={{width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center"}}>Aumenta la cantidad de recursos que robas en un 1% por cada nivel.</Text>
+                                        <Text style={{width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center"}}>Actualmente {1 * guildLevelTres.level}%</Text>
+                                        <View style={{width: "12%", height: "16%", marginVertical: 10}}>
+                                            <Image source={require('../assets/imgs/arrow.png')} style={{width: "100%", height: "100%"}} />
+                                        </View>
+                                        <Text style={{width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center"}}>Proximo nivel {1 * (guildLevelTres.level + 1)}%</Text>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row', height: "8%", width: "100%", marginTop: "2%"}}>
+                                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => setModalConstruccionTres(false)} style={{ width: 40, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 26 }}>X</Text>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
+                    </LinearGradient>
+				</View>
+			</Modal>
         </View>
     );
 };
 
 export default Clan
 
+const stylesModal = StyleSheet.create({
+    modalView: {
+		backgroundColor: '#00a8d6',
+		borderRadius: 20,
+		padding: 20,
+		elevation: 15,
+		width: "80%",
+        height: "50%"
+	},
+})

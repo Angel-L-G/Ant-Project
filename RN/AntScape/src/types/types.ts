@@ -3,7 +3,7 @@ export type ContextUser = {
     nombre: string,
     password: string,
     email: string,
-    rol: string,
+    rol: string
 }
 
 export type UserLogin = {
@@ -85,7 +85,8 @@ export type User = {
     img: string,
     name: string,
     nests: Array<Nest>,
-    id_guild: number | undefined
+    id_guild: number | undefined,
+    totalMoneyGenerated: string
 }
 
 export type Nest = {
