@@ -354,9 +354,9 @@ public class GuildV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/{idAtacker}/atack/{idDefender}")
-	public ResponseEntity<?> atackGuild(@RequestHeader HttpHeaders headers, @PathVariable Integer idAtacker, @PathVariable Integer idDefender, @RequestParam Integer atackNumber){
-		if(idAtacker != null && idDefender != null && atackNumber != null) {
+	@PutMapping(path="/{idAtacker}/attack/{idDefender}")
+	public ResponseEntity<?> atackGuild(@RequestHeader HttpHeaders headers, @PathVariable Integer idAtacker, @PathVariable Integer idDefender, @RequestParam Integer attackNumber){
+		if(idAtacker != null && idDefender != null && attackNumber != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
 			String username = jwtService.extractUsername(resultado);
@@ -365,7 +365,7 @@ public class GuildV2Controller {
 			Guild defender = mainService.findById(idDefender);
 			Guild atacker = mainService.findById(idAtacker);
 			
-			Integer acuracy = Math.abs(atackNumber - defender.getDefenseNumber());
+			Integer acuracy = Math.abs(attackNumber - defender.getDefenseNumber());
 			
 			Double eggsGained = null;
 			Double goldenEggsGained = null;

@@ -105,3 +105,11 @@ export type ClanType = {
     trophys: number,
     defenseRange: string
 }
+
+export type GuildLevel = {
+    id: number,
+    cost: number,
+    efect: string,
+    level: number,
+    name: string
+}

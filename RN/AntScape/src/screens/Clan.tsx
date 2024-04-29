@@ -5,7 +5,7 @@ import NavBarBotton from '../components/NavBarBotton'
 import Globals from '../components/Globals'
 import axios from 'axios'
 import { AppContext } from '../context/AppContextProvider'
-import { ClanType } from '../types/types'
+import { ClanType, GuildLevel } from '../types/types'
 import { Icon, Image } from 'react-native-elements';
 
 type Props = {
@@ -18,8 +18,17 @@ const Clan = ({ navigation }: Props) => {
     const [clan, setClan] = useState<ClanType>({} as ClanType);
     const [tieneClan, setTieneClan] = useState(false);
     const [clanId, setClanId] = useState(0);
+    const [modalConstruccionUno, setModalConstruccionUno] = useState(false);
+    const [guildLevelUno, setGuildLevelUno] = useState<GuildLevel>({} as GuildLevel);
+    const [modalConstruccionDos, setModalConstruccionDos] = useState(false);
+    const [guildLevelDos, setGuildLevelDos] = useState<GuildLevel>({} as GuildLevel);
+    const [modalConstruccionTres, setModalConstruccionTres] = useState(false);
+    const [guildLevelTres, setGuildLevelTres] = useState<GuildLevel>({} as GuildLevel);
 
     useEffect(() => {
+        console.log(user);
+        
+
         async function carga() {
             console.log("UseEffect");
 
@@ -67,14 +76,55 @@ const Clan = ({ navigation }: Props) => {
         }
     }
 
-    return (
+    function abrirModalUno() {
+        setModalConstruccionUno(true);
+    }
 
+    function abrirModalDos() {
+        setModalConstruccionDos(true);
+    }
+
+    function abrirModalTres() {
+        setModalConstruccionTres(true);
+    }
+
+    async function getGuild() {
+        try {
+            const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+            setGuildLevelUno(response.data[0]);
+            setGuildLevelDos(response.data[0]);
+            setGuildLevelTres(response.data[0]);
+            console.log(response.data);
+        } catch (error) {
+            
+        }
+    }
+
+    return (
         <View style={{ width: "100%", height: "100%" }}>
             <NavBarTop navigation={navigation} />
 
             <View style={{ height: "93%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
                 {(tieneClan) ?
                     <View style={{ height: "93%", width: "100%" }}>
+
+                        <View>
+                            <View style={{height: "33%", width: "100%", justifyContent: "center", alignItems: "flex-end"}}>
+                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalUno()} style={{width: "40%", height: "60%", backgroundColor: "blue", justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{fontSize: 40}}>IMG</Text>
+                                </TouchableHighlight>
+                            </View>
+                            <View style={{height: "34%", width: "100%", justifyContent: "center"}}>
+                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalDos()} style={{width: "40%", height: "60%", backgroundColor: "blue", justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{fontSize: 40}}>IMG</Text>
+                                </TouchableHighlight>
+                            </View>
+                            <View style={{height: "33%", width: "100%", justifyContent: "center", alignItems: "center"}}>
+                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalTres()} style={{width: "40%", height: "60%", backgroundColor: "blue", justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{fontSize: 40}}>IMG</Text>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
                         
                         <View style={{position: "absolute", width: "20%", height: "15%", bottom: 0, right: 10, justifyContent: 'center', alignItems: 'center'}}>
                             <TouchableHighlight underlayColor={"orange"} onPress={() => navigation.navigate("Atacar", {clan: clan})} style={{width: 70, height: 70, backgroundColor: "yellow", borderRadius: 100, elevation: 10, justifyContent: 'center'}}>
