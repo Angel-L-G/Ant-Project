@@ -102,5 +102,6 @@ export type ClanType = {
     description: string,
     quantity: number,
     leader: number,
-    trophys: number
+    trophys: number,
+    defenseRange: string
 }
