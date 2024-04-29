@@ -5,14 +5,14 @@ import { Client } from '@stomp/stompjs'
 import Globals from '../components/Globals'
 import * as encoding from 'text-encoding';
 import { AppContext } from '../context/AppContextProvider';
-import { Message, websocketMessage } from '../types/chatTypes'
+import { Chat, Message, websocketMessage } from '../types/chatTypes'
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
     const {token, user} = useContext(AppContext);
     const [conectado, setConectado] = useState(false);
     const [historico, setHistorico] = useState<Message[]>(new Array<Message>());
-    //const [historico, setHistorico] = useState<string[]>(new Array<string>());
+    const chatActual = useRef<Chat>();
     const {ruta, ip} = Globals();
 
     Object.assign(global, {
@@ -55,10 +55,10 @@ const UseChat = () => {
 
     function onPublicMessageReceived(datos: any) {
         console.log("Publico");
-        console.log("datos: " + datos);
+        console.log("datos: " + datos.content);
         
         let nuevoMensaje = JSON.parse(datos.content);
-        console.log(nuevoMensaje);
+        console.log("2222222222222222 " + nuevoMensaje);
 
         let messageRecieved: Message = {
             body: datos.content,
@@ -67,26 +67,31 @@ const UseChat = () => {
         };
 
         let arr = historico;
-        arr.push(messageRecieved);
+        arr.unshift(messageRecieved);
         setHistorico([...arr]);
     }
 
     function onPrivateMessageReceived(datos: any) {
         console.log("Privado");
         console.log("datos: " + datos);
+
+        console.log("A: " + JSON.parse(datos.body));
         
-        let nuevoMensaje = JSON.parse(datos.content);
-        console.log(nuevoMensaje);
+        let nuevoMensaje = JSON.parse(datos.body);
+        console.log(JSON.stringify(nuevoMensaje));
 
         let messageRecieved: Message = {
-            body: datos.content,
-            sentAt: datos.sentAt,
-            senderId: datos.senderId
+            body: nuevoMensaje.content,
+            sentAt: nuevoMensaje.sentAt,
+            senderId: nuevoMensaje.senderId
         };
 
+        console.log("AAAAAAAAAAAAAAAAAAAAA: " + JSON.stringify(messageRecieved));
+
         let arr = historico;
-        arr.push(messageRecieved);
+        arr.unshift(messageRecieved);
         setHistorico([...arr]);
+        console.log(historico);
     }
 
     function enviar(autor: string, mensaje: string, senderId: number) {
@@ -109,7 +114,7 @@ const UseChat = () => {
         };
 
         let arr = historico;
-        arr.push(messageRecieved);
+        arr.unshift(messageRecieved);
         setHistorico([...arr]);
     }
 
@@ -133,7 +138,7 @@ const UseChat = () => {
         };
 
         let arr = historico;
-        arr.push(messageRecieved);
+        arr.unshift(messageRecieved);
         setHistorico([...arr]);
     }
 
@@ -143,7 +148,8 @@ const UseChat = () => {
         enviarPrivado,
         conectado,
         historico,
-        setHistorico
+        setHistorico,
+        chatActual
     }
 }
 

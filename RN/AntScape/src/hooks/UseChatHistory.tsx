@@ -36,16 +36,14 @@ const UseChatHistory = () => {
 
     async function save(chat: ChatInputSaveDTO): Promise<Chat | undefined> {
         try {
-            // Realiza la solicitud POST y espera la respuesta
             const response = await axios.post(ruta + "v2/chats", chat, {
                 headers: { "Authorization": "Bearer " + token }
             });
 
             return response.data;
         } catch (error) {
-            // Maneja los errores si la solicitud falla
             console.log(error);
-            return undefined; // Devuelve undefined en caso de error
+            return undefined;
         }
     }
 

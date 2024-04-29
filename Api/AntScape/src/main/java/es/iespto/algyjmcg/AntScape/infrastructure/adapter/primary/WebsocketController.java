@@ -16,9 +16,7 @@ import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.domain.service.UsuarioDomainService;
 
-
 class MessageTo{
-	
 	public MessageTo() {}
 	String author;
 	String receiver;
@@ -82,11 +80,11 @@ public class WebsocketController { //el controlador es para una conexión establ
     }
     
     @MessageMapping("/privado") 
-     public void sendSpecific(    		
-	      @Payload MessageTo msg, 
-	      Principal user, 
-	      @Header("simpSessionId") String sessionId
-      ) throws Exception { 
+    public void sendSpecific(    		
+	     @Payload MessageTo msg, 
+	     Principal user, 
+	     @Header("simpSessionId") String sessionId
+     ) throws Exception { 
     	
     	Usuario sender = userService.findByName(msg.getAuthor());
     	msg.setSenderId(sender.getId());

@@ -21,14 +21,13 @@ const NuevoChat = ({navigation, route}: Props) => {
     const idOtherUser = route.params.idOtherUser;
     const nameOtherUser = route.params.nameOtherUser;
     
-    const {conectar, conectado, historico, enviarPrivado, setHistorico} = UseChat();
+    const {conectar, conectado, historico, enviarPrivado, setHistorico, chatActual} = UseChat();
     const {chats, save, saveMessages, findAllMessagesByChatId} = UseChatHistory();
     const {token, user} = useContext(AppContext);
     const {ruta} = Globals();
     const [img, setImg] = useState(ruta + "v1/files/" + user.img);
     const [loading, setLoading] = useState(true);
 
-    const chatActual = useRef<Chat>();
     const [mensaje, setMensaje] = useState("");
 
     useEffect(() => {
@@ -41,7 +40,8 @@ const NuevoChat = ({navigation, route}: Props) => {
 
             if (chatEncontrado) {
                 chatActual.current = chatEncontrado;
-                setHistorico(chatActual.current.messages);
+                const mensajesInvertidos = chatEncontrado.messages.slice().reverse();
+                setHistorico(mensajesInvertidos);
                 setLoading(false);
 
             } else {
@@ -54,17 +54,18 @@ const NuevoChat = ({navigation, route}: Props) => {
                         const chatData: Chat | undefined = await save(chatInput) as Chat | undefined;
 
                         chatActual.current = chatData;
-                        if(chatActual.current != undefined){
-                            setHistorico(chatActual.current.messages);    
-                        }
+                        
                     } catch (error) {
                         console.error('Error al obtener el chat:', error);
                     } finally {
+                        const mensajesInvertidos = chatActual.current?.messages.slice().reverse();
+                        setHistorico(mensajesInvertidos ?? []);
                         setLoading(false);
                     }
                 }
 
                 fetchData();
+                
             }
         }else {
             console.log("Fallo de conexion");
@@ -74,6 +75,7 @@ const NuevoChat = ({navigation, route}: Props) => {
     function sendMessage() {
         saveMessages(chatActual.current?.id as number, mensaje);
         enviarPrivado(user.name, nameOtherUser, mensaje, user.id);
+        
     }
 
     return (
@@ -102,7 +104,7 @@ const NuevoChat = ({navigation, route}: Props) => {
                     {(loading) 
                     ? <View><Text>Loading...</Text></View>
                     : <FlatList
-                        data={chatActual.current?.messages}
+                        data={historico}
                         renderItem={({ item }) =>
                             (item.senderId === user.id) ?
                                 <View style={{ alignSelf: 'flex-end' }}>
@@ -120,6 +122,7 @@ const NuevoChat = ({navigation, route}: Props) => {
                                 </View>
                         }
                         keyExtractor={(item, index) => index.toString()}
+                        inverted
                     />
                     }
                 </View>
