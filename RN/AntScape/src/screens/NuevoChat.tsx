@@ -39,9 +39,17 @@ const NuevoChat = ({navigation, route}: Props) => {
             const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;            
 
             if (chatEncontrado) {
+                console.log("Chat Encontrado LOG .......................");
+                
                 chatActual.current = chatEncontrado;
-                const mensajesInvertidos = chatEncontrado.messages.slice().reverse();
-                setHistorico(mensajesInvertidos);
+                if(chatEncontrado.messages != null){
+                    const mensajesInvertidos = chatEncontrado.messages.slice().reverse();
+                    setHistorico(mensajesInvertidos);
+                }else {
+                    setHistorico([]);
+                    console.log("SE HA BORADO TODOOOOOOOOOOOOOOOOOOOOOOO")
+                }
+                
                 setLoading(false);
 
             } else {
@@ -58,6 +66,8 @@ const NuevoChat = ({navigation, route}: Props) => {
                     } catch (error) {
                         console.error('Error al obtener el chat:', error);
                     } finally {
+                        console.log("Recoger Historico LOG ");
+                        
                         const mensajesInvertidos = chatActual.current?.messages.slice().reverse();
                         setHistorico(mensajesInvertidos ?? []);
                         setLoading(false);
@@ -73,9 +83,11 @@ const NuevoChat = ({navigation, route}: Props) => {
     }, [conectado]);
     
     function sendMessage() {
+        console.log("1: " + historico.length);
         saveMessages(chatActual.current?.id as number, mensaje);
+        console.log("2: " + historico.length);
         enviarPrivado(user.name, nameOtherUser, mensaje, user.id);
-        
+        console.log("3: " + historico.length);
     }
 
     return (

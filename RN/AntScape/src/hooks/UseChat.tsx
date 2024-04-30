@@ -6,10 +6,12 @@ import Globals from '../components/Globals'
 import * as encoding from 'text-encoding';
 import { AppContext } from '../context/AppContextProvider';
 import { Chat, Message, websocketMessage } from '../types/chatTypes'
+import UseChatHistory from './UseChatHistory'
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
     const {token, user} = useContext(AppContext);
+    const {findAllMessagesByChatId} = UseChatHistory();
     const [conectado, setConectado] = useState(false);
     const [historico, setHistorico] = useState<Message[]>(new Array<Message>());
     const chatActual = useRef<Chat>();
@@ -19,6 +21,15 @@ const UseChat = () => {
         TextEncoder: encoding.TextEncoder,
         TextDecoder: encoding.TextDecoder,
     });
+
+    useEffect(() => {
+        console.log("_______________________________________________");
+        console.log("_______________________________________________");
+        console.log("------------ LOG USE EFFECT: " + historico.length + " --------------");
+        console.log("_______________________________________________");
+        console.log("_______________________________________________");
+    }, [historico])
+    
 
     function conectar() {
         stompRef.current = new Client({
@@ -66,19 +77,21 @@ const UseChat = () => {
             senderId: datos.senderId
         };
 
-        let arr = historico;
-        arr.unshift(messageRecieved);
-        setHistorico([...arr]);
+        setHistorico((arr) => {
+            let array =  arr.filter(m => true);
+            array.unshift(messageRecieved);
+            console.log("Size2: " + arr.length);
+            return array
+        });
     }
 
     function onPrivateMessageReceived(datos: any) {
         console.log("Privado");
-        console.log("datos: " + datos);
-
-        console.log("A: " + JSON.parse(datos.body));
+        console.log("Size: " + historico.length);
+        console.log("Id chat: " + chatActual.current?.id);
         
         let nuevoMensaje = JSON.parse(datos.body);
-        console.log(JSON.stringify(nuevoMensaje));
+        console.log("2222222222222222 " + JSON.stringify(nuevoMensaje));
 
         let messageRecieved: Message = {
             body: nuevoMensaje.content,
@@ -86,13 +99,39 @@ const UseChat = () => {
             senderId: nuevoMensaje.senderId
         };
 
-        console.log("AAAAAAAAAAAAAAAAAAAAA: " + JSON.stringify(messageRecieved));
+        
+        setHistorico((arr) => {
+            let array =  arr.filter(m => true);
+            array.unshift(messageRecieved);
+            console.log("Size2: " + arr.length);
+            return array
+        });
+    }
 
-        let arr = historico;
+    /*
+    async function onPrivateMessageReceived(datos: any) {
+        const messagesAll = await findAllMessagesByChatId(chatActual.current?.id ?? null);
+        const mensajesInvertidos = messagesAll.slice().reverse();
+        console.log("Privado");
+        console.log("Size: " + historico.length);
+        console.log("Size2: " + messagesAll.length);
+        console.log("Size ref: " + chatActual.current?.id);
+        
+        let nuevoMensaje = JSON.parse(datos.body);
+
+        let messageRecieved: Message = {
+            body: nuevoMensaje.content,
+            sentAt: nuevoMensaje.sentAt,
+            senderId: nuevoMensaje.senderId
+        };
+        
+        console.log(JSON.stringify(messageRecieved));
+
+        let arr = mensajesInvertidos;
         arr.unshift(messageRecieved);
         setHistorico([...arr]);
-        console.log(historico);
     }
+    */
 
     function enviar(autor: string, mensaje: string, senderId: number) {
         let stompClient = stompRef.current;
@@ -113,9 +152,12 @@ const UseChat = () => {
             senderId: messageTo.senderId
         };
 
-        let arr = historico;
-        arr.unshift(messageRecieved);
-        setHistorico([...arr]);
+        setHistorico((arr) => {
+            let array =  arr.filter(m => true);
+            array.unshift(messageRecieved);
+            console.log("Size2: " + arr.length);
+            return array
+        });
     }
 
     function enviarPrivado(autor: string, receptor:string, mensaje: string, senderId: number) {
@@ -137,9 +179,12 @@ const UseChat = () => {
             senderId: messageTo.senderId
         };
 
-        let arr = historico;
-        arr.unshift(messageRecieved);
-        setHistorico([...arr]);
+        setHistorico((arr) => {
+            let array =  arr.filter(m => true);
+            array.unshift(messageRecieved);
+            console.log("Size2: " + arr.length);
+            return array
+        });
     }
 
     return {

@@ -47,7 +47,7 @@ const UseChatHistory = () => {
         }
     }
 
-    async function findAllMessagesByChatId(id: number) {
+    async function findAllMessagesByChatId(id: any) {
         try {
             const response = await axios.get(ruta + "v2/chats/" + id + "/messages", { headers: { "Authorization": "Bearer " + token } });
 
