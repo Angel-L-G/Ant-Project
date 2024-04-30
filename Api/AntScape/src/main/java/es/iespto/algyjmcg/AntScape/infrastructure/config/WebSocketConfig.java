@@ -19,10 +19,10 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
-import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.service.UsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
-
 
 
 @Configuration
@@ -32,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	
 	@Autowired JwtService jwtService;
-	@Autowired private IUsuarioService usuarioservice;
+	@Autowired private UsuarioService usuarioservice;
 	
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {

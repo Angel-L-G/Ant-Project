@@ -20,7 +20,7 @@ class GuildMapperTest {
 		GuildEntity in = new GuildEntity();
 		in.setId(0);
 		in.setDefenseNumber(1);
-		in.setDefenseRange(2);
+		in.setDefenseRange("2-2");
 		in.setName("Name");
 		in.setQuantity(3);
 		in.setTrophys(4);
@@ -52,7 +52,7 @@ class GuildMapperTest {
 		Guild in = new Guild();
 		in.setId(0);
 		in.setDefenseNumber(1);
-		in.setDefenseRange(2);
+		in.setDefenseRange("2-2");
 		in.setName("Name");
 		in.setQuantity(3);
 		in.setTrophys(4);

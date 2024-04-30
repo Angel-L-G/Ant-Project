@@ -51,8 +51,8 @@ public class UsuarioDomainService implements IUsuarioService {
 	}
 
 	@Override
-	public List<Usuario> findFriends(){
-		return service.findFriends();
+	public List<Usuario> findFriends(Integer id){
+		return service.findFriends(id);
 	}
 	
 	@Override
@@ -81,8 +81,8 @@ public class UsuarioDomainService implements IUsuarioService {
 	}
 
 	@Override
-	public List<Usuario> findBloqued() {
-		return service.findBloqued();
+	public List<Usuario> findBloqued(Integer id) {
+		return service.findBloqued(id);
 	}
 
 	@Override
@@ -93,6 +93,11 @@ public class UsuarioDomainService implements IUsuarioService {
 	@Override
 	public boolean unblock(String name, String nameFriend) {
 		return service.unblock(name, nameFriend);
+	}
+
+	@Override
+	public boolean updateGuild(Usuario in) {
+		return service.updateGuild(in);
 	}
 
 }

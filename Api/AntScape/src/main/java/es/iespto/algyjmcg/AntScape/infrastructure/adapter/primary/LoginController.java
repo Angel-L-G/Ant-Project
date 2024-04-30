@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,7 +68,7 @@ public class LoginController {
 					return ResponseEntity.ok(token);
 				}
 			}else {
-				return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Necesario activar a traves del email antes y que la administracion confirme su cuenta");
+				return ResponseEntity.status(HttpStatus.PRECONDITION_REQUIRED).body("Es necesario activar a traves del email");
 			}
 		}else {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Banned User");
@@ -123,7 +122,7 @@ public class LoginController {
 		}
 	}
 	
-	@GetMapping("/{token}")
+	/*@GetMapping("/{token}")
 	public ResponseEntity<?> getRol(@PathVariable String token){
 		if(token != null) {
 			String rol = service.getRol(token);
@@ -131,7 +130,7 @@ public class LoginController {
 		}else {
 			return (ResponseEntity<?>) ResponseEntity.noContent();
 		}
-	}
+	}*/
 }
 
 class UserInputRegisterDTO{

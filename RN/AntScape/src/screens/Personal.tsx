@@ -5,7 +5,7 @@ import { ImageBackground } from 'react-native';
 import Rama from '../components/Rama';
 import axios from 'axios';
 import { AppContext } from '../context/AppContextProvider';
-import { Nest, NestLevel } from '../components/types';
+import { Nest, NestLevel } from '../types/types';
 import Globals from '../components/Globals';
 import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
@@ -66,7 +66,6 @@ const Personal = ({ navigation }: Props) => {
         console.log(lastLevel);
 
         const coste = Math.round(lastLevel?.multiplier ** levels.length * 100);
-        const cantidadEggs = eggs;
         const cantidadEg = eg.current;
 
         const dineroRestante = Math.round(cantidadEg - coste);

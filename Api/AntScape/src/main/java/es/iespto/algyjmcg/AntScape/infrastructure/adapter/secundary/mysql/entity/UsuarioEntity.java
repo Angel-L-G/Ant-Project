@@ -59,12 +59,13 @@ public class UsuarioEntity implements Serializable {
 
 	@Column(nullable=false, length=45)
 	private String rol;
+	
+	@Column(name="total_money_generated", length=255)
+	private String totalMoneyGenerated;
 
-	//bi-directional many-to-one association to Nest
 	@OneToMany(mappedBy="usuario")
 	private List<NestEntity> nests;
 
-	//bi-directional many-to-one association to Guild
 	@ManyToOne
 	@JoinColumn(name="id_guild")
 	private GuildEntity guild;
@@ -90,7 +91,7 @@ public class UsuarioEntity implements Serializable {
 	    joinColumns = @JoinColumn(name = "id_user"),
 	    inverseJoinColumns = @JoinColumn(name = "id_friend")
 	)
-	private List<UsuarioEntity> amigos;
+	private List<UsuarioEntity> friends;
 	
 	@ManyToMany
 	@JoinTable(
@@ -99,6 +100,17 @@ public class UsuarioEntity implements Serializable {
 	    inverseJoinColumns = @JoinColumn(name = "id_blocked")
 	)
 	private List<UsuarioEntity> bloqued;
+	
+	@ManyToMany
+	@JoinTable(
+		    name = "user_chats",
+		    joinColumns = @JoinColumn(name = "user_id"),
+		    inverseJoinColumns = @JoinColumn(name = "chat_id")
+		)
+	private List<ChatEntity> chats;
+	
+	@OneToMany(mappedBy="sender")
+	private List<MessageEntity> messages;
 
 	public UsuarioEntity() {
 	}
@@ -191,6 +203,14 @@ public class UsuarioEntity implements Serializable {
 		this.rol = rol;
 	}
 
+	public String getTotalMoneyGenerated() {
+		return totalMoneyGenerated;
+	}
+
+	public void setTotalMoneyGenerated(String totalMoneyGenerated) {
+		this.totalMoneyGenerated = totalMoneyGenerated;
+	}
+
 	public List<NestEntity> getNests() {
 		return this.nests;
 	}
@@ -228,13 +248,13 @@ public class UsuarioEntity implements Serializable {
 	public void setAnts(List<AntEntity> ants) {
 		this.ants = ants;
 	}
-	
-	public List<UsuarioEntity> getAmigos() {
-		return amigos;
+
+	public List<UsuarioEntity> getFriends() {
+		return friends;
 	}
 
-	public void setAmigos(List<UsuarioEntity> amigos) {
-		this.amigos = amigos;
+	public void setFriends(List<UsuarioEntity> friends) {
+		this.friends = friends;
 	}
 
 	public List<AdministrativeInfoEntity> getAdministrativeInfos() {
@@ -251,5 +271,21 @@ public class UsuarioEntity implements Serializable {
 
 	public void setBloqued(List<UsuarioEntity> bloqued) {
 		this.bloqued = bloqued;
+	}
+	
+	public List<ChatEntity> getChats() {
+		return this.chats;
+	}
+
+	public void setChats(List<ChatEntity> chats) {
+		this.chats = chats;
+	}
+
+	public List<MessageEntity> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<MessageEntity> messages) {
+		this.messages = messages;
 	}
 }

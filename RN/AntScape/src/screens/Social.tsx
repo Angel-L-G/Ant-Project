@@ -1,59 +1,154 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableHighlight, TextInput, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableHighlight, TextInput, FlatList, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
 import { Icon } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
-import { User } from '../components/types';
+import { ClanType, User } from '../types/types';
 import UsuarioCard from '../components/UsuarioCard';
 import Globals from '../components/Globals';
 import axios from 'axios';
 import { AppContext } from '../context/AppContextProvider';
-import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import ClanCard from '../components/ClanCard';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-type Props = {
-    navigation: any,
-}
+type Props = NativeStackScreenProps<RootStackParamList, "Social">;
 
-const Social = ({ navigation }: Props) => {
+const Social = ({ navigation, route }: Props) => {
     const {ruta} = Globals();
     const {token, user} = useContext(AppContext);
     const [activeTab, setActiveTab] = useState(0);
     const [usuarios, setUsuarios] = useState<Array<User>>([]);
+    const [amigos, setAmigos] = useState<Array<User>>([]);
+    const [clan, setClan] = useState<ClanType>({} as ClanType);
+    const [tieneClan, setTieneClan] = useState(false);
+    const [clanes, setClanes] = useState<Array<ClanType>>([]);
     const [valorInput, setValorInput] = useState('');
+    const tabNumber = route.params.tab;
 
     useEffect(() => {
-        async function get() {
-            const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
-            const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
-                usuario.name.includes(valorInput) && usuario.name !== user.name
-            );
-            setUsuarios(usuariosFiltrados);
+        setActiveTab(tabNumber);
+
+        async function getU() {
+            try {
+                const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
+                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
+                    usuario.name.includes(valorInput) && usuario.name !== user.name
+                );
+                setUsuarios(usuariosFiltrados);
+            } catch (error) {
+                console.log(error);
+            }
         }
 
-        get();
-    }, [])
-    
+        getU();
+
+        async function getA() {
+            try {
+                const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
+                const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
+                    amigo.name.includes(valorInput) && amigo.name !== user.name
+                );
+                setAmigos(amigosFiltrados);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getA();
+
+        async function getC() {
+            try {
+                const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+                for (let i = 0; i < response.data.length; i++) {
+                    if (response.data[i].id === user.id_guild) {
+                        setClan(response.data[i]);
+                        setTieneClan(true);
+                    }
+                }
+                const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) => 
+                    c.name.includes(valorInput) && c !== clan
+                );
+                setClanes(clanesFiltrados);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getC();
+    }, [tabNumber])
+
+    function passToChildren() {
+
+    }
 
     const handleTabPress = (tabIndex: number) => {
         setActiveTab(tabIndex);
+        setValorInput('');
+    
+        if (tabIndex === 0) {
+            buscarUsuarios("");
+        } else if (tabIndex === 1) {
+            buscarAmigos("");
+        } else if (tabIndex === 2) {
+            buscarClan();
+            buscarClanes("");
+        }
     };
 
     const handleChangeInput = (text: string) => {
         setValorInput(text);
         console.log(valorInput);
-        
     };
 
-    async function buscarUsuarios() {
+    async function buscarUsuarios(inputValue: string) {
         try {
             const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
             const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
-                usuario.name.includes(valorInput) && usuario.name !== user.name
+                usuario.name.includes(inputValue) && usuario.name !== user.name
             );
             setUsuarios(usuariosFiltrados);
             console.log(usuariosFiltrados);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    async function buscarAmigos(inputValue: string) {
+        try {
+            const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
+            const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
+                amigo.name.includes(inputValue) && amigo.name !== user.name
+            );
+            setAmigos(amigosFiltrados);
+            console.log(amigosFiltrados);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function buscarClan() {
+        try {
+            if (user.id_guild != undefined) {
+                const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
+                setClan(response.data);
+                setTieneClan(true);
+            } else {
+                setTieneClan(false);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function buscarClanes(texto: string) {
+        try {
+            const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+            const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) => 
+                c.name.includes(valorInput) && c !== clan
+            );
+            setClanes(clanesFiltrados);
         } catch (error) {
             console.log(error);
         }
@@ -97,7 +192,7 @@ const Social = ({ navigation }: Props) => {
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}
                                     style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
-                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios()} style={{justifyContent: 'center', width: 40}}>
+                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios(valorInput)} style={{justifyContent: 'center', width: 40}}>
                                             <Icon name="search" size={30} color={"yellow"}></Icon>
                                         </TouchableHighlight>
                                     </LinearGradient>
@@ -108,25 +203,115 @@ const Social = ({ navigation }: Props) => {
                                         data={usuarios}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {user: item})}><UsuarioCard user={item}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }
                                         style={{}}
                                         />
                                     :
-                                        <Text style={{color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado usuarios</Text>
+                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado usuarios</Text>
                                     }
                                 </View>
                             </View>
                         }
 
                         {(activeTab === 1) && 
-                            <Text>Amigos</Text>
+                            <View style={{height: "100%", width: "100%"}}>
+                                <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
+                                    <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                    <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                    start={{ x: 0.5, y: 0 }}
+                                    end={{ x: 0.5, y: 1 }}
+                                    style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
+                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarAmigos(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                            <Icon name="search" size={30} color={"yellow"}></Icon>
+                                        </TouchableHighlight>
+                                    </LinearGradient>
+                                </View>
+                                <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
+                                    {(amigos.length > 0) ? 
+                                        <FlatList
+                                        data={amigos}
+                                        renderItem={({ item }) =>
+                                            <View>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                                <View style={{height: 1, backgroundColor: "black"}}></View>
+                                            </View>
+                                        }
+                                        style={{}}
+                                        />
+                                    :
+                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center', width: "70%", textAlign: 'center'}}>No se han encontrado amigos</Text>
+                                    }
+                                </View>
+                            </View>
                         }
 
                         {(activeTab === 2) && 
-                            <Text>Clan</Text>
+                            (tieneClan) ? 
+                                <View style={{height: "100%", width: "100%"}}>
+                                    <View style={{height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%"}}>
+                                        <View style={{width: "19%", marginHorizontal: "5%"}}>
+                                            <Image source={{uri: ruta + "v1/files/" + user.img}} style={{width: "100%", height: "80%", borderRadius: 100}} />
+                                        </View>
+                                        <View style={{width: "61%", backgroundColor: "red", marginHorizontal: "5%", flexDirection: 'column'}}>
+                                            <Text style={{color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center'}}>{clan.name}</Text>
+                                            <Text style={{color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular"}}>{clan.description}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{height: "10%", flexDirection: 'row', alignItems: 'center', width: "100%"}}>
+                                        <View style={{width: "57%", marginHorizontal: "5%", flexDirection: 'row', justifyContent: 'space-between'}}>
+                                            <TextInput style={{backgroundColor: "white", height: 35, width: "75%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                            <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                            start={{ x: 0.5, y: 0 }}
+                                            end={{ x: 0.5, y: 1 }}
+                                            style={{justifyContent: 'center'}}>
+                                                <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                                    <Icon name="search" size={30} color={"yellow"}></Icon>
+                                                </TouchableHighlight>
+                                            </LinearGradient>
+                                        </View>
+                                        <View style={{width: "23%", marginHorizontal: "5%", flexDirection: 'row'}}>
+                                            <TouchableHighlight style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
+                                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Abandonar</Text>
+                                            </TouchableHighlight>
+                                        </View>
+                                    </View>
+                                    <View style={{height: "76%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
+                                        
+                                    </View>
+                                </View>
+                            :
+                                <View style={{height: "100%", width: "100%"}}>
+                                    <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
+                                        <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                        start={{ x: 0.5, y: 0 }}
+                                        end={{ x: 0.5, y: 1 }}
+                                        style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
+                                            <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarClanes(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                                <Icon name="search" size={30} color={"yellow"}></Icon>
+                                            </TouchableHighlight>
+                                        </LinearGradient>
+                                    </View>
+                                    <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
+                                        {(clanes.length > 0) ? 
+                                            <FlatList
+                                            data={clanes}
+                                            renderItem={({ item }) =>
+                                                <View>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", {clan: item})}><ClanCard clan={item}/></TouchableHighlight>
+                                                    <View style={{height: 1, backgroundColor: "black"}}></View>
+                                                </View>
+                                            }
+                                            style={{}}
+                                            />
+                                        :
+                                            <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado clanes</Text>
+                                        }
+                                    </View>
+                            </View>
                         }
                     </View>
                 </View>
@@ -164,40 +349,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'MadimiOneRegular',
         color: 'yellow',
-    },
-
-    /*
-    <View style={styles.tabsContainer}>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 0 && styles.activeTab]}
-                    onPress={() => handleTabPress(0)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 1</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 1 && styles.activeTab]}
-                    onPress={() => handleTabPress(1)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 2</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 2 && styles.activeTab]}
-                    onPress={() => handleTabPress(2)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 3</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    style={[styles.tab, activeTab === 3 && styles.activeTab]}
-                    onPress={() => handleTabPress(3)}
-                    underlayColor="#E5E5E5"
-                >
-                    <Text style={styles.tabText}>Tab 4</Text>
-                </TouchableHighlight>
-            </View>
-    */
+    }
 });
 
 export default Social;

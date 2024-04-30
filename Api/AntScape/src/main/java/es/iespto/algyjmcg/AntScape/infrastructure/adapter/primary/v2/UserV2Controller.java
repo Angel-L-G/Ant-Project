@@ -8,7 +8,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -133,6 +136,84 @@ public class UserV2Controller {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
 		}
 	}
+	
+	@PostMapping(path="/{me}/friends/{name_friend}")
+	public ResponseEntity<?> addFriend(@PathVariable String me, @PathVariable String name_friend){
+		boolean added = userService.addFriend(me, name_friend);
+		
+		if(added) {
+			return ResponseEntity.ok("Friend Added Correctly");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something Went wrong");
+		}
+	}
+	
+	@PostMapping(path="/{me}/blocked/{name_blocked}")
+	public ResponseEntity<?> block(@PathVariable String me, @PathVariable String name_blocked){
+		boolean blocked = userService.block(me, name_blocked);
+		
+		if(blocked) {
+			return ResponseEntity.ok("User Bloqued Correctly");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something Went wrong");
+		}
+	}
+	
+	@GetMapping(path="/{id}/friends")
+	public ResponseEntity<?> findFriends(@RequestHeader HttpHeaders headers) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Iterable<Usuario> findAll = userService.findFriends(findByName.getId());
+		
+		if(findAll != null) {
+			return ResponseEntity.ok(findAll);
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+		}
+	}
+	
+	@GetMapping(path="/{id}/bloqued")
+	public ResponseEntity<?> findBloqued(@RequestHeader HttpHeaders headers) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Iterable<Usuario> findAll = userService.findBloqued(findByName.getId());
+		
+		if(findAll != null) {
+			return ResponseEntity.ok(findAll);
+		}else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went horribly wrong");
+		}
+	}
+	
+	@DeleteMapping(path="/{me}/friends/{name_friend}")
+	public ResponseEntity<?> removeFriend(@PathVariable String me, @PathVariable String name_friend){
+		boolean added = userService.removeFriend(me, name_friend);
+		
+		if(added) {
+			return ResponseEntity.ok("Friend removed Correctly");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something Went wrong");
+		}
+	}
+	
+	@DeleteMapping(path="/{me}/blocked/{name_blocked}")
+	public ResponseEntity<?> unblock(@PathVariable String me, @PathVariable String name_blocked){
+		boolean blocked = userService.unblock(me, name_blocked);
+		
+		if(blocked) {
+			return ResponseEntity.ok("User Unblocked Correctly");
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Something Went wrong");
+		}
+	}
 }
 
 class updateProfilePictureDTO {
@@ -164,11 +245,9 @@ class updateMoneyDTO{
 	public String getEggs() {
 		return eggs;
 	}
-	
 	public void setEggs(String eggs) {
 		this.eggs = eggs;
 	}
-	
 	public String getGoldenEggs() {
 		return goldenEggs;
 	}

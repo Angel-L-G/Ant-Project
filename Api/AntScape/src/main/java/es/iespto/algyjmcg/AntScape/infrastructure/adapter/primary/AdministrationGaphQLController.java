@@ -17,6 +17,7 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 @Controller
 public class AdministrationGaphQLController {
 	@Autowired private INestService nestService;
+	@Autowired private IAdministrativeInfoService administrativeInfoService;
 	
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	@QueryMapping
@@ -24,8 +25,7 @@ public class AdministrationGaphQLController {
 		return (List<Nest>) nestService.findAll();
 	}
 	
-	@Autowired
-    private IAdministrativeInfoService administrativeInfoService;
+	
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping

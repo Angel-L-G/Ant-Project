@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import styles from '../themes/styles'
 import SelectDropdown from 'react-native-select-dropdown'
 import UseHormiguero from '../hooks/UseHormiguero'
-import { NestSaveDTO } from '../components/types'
+import { NestSaveDTO } from '../types/types'
 
 type Props = {
     navigation: any

@@ -37,6 +37,14 @@ public class UsuarioService implements IUsuarioRepository{
 			
 			if(findById.isPresent()) {
 				out = um.toDomain(findById.get());
+				
+				if(findById.get().getNests() != null && findById.get().getNests().size() != 0) {
+					List<Nest> lista = new ArrayList<Nest>();
+					for (NestEntity entity : findById.get().getNests()) {
+						lista.add(nm.toDomain(entity));
+					}
+					out.setNests(lista);
+				}
 			}
 		}
 		
@@ -102,19 +110,14 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setName(persistance.getName());
 				findByName.get().setEggs(persistance.getEggs());
 				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
-				findByName.get().setImg(persistance.getImg());
-								
-				if(in.getNests() != null ) {
-					for (Nest nest : in.getNests()) {
-						findByName.get().getNests().add(nm.toPersistance(nest));
-					}
-				}
-								
+				findByName.get().setImg(persistance.getImg());			
+				findByName.get().setTotalMoneyGenerated(persistance.getTotalMoneyGenerated());
+				
 				if(in.getGuild() != null) {
 					findByName.get().setGuild(gm.toPersistance(in.getGuild()));
 				}
 				
-				if(in.getNests() != null) {
+				if(in.getNests() != null ) {
 					for (Nest nest : in.getNests()) {
 						findByName.get().getNests().add(nm.toPersistance(nest));
 					}
@@ -134,6 +137,29 @@ public class UsuarioService implements IUsuarioRepository{
 		
 		return ok;
 	}
+	
+	@Override
+	public boolean updateGuild(Usuario in) {
+		boolean ok = false;
+		
+		if(in != null) {
+			Optional<UsuarioEntity> find = usuarioRepo.findById(in.getId());
+			
+			if(find.isPresent()) {
+				if(in.getGuild() != null) {
+					find.get().setGuild(gm.toPersistance(in.getGuild()));
+				}else {
+					find.get().setGuild(null);
+				}
+				
+				usuarioRepo.save(find.get());
+				
+				ok = true;
+			}
+		}
+		
+		return ok;
+	}
 
 	@Override
 	public Usuario findByName(String n) {
@@ -144,12 +170,6 @@ public class UsuarioService implements IUsuarioRepository{
 			
 			if(findById.isPresent()) {
 				out = um.toDomain(findById.get());
-				
-				List<Nest> list = new ArrayList<Nest>();
-				for (NestEntity nest : findById.get().getNests()) {
-					list.add(nm.toDomain(nest));
-				}
-				out.setNests(list);
 			}
 		}
 		
@@ -170,43 +190,6 @@ public class UsuarioService implements IUsuarioRepository{
 		}
 		
 		return out;
-	}
-	
-	/*@Override
-	public List<Usuario> findFriends(String name){
-		if(name != null) {
-			Optional<UsuarioEntity> findByName = usuarioRepo.findByName(name);
-			
-			if(findByName.isPresent() && findByName.get().getAmigos() != null) {
-				
-				List<Usuario> list = new ArrayList<Usuario>();
-				for (UsuarioEntity u : findByName.get().getAmigos()) {
-					list.add(um.toDomain(u));
-				}
-				
-				return list;
-			}
-		}
-		return null;
-	}*/
-	
-	@Override
-	public boolean addFriend(String name, String nameFriend) {
-		boolean ok = false;
-		if(name != null && nameFriend != null) {
-			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
-			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
-			
-			if(user.isPresent() && friend.isPresent()) {
-				user.get().getAmigos().add(friend.get());
-				friend.get().getAmigos().add(user.get());
-				
-				usuarioRepo.save(user.get());
-				usuarioRepo.save(friend.get());
-				ok = true;
-			}
-		}
-		return ok;
 	}
 	
 	public boolean verify(Integer id) {
@@ -270,21 +253,15 @@ public class UsuarioService implements IUsuarioRepository{
 	}
 
 	@Override
-	public List<Usuario> findFriends() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean removeFriend(String name, String nameFriend) {
+	public boolean addFriend(String name, String nameFriend) {
 		boolean ok = false;
 		if(name != null && nameFriend != null) {
 			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
 			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
 			
 			if(user.isPresent() && friend.isPresent()) {
-				user.get().getAmigos().remove(friend.get());
-				friend.get().getAmigos().remove(user.get());
+				user.get().getFriends().add(friend.get());
+				friend.get().getFriends().add(user.get());
 				
 				usuarioRepo.save(user.get());
 				usuarioRepo.save(friend.get());
@@ -295,9 +272,60 @@ public class UsuarioService implements IUsuarioRepository{
 	}
 
 	@Override
-	public List<Usuario> findBloqued() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean removeFriend(String name, String nameFriend) {
+		boolean ok = false;
+		if(name != null && nameFriend != null) {
+			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
+			Optional<UsuarioEntity> friend = usuarioRepo.findByName(nameFriend);
+			
+			if(user.isPresent() && friend.isPresent()) {
+				user.get().getFriends().remove(friend.get());
+				friend.get().getFriends().remove(user.get());
+				
+				usuarioRepo.save(user.get());
+				usuarioRepo.save(friend.get());
+				ok = true;
+			}
+		}
+		return ok;
+	}
+	
+	@Override
+	public List<Usuario> findFriends(Integer id) {
+		List<Usuario> out = null;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> findById = usuarioRepo.findById(id);
+			
+			if(findById.isPresent()) {
+				List<Usuario> aux = new ArrayList<>();
+				for (UsuarioEntity userEntity : findById.get().getFriends()) {
+					aux.add(um.toDomain(userEntity));
+				}
+				out = aux;
+			}
+		}
+		
+		return out;
+	}
+
+	@Override
+	public List<Usuario> findBloqued(Integer id) {
+		List<Usuario> out = null;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> findById = usuarioRepo.findById(id);
+			
+			if(findById.isPresent()) {
+				List<Usuario> aux = new ArrayList<>();
+				for (UsuarioEntity userEntity : findById.get().getBloqued()) {
+					aux.add(um.toDomain(userEntity));
+				}
+				out = aux;
+			}
+		}
+		
+		return out;
 	}
 
 	@Override

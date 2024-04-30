@@ -4,6 +4,9 @@ USE antscape;
 
 SET GLOBAL time_zone = '+01:00';
 
+DROP TABLE IF EXISTS `chat_message`;
+DROP TABLE IF EXISTS `chat_user`;
+DROP TABLE IF EXISTS `chats`;
 DROP TABLE IF EXISTS `usuarios`;
 DROP TABLE IF EXISTS `ants`;
 DROP TABLE IF EXISTS `nests`;
@@ -19,8 +22,10 @@ DROP TABLE IF EXISTS `administrative_info`;
 
 CREATE TABLE `guild` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `leader` INT NOT NULL,
   `name` varchar(45),
-  `trophys` INT NOT NULL DEFAULT(1),
+  `description` TEXT,
+  `trophys` INT NOT NULL DEFAULT(10),
   `quantity` INT DEFAULT(1),
   `defense_range` INT DEFAULT(1-6),
   `defense_number` INT DEFAULT(null),
@@ -40,6 +45,7 @@ CREATE TABLE `usuarios` (
   `golden_eggs` varchar(10) DEFAULT ("0"),
   `img` varchar(255) DEFAULT("profile.png"),
   `id_guild` INT DEFAULT(null),
+  `total_money_generated` varchar(255) DEFAULT("10"),
   constraint pk_usuarios PRIMARY KEY(id),
   CONSTRAINT fk_guild_user FOREIGN KEY (id_guild) REFERENCES guild(id),
   constraint uk_name UNIQUE KEY(name)
@@ -135,18 +141,50 @@ CREATE TABLE `bosses` (
   CONSTRAINT pk_boss PRIMARY KEY(id)
 );
 
-INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 15, 7, 2, 5);
-INSERT INTO guild (id, name, trophys, quantity, defense_range, defense_number) VALUES (1, 'Guild2', 15, 7, 2, 5);
+CREATE TABLE chats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    last_message Text,
+    id_guild INT NULL,
+    id_user1 INT NULL,
+    id_user2 INT NULL,
+    FOREIGN KEY (id_guild) REFERENCES guild(id),
+    FOREIGN KEY (id_user1) REFERENCES usuarios(id),
+    FOREIGN KEY (id_user2) REFERENCES usuarios(id)
+);
 
-INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1);
-INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2);
+-- Tabla intermedia para la relación de usuarios con chats
+CREATE TABLE user_chats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    chat_id INT,
+    FOREIGN KEY (user_id) REFERENCES usuarios(id),
+    FOREIGN KEY (chat_id) REFERENCES chats(id),
+    UNIQUE KEY (user_id, chat_id)
+);
+
+-- Definición de la tabla de mensajes
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    chat_id INT NULL,
+    sender_id INT,
+    body TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (chat_id) REFERENCES chats(id),
+    FOREIGN KEY (sender_id) REFERENCES usuarios(id)
+);
+
+INSERT INTO guild (id, name, description, leader, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 'desc', 1, 15, 7, 2, 5);
+INSERT INTO guild (id, name, description, leader, trophys, quantity, defense_range, defense_number) VALUES (1, 'Guild2', 'desc', 2, 15, 7, 2, 5);
+
+INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild, total_money_generated) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1, "10");
+INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild, total_money_generated) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2, "10");
 
 INSERT INTO administrative_info (usuario_id, informacion, last_login) 
 VALUES (1, 'Información administrativa para el usuario 1', '2024-03-25 15:30:00');
 INSERT INTO administrative_info (usuario_id, informacion, last_login) 
 VALUES (2, 'Información administrativa para el usuario 2', '2024-03-26 10:45:00');
 INSERT INTO administrative_info (usuario_id, informacion, last_login) 
-VALUES (3, 'Información administrativa para el usuario 3', '2024-03-24 18:20:00');
+VALUES (1, 'Información administrativa para el usuario 3', '2024-03-24 18:20:00');
 
 INSERT INTO guild_levels (id, id_guild, name, cost, level, efect) VALUES (1, 1, 'Level1', 100, 1, 'Efecto nivel 1');
 INSERT INTO guild_levels (id, id_guild, name, cost, level, efect) VALUES (2, 1, 'Level2', 200, 2, 'Efecto nivel 2');
@@ -175,3 +213,19 @@ INSERT INTO nest_levels (id, nest_id, name, production, cost, level, multiplier)
 
 INSERT INTO bosses (id, name, life, damage, reward) VALUES (1, 'Boss1', 100, 20, 500);
 INSERT INTO bosses (id, name, life, damage, reward) VALUES (2, 'Boss2', 150, 30, 750);
+
+INSERT INTO chats (last_message, id_guild, id_user1, id_user2) VALUES 
+('Hola, ¿cómo estás?', NULL, 1, 2),
+('Estoy emocionado por el nuevo proyecto.', 1, NULL, NULL);
+
+INSERT INTO user_chats (user_id, chat_id) VALUES 
+(1, 1),
+(1, 2);
+
+INSERT INTO messages (chat_id, sender_id, body) VALUES 
+(1, 1, 'Todo bien, gracias. ¿Y tú?'),
+(1, 2, 'Bien, preparando unas cosas para la universidad.'),
+(2, 2, 'Aún no lo sé, ¿tienes alguna sugerencia?'),
+(2, 2, 'Podríamos ir al cine o salir a cenar.'),
+(2, 1, 'Sí, el proyecto parece muy interesante.'),
+(1, 1, 'Estoy ansioso por empezar.');

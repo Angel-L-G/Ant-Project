@@ -8,66 +8,46 @@ type Props = {
 }
 
 const NavBarBotton = ({navigation, icon}: Props) => {
-    function navegar(lugar: string) {
-        navigation.navigate(lugar)
-    }
-
     return (
         <View style={{ height: "7%", width: "100%", backgroundColor: "rgba(28, 64, 169, 1)", flexDirection: 'row', alignItems: 'center', justifyContent: "space-around" }}>
             {(icon == "social") ? 
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Social")}>
-                        <Icon name="person" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Social", {tab: 0})}>
+                    <Icon name="person" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             : 
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Social")}>
-                        <Icon name="person-outline" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Social", {tab: 0})}>
+                    <Icon name="person-outline" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             }
 
             {(icon == "personal") ? 
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Personal")}>
-                        <Icon name="bulb" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Personal", {tab: 0})}>
+                    <Icon name="bulb" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             :
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Personal")}>
-                        <Icon name="bulb-outline" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Personal", {tab: 0})}>
+                    <Icon name="bulb-outline" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             }
 
             {(icon == "clan") ? 
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Clan")}>
-                        <Icon name="shield" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Clan", {tab: 0})}>
+                    <Icon name="shield" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             : 
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Clan")}>
-                        <Icon name="shield-outline" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Clan", {tab: 0})}>
+                    <Icon name="shield-outline" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             }
 
             {(icon == "settings") ? 
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Ajustes")}>
-                        <Icon name="settings" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Ajustes", {tab: 0})}>
+                    <Icon name="settings" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             : 
-                <View style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableHighlight underlayColor={"transparent"} onPress={() => navegar("Ajustes")}>
-                        <Icon name="settings-outline" size={40} color={"yellow"}></Icon>
-                    </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Ajustes", {tab: 0})}>
+                    <Icon name="settings-outline" size={40} color={"yellow"}></Icon>
+                </TouchableHighlight>
             }
 
         </View>

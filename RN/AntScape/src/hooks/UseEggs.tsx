@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import Globals from '../components/Globals';
-import { NestLevel } from '../components/types';
+import { NestLevel } from '../types/types';
 import { AppContext } from '../context/AppContextProvider';
 
 type Props = {
