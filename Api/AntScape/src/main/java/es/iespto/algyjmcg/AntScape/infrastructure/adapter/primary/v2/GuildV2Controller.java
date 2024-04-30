@@ -424,7 +424,6 @@ public class GuildV2Controller {
 			boolean updateAtacker = mainService.update(atacker);
 			
 			if(updateUser && updateDefender && updateAtacker) {
-				//POSIBLE RETURNEAR DATOS DE ALGUNA MANERA
 				return ResponseEntity.status(HttpStatus.OK).body(rewards);
 			} else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
@@ -432,6 +431,25 @@ public class GuildV2Controller {
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
 		}
+	}
+	
+	@PutMapping(path="/{id}/defensenumber")
+	public ResponseEntity<?> atackGuild(@RequestHeader HttpHeaders headers, @PathVariable Integer id, @RequestParam Integer newDefenseNumber){
+		if(id != null && newDefenseNumber != null) {
+			Guild guild = mainService.findById(id);
+			
+			guild.setDefenseNumber(newDefenseNumber);
+			
+			boolean update = mainService.update(guild);
+			
+			if(update) {
+				return ResponseEntity.status(HttpStatus.OK).body("Defense Number Updated");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
+			}
+		}
+		
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
 	}
 	
 	private Guild nearestGuild(Guild seeker) {
