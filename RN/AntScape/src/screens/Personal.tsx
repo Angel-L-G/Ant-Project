@@ -16,17 +16,20 @@ type Props = {
 
 const Personal = ({ navigation }: Props) => {
     const { ruta } = Globals();
-    const { token, user, setEggsContext } = useContext(AppContext);
+    const { token, user, totalEggsContext, setEggsContext, setTotalEggsContext } = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
     const eg = useRef(0);
+    const totalEggs = useRef(0);
     const [nests, setNests] = useState<Array<Nest>>([]);
 
     useEffect(() => {
         setEggs(user.eggs);
         eg.current = user.eggs;
         setEggsContext(user.eggs);
+        totalEggs.current = Number(user.totalMoneyGenerated);
+        setTotalEggsContext(user.totalMoneyGenerated);
 
         async function getOwnNests() {
             const response = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
@@ -128,7 +131,7 @@ const Personal = ({ navigation }: Props) => {
                 }
             }
             updateMoney();
-            console.log('Esta función se ejecutará cada 5 segundos');
+            console.log('Esta función se ejecutará cada 5 segundos');            
         }, 5000);
 
         return () => clearInterval(intervalo);
@@ -139,10 +142,21 @@ const Personal = ({ navigation }: Props) => {
         
         let eggs1 = eg.current;
 
+        let eggs2 = totalEggs.current;
+
         if (lastLevel) {
             const dineroNuevo = Math.round((Number)(eggs1) + (Number)(produccion));
 
             updateEggs(dineroNuevo);
+        }
+
+        if (produccion > 0) {
+            const dineroNuevo = Math.round((Number)(eggs2) + (Number)(produccion));
+
+            setTotalEggsContext(dineroNuevo + "");
+            totalEggs.current = dineroNuevo;
+            console.log(totalEggs.current);
+            console.log(totalEggsContext);
         }
     }
 

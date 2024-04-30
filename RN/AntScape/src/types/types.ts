@@ -3,7 +3,7 @@ export type ContextUser = {
     nombre: string,
     password: string,
     email: string,
-    rol: string,
+    rol: string
 }
 
 export type UserLogin = {
@@ -74,7 +74,8 @@ export type User = {
     img: string,
     name: string,
     nests: Array<Nest>,
-    id_guild: number
+    id_guild: number | undefined,
+    totalMoneyGenerated: string
 }
 
 export type Nest = {
@@ -86,6 +87,19 @@ export type Nest = {
 }
 
 export type ClanType = {
+    id: number,
     name: string,
     description: string,
+    quantity: number,
+    leader: number,
+    trophys: number,
+    defenseRange: string
+}
+
+export type GuildLevel = {
+    id: number,
+    cost: number,
+    efect: string,
+    level: number,
+    name: string
 }

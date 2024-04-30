@@ -1,16 +1,17 @@
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React, { useContext } from 'react'
-import { User } from '../types/types'
+import { ClanType, User } from '../types/types'
 import { Image } from 'react-native-elements'
 import Globals from './Globals';
 import { AppContext } from '../context/AppContextProvider';
 
 type Props = {
     usu: User,
+    clan: ClanType,
     navigation: any
 }
 
-const UsuarioCard = ({usu, navigation}: Props) => {
+const UsuarioCardClan = ({usu, navigation, clan}: Props) => {
     const {ruta} = Globals();
     const {user} = useContext(AppContext);
 
@@ -19,10 +20,10 @@ const UsuarioCard = ({usu, navigation}: Props) => {
             <Image source={{uri: ruta + "v1/files/" + usu.img}} style={{height: "100%", width: 70, borderRadius: 100}} />
             <View style={{width: "61%"}}>
                 <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center', marginBottom: 10}}>{usu.name}</Text>
-                {(usu.id_guild == null) ? 
-                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Sin Clan</Text> 
+                {(usu.id != clan.leader) ? 
+                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Miembro</Text> 
                 : 
-                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Con Clan</Text>
+                    <Text style={{fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center'}}>Lider</Text>
                 }
             </View>
             <View style={{width: "20%"}}>
@@ -38,6 +39,6 @@ const UsuarioCard = ({usu, navigation}: Props) => {
     )
 }
 
-export default UsuarioCard
+export default UsuarioCardClan
 
 const styles = StyleSheet.create({})

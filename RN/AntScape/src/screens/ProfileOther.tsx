@@ -57,13 +57,25 @@ const ProfileOther = ({route, navigation}: Props) => {
         }
 
         buscarBloqueados();
+
+        async function buscarClanes() {
+            try {
+                const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+                console.log(response.data);
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        buscarClanes();
     }, [])
 
     async function aniadirAmigo() {
         console.log("Añadiendo amigo");
         
         try {
-            const response = await axios.post(ruta + "v2/users/" + user.name + "/friends/add/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.post(ruta + "v2/users/" + user.name + "/friends/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setAmigo(true);
         } catch (error) {
@@ -149,7 +161,7 @@ const ProfileOther = ({route, navigation}: Props) => {
                         {(usu.id_guild == null) ?
                             <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: -----</Text>
                         :
-                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {usu.id_guild}</Text>
+                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {String(usu.id_guild)}</Text>
                         }
                         <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Eggs: {usu.eggs}</Text>
                     </View>

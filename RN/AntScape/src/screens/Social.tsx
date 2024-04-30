@@ -25,12 +25,13 @@ const Social = ({ navigation, route }: Props) => {
     const [tieneClan, setTieneClan] = useState(false);
     const [clanes, setClanes] = useState<Array<ClanType>>([]);
     const [valorInput, setValorInput] = useState('');
+    const [clanUsers, setClanUsers] = useState<Array<User>>([]);
     const tabNumber = route.params.tab;
 
     useEffect(() => {
         setActiveTab(tabNumber);
 
-        async function getU() {
+        async function getUsuarios() {
             try {
                 const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
                 const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
@@ -42,9 +43,9 @@ const Social = ({ navigation, route }: Props) => {
             }
         }
 
-        getU();
+        getUsuarios();
 
-        async function getA() {
+        async function getAmigos() {
             try {
                 const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
                 const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
@@ -56,9 +57,9 @@ const Social = ({ navigation, route }: Props) => {
             }
         }
 
-        getA();
+        getAmigos();
 
-        async function getC() {
+        async function getClans() {
             try {
                 const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
                 for (let i = 0; i < response.data.length; i++) {
@@ -76,7 +77,19 @@ const Social = ({ navigation, route }: Props) => {
             }
         }
 
-        getC();
+        getClans();
+
+        async function getClanUsers() {
+            try {
+                const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getClanUsers();
+
+        console.log("UseEffect");
     }, [tabNumber])
 
     function passToChildren() {
@@ -187,7 +200,7 @@ const Social = ({ navigation, route }: Props) => {
                         {(activeTab === 0) && 
                             <View style={{height: "100%", width: "100%"}}>
                                 <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}
@@ -203,7 +216,7 @@ const Social = ({ navigation, route }: Props) => {
                                         data={usuarios}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard usu={item} navigation={navigation}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }
@@ -219,7 +232,7 @@ const Social = ({ navigation, route }: Props) => {
                         {(activeTab === 1) && 
                             <View style={{height: "100%", width: "100%"}}>
                                 <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}
@@ -235,7 +248,7 @@ const Social = ({ navigation, route }: Props) => {
                                         data={amigos}
                                         renderItem={({ item }) =>
                                             <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard user={item} navigation={navigation}/></TouchableHighlight>
+                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard usu={item} navigation={navigation}/></TouchableHighlight>
                                                 <View style={{height: 1, backgroundColor: "black"}}></View>
                                             </View>
                                         }
@@ -249,68 +262,40 @@ const Social = ({ navigation, route }: Props) => {
                         }
 
                         {(activeTab === 2) && 
-                            (tieneClan) ? 
-                                <View style={{height: "100%", width: "100%"}}>
-                                    <View style={{height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%"}}>
-                                        <View style={{width: "19%", marginHorizontal: "5%"}}>
-                                            <Image source={{uri: ruta + "v1/files/" + user.img}} style={{width: "100%", height: "80%", borderRadius: 100}} />
-                                        </View>
-                                        <View style={{width: "61%", backgroundColor: "red", marginHorizontal: "5%", flexDirection: 'column'}}>
-                                            <Text style={{color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center'}}>{clan.name}</Text>
-                                            <Text style={{color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular"}}>{clan.description}</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{height: "10%", flexDirection: 'row', alignItems: 'center', width: "100%"}}>
-                                        <View style={{width: "57%", marginHorizontal: "5%", flexDirection: 'row', justifyContent: 'space-between'}}>
-                                            <TextInput style={{backgroundColor: "white", height: 35, width: "75%", borderRadius: 100}} onChangeText={handleChangeInput} />
-                                            <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
-                                            start={{ x: 0.5, y: 0 }}
-                                            end={{ x: 0.5, y: 1 }}
-                                            style={{justifyContent: 'center'}}>
-                                                <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios(valorInput)} style={{justifyContent: 'center', width: 40}}>
-                                                    <Icon name="search" size={30} color={"yellow"}></Icon>
-                                                </TouchableHighlight>
-                                            </LinearGradient>
-                                        </View>
-                                        <View style={{width: "23%", marginHorizontal: "5%", flexDirection: 'row'}}>
-                                            <TouchableHighlight style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
-                                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Abandonar</Text>
-                                            </TouchableHighlight>
-                                        </View>
-                                    </View>
-                                    <View style={{height: "76%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
-                                        
-                                    </View>
+                            <View style={{height: "100%", width: "100%"}}>
+                                <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
+                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
+                                    <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                    start={{ x: 0.5, y: 0 }}
+                                    end={{ x: 0.5, y: 1 }}
+                                    style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
+                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarClanes(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                            <Icon name="search" size={30} color={"yellow"}></Icon>
+                                        </TouchableHighlight>
+                                    </LinearGradient>
                                 </View>
-                            :
-                                <View style={{height: "100%", width: "100%"}}>
-                                    <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                        <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
-                                        <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
-                                        start={{ x: 0.5, y: 0 }}
-                                        end={{ x: 0.5, y: 1 }}
-                                        style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
-                                            <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarClanes(valorInput)} style={{justifyContent: 'center', width: 40}}>
-                                                <Icon name="search" size={30} color={"yellow"}></Icon>
-                                            </TouchableHighlight>
-                                        </LinearGradient>
-                                    </View>
-                                    <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
-                                        {(clanes.length > 0) ? 
-                                            <FlatList
-                                            data={clanes}
-                                            renderItem={({ item }) =>
+                                <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
+                                    {(clanes.length > 0) ? 
+                                        <FlatList
+                                        data={clanes}
+                                        renderItem={({ item }) =>
+                                            (user.id_guild === item.id || item.leader === user.id) ?
                                                 <View>
-                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", {clan: item})}><ClanCard clan={item}/></TouchableHighlight>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", {clan: item})}><ClanCard clan={item} navigation={navigation}/></TouchableHighlight>
                                                     <View style={{height: 1, backgroundColor: "black"}}></View>
                                                 </View>
-                                            }
-                                            style={{}}
-                                            />
-                                        :
-                                            <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado clanes</Text>
+                                            :
+                                                <View>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfileOther", {clan: item})}><ClanCard clan={item} navigation={navigation}/></TouchableHighlight>
+                                                    <View style={{height: 1, backgroundColor: "black"}}></View>
+                                                </View>
                                         }
-                                    </View>
+                                        style={{}}
+                                        />
+                                    :
+                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado clanes</Text>
+                                    }
+                                </View>
                             </View>
                         }
                     </View>

@@ -93,8 +93,8 @@ public class UsuarioService implements IUsuarioRepository{
 		}
 	}
 
-	@Transactional
 	@Override
+	@Transactional
 	public boolean update(Usuario in) {
 		boolean ok = false;
 		
@@ -110,7 +110,8 @@ public class UsuarioService implements IUsuarioRepository{
 				findByName.get().setName(persistance.getName());
 				findByName.get().setEggs(persistance.getEggs());
 				findByName.get().setGoldenEggs(persistance.getGoldenEggs());
-				findByName.get().setImg(persistance.getImg());			
+				findByName.get().setImg(persistance.getImg());
+
 				findByName.get().setTotalMoneyGenerated(persistance.getTotalMoneyGenerated());
 				
 				if(in.getGuild() != null) {

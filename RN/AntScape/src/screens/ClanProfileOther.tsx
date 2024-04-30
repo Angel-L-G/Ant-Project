@@ -8,12 +8,11 @@ import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 import axios from 'axios';
 import { User } from '../types/types';
-import UsuarioCard from '../components/UsuarioCard';
 import UsuarioCardClan from '../components/UsuarioCardClan';
 
-type Props = NativeStackScreenProps<RootStackParamList, "ClanProfile">;
+type Props = NativeStackScreenProps<RootStackParamList, "ClanProfileOther">;
 
-const ClanProfile = ({navigation, route}: Props) => {
+const ClanProfileOther = ({navigation, route}: Props) => {
     const clan = route.params.clan;
     const {ruta} = Globals();
     const {token, user, setUser} = useContext(AppContext);
@@ -23,8 +22,11 @@ const ClanProfile = ({navigation, route}: Props) => {
     useEffect(() => {
         async function getClanUsers() {
             try {
-                const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/users", { headers: { "Authorization": "Bearer " + token } });
-                setUsers(response.data);
+                const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
+                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
+                    usuario.id_guild == clan.id || usuario.id == clan.leader
+                );
+                setUsers(usuariosFiltrados);
             } catch (error) {
                 console.log(error);
             }
@@ -32,6 +34,7 @@ const ClanProfile = ({navigation, route}: Props) => {
 
         getClanUsers();
     }, [])
+    
 
     const handleChangeInput = (text: string) => {
         setValorInput(text);
@@ -40,16 +43,13 @@ const ClanProfile = ({navigation, route}: Props) => {
 
     async function buscarUsuarios(texto: string) {
         
-    }
+    };
 
-    async function abandonar() {
-
+    async function unirse() {
         try {
-            console.log(ruta + "v2/guilds/" + clan.id + "/leaveguild");
-            
-            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {params: {newLeader: -1}, headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/joinguild", { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
-            setUser({...user, id_guild: undefined});
+            setUser({...user, id_guild: clan.id});
         } catch (error) {
             console.log(error);
         }
@@ -81,8 +81,8 @@ const ClanProfile = ({navigation, route}: Props) => {
                             </LinearGradient>
                         </View>
                         <View style={{width: "23%", marginHorizontal: "5%", flexDirection: 'row', marginTop: -10}}>
-                            <TouchableHighlight underlayColor={"transparent"} onPress={abandonar} style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
-                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Abandonar</Text>
+                            <TouchableHighlight onPress={() => unirse()} style={{ width: "100%", borderWidth: 4, borderColor: "rgba(200, 50, 50, 1)", backgroundColor: "rgba(20, 40, 140, 1)", height: 40, justifyContent: 'center', borderRadius: 18}}>
+                                <Text style={{fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 16, textAlign: 'center'}}>Unirse</Text>
                             </TouchableHighlight>
                         </View>
                     </View>
@@ -109,7 +109,7 @@ const ClanProfile = ({navigation, route}: Props) => {
     );
 };
 
-export default ClanProfile
+export default ClanProfileOther
 
 const styles = StyleSheet.create({
 

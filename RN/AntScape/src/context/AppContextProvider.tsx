@@ -12,6 +12,8 @@ export interface AppContextType {
     setUser: Dispatch<SetStateAction<User>>;
     eggsContext: number;
     setEggsContext: Dispatch<SetStateAction<number>>;
+    totalEggsContext: string;
+    setTotalEggsContext: Dispatch<SetStateAction<string>>;
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -21,16 +23,19 @@ export const AppContextProvider = (props: any) => {
     const [usuario, setUsuario] = useState<User>({} as User);
     const [rol, setRol] = useState("");
     const [eggsContext, setEggsContext] = useState(0);
+    const [totalEggsContext, setTotalEggsContext] = useState("");
     
     const contextValues: AppContextType = {
         user: usuario,
         token: token,
         rol: rol,
         eggsContext: eggsContext,
+        totalEggsContext: totalEggsContext,
         setRol: setRol,
         setToken: setToken,
         setUser: setUsuario,
         setEggsContext: setEggsContext,
+        setTotalEggsContext: setTotalEggsContext
     };
 
     return (

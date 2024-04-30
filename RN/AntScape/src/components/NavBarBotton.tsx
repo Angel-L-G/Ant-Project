@@ -9,7 +9,7 @@ type Props = {
 
 const NavBarBotton = ({navigation, icon}: Props) => {
     return (
-        <View style={{ height: "7%", width: "100%", backgroundColor: "rgba(28, 64, 169, 1)", flexDirection: 'row', alignItems: 'center', justifyContent: "space-around" }}>
+        <View style={{ height: "7.1%", width: "100%", backgroundColor: "rgba(28, 64, 169, 1)", flexDirection: 'row', alignItems: 'center', justifyContent: "space-around" }}>
             {(icon == "social") ? 
                 <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Social", {tab: 0})}>
                     <Icon name="person" size={40} color={"yellow"}></Icon>
