@@ -3,6 +3,9 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +37,7 @@ public class GuildEntity implements Serializable {
 	private Integer defenseNumber;
 
 	@Column(name="defense_range")
-	private Integer defenseRange;
+	private String defenseRange;
 
 	@Column(length=45)
 	private String name;
@@ -48,10 +51,11 @@ public class GuildEntity implements Serializable {
 	private Integer trophys;
 
 	//bi-directional many-to-one association to GuildLevel
-	@OneToMany(mappedBy="guild")
+	@OneToMany(mappedBy="guild", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<GuildLevelEntity> guildLevels;
 
 	//bi-directional many-to-one association to Usuario
+	@JsonIgnore
 	@OneToMany(mappedBy="guild")
 	private List<UsuarioEntity> usuarios;
 
@@ -74,11 +78,11 @@ public class GuildEntity implements Serializable {
 		this.defenseNumber = defenseNumber;
 	}
 
-	public Integer getDefenseRange() {
+	public String getDefenseRange() {
 		return this.defenseRange;
 	}
 
-	public void setDefenseRange(Integer defenseRange) {
+	public void setDefenseRange(String defenseRange) {
 		this.defenseRange = defenseRange;
 	}
 

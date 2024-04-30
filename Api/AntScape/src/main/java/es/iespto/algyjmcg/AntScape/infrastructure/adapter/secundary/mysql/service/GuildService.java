@@ -8,19 +8,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
+import es.iespto.algyjmcg.AntScape.domain.model.GuildLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.secundary.IGuildLevelRepository;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IGuildRepository;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.GuildEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.GuildLevelEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.GuildJPARepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.GuildLevelJPARepository;
 
 @Service
 public class GuildService implements IGuildRepository{
 	@Autowired private GuildJPARepository repository;
 	@Autowired private IUsuarioRepository userService;
+	@Autowired private GuildLevelJPARepository guildLevelRepository;
 	private GuildMapper gm = new GuildMapper();
 	private UsuarioMapper um = new UsuarioMapper();
 
@@ -44,14 +49,54 @@ public class GuildService implements IGuildRepository{
 		Guild out = null;
 		
 		if(in != null) {
-			GuildEntity save = repository.save(gm.toPersistance(in));
+			GuildEntity persistance = gm.toPersistance(in);
 			
-			if(save != null) {
-				out = gm.toDomain(save);
+			GuildEntity save = repository.save(persistance);
+			
+			save = generateGuildLevels(save);
+			
+			GuildEntity saved = repository.save(persistance);
+			
+			if(saved != null) {
+				out = gm.toDomain(saved);
 			}
 		}
 		
 		return out;
+	}
+	
+	private GuildEntity generateGuildLevels(GuildEntity in) {
+		GuildLevelEntity barracks = new GuildLevelEntity();
+		
+		barracks.setCost(10.0);
+		barracks.setEfect("Higher chances of wining");
+		barracks.setLevel(0);
+		barracks.setName("Barracks");
+		barracks.setGuild(in);
+		
+		guildLevelRepository.save(barracks);
+		
+		GuildLevelEntity defenses = new GuildLevelEntity();
+		
+		defenses.setCost(25.0);
+		defenses.setEfect("Higher chances of defending");
+		defenses.setLevel(0);
+		defenses.setName("Defenses");
+		defenses.setGuild(in);
+		
+		guildLevelRepository.save(defenses);
+		
+		GuildLevelEntity foodChamerbs = new GuildLevelEntity();
+		
+		foodChamerbs.setCost(65.0);
+		foodChamerbs.setEfect("More Resources Robbed");
+		foodChamerbs.setLevel(0);
+		foodChamerbs.setName("Food Chamerbs");
+		foodChamerbs.setGuild(in);
+		
+		guildLevelRepository.save(foodChamerbs);
+		
+		return in;
 	}
 
 	@Override
@@ -96,7 +141,11 @@ public class GuildService implements IGuildRepository{
 					findByName.get().getUsuarios().add(um.toPersistance(domain));
 				}
 				
-				ok = true;
+				GuildEntity save = repository.save(findByName.get());
+				
+				if(save != null) {
+					ok = true;
+				}
 			}
 		}
 		

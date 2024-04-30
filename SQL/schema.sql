@@ -45,6 +45,7 @@ CREATE TABLE `usuarios` (
   `golden_eggs` varchar(10) DEFAULT ("0"),
   `img` varchar(255) DEFAULT("profile.png"),
   `id_guild` INT DEFAULT(null),
+  `total_money_generated` varchar(255) DEFAULT("10"),
   constraint pk_usuarios PRIMARY KEY(id),
   CONSTRAINT fk_guild_user FOREIGN KEY (id_guild) REFERENCES guild(id),
   constraint uk_name UNIQUE KEY(name)
@@ -175,8 +176,8 @@ CREATE TABLE messages (
 INSERT INTO guild (id, name, description, leader, trophys, quantity, defense_range, defense_number) VALUES (2, 'Guild2', 'desc', 1, 15, 7, 2, 5);
 INSERT INTO guild (id, name, description, leader, trophys, quantity, defense_range, defense_number) VALUES (1, 'Guild2', 'desc', 2, 15, 7, 2, 5);
 
-INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1);
-INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2);
+INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild, total_money_generated) VALUES (1, 'Usuario1', 'password1', 'ROLE_USER', 'usuario1@example.com', true, 'hash1', false, '10', '5', 'profile1.png', 1, "10");
+INSERT INTO usuarios (id, name, password, rol, email, active, hash, banned, eggs, golden_eggs, img, id_guild, total_money_generated) VALUES (2, 'Usuario2', 'password2', 'ROLE_ADMIN', 'usuario2@example.com', false, 'hash2', true, '8', '3', 'profile2.png', 2, "10");
 
 INSERT INTO administrative_info (usuario_id, informacion, last_login) 
 VALUES (1, 'Información administrativa para el usuario 1', '2024-03-25 15:30:00');

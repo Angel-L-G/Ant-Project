@@ -95,4 +95,9 @@ public class UsuarioDomainService implements IUsuarioService {
 		return service.unblock(name, nameFriend);
 	}
 
+	@Override
+	public boolean updateGuild(Usuario in) {
+		return service.updateGuild(in);
+	}
+
 }

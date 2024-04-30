@@ -26,4 +26,6 @@ public interface IUsuarioService {
 	public boolean verify(Integer id);
 	public boolean ban(Integer id);
 	public boolean unBan(Integer id);
+	
+	public boolean updateGuild(Usuario u);
 }
