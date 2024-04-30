@@ -22,15 +22,6 @@ const UseChat = () => {
         TextDecoder: encoding.TextDecoder,
     });
 
-    useEffect(() => {
-        console.log("_______________________________________________");
-        console.log("_______________________________________________");
-        console.log("------------ LOG USE EFFECT: " + historico.length + " --------------");
-        console.log("_______________________________________________");
-        console.log("_______________________________________________");
-    }, [historico])
-    
-
     function conectar() {
         stompRef.current = new Client({
             brokerURL: 'ws://' + ip + '/websocket',
@@ -92,20 +83,26 @@ const UseChat = () => {
         
         let nuevoMensaje = JSON.parse(datos.body);
         console.log("2222222222222222 " + JSON.stringify(nuevoMensaje));
-
-        let messageRecieved: Message = {
-            body: nuevoMensaje.content,
-            sentAt: nuevoMensaje.sentAt,
-            senderId: nuevoMensaje.senderId
-        };
-
         
-        setHistorico((arr) => {
-            let array =  arr.filter(m => true);
-            array.unshift(messageRecieved);
-            console.log("Size2: " + arr.length);
-            return array
-        });
+        if(nuevoMensaje.receiver == user.name && (chatActual.current?.nameUser1 == nuevoMensaje.receiver || chatActual.current?.nameUser2 == nuevoMensaje.receiver)){
+            let messageRecieved: Message = {
+                body: nuevoMensaje.content,
+                sentAt: nuevoMensaje.sentAt,
+                senderId: nuevoMensaje.senderId
+            };
+    
+            
+            setHistorico((arr) => {
+                let array =  arr.filter(m => true);
+                array.unshift(messageRecieved);
+                console.log("Size2: " + arr.length);
+                return array
+            });
+        }else{
+            console.log("No Pa Ti");
+            
+        }
+        
     }
 
     /*
