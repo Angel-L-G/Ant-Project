@@ -267,7 +267,7 @@ public class GuildV2Controller {
 			
 			guild.setName(guildName);
 			guild.setDescription(guildDescription);
-			guild.setDefenseRange("1-6");
+			guild.setDefenseRange("12-18");
 			guild.setDefenseNumber(num);
 			guild.getUsuarios().add(user);
 			guild.setTrophys(10);
@@ -373,24 +373,27 @@ public class GuildV2Controller {
 			Double totalMoneyGanied = null;
 			
 			if(acuracy == 0) {
-				eggsGained = Integer.parseInt(user.getEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.20) + 10;
-				goldenEggsGained = Integer.parseInt(user.getGoldenEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.01) + 2;
-				trophysDefeneder = defender.getTrophys()-13;
-				trophysAtacker = atacker.getTrophys()+15;
+				// PERFECT
+				eggsGained = (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.20) + 10;
+				goldenEggsGained =  8.0;
+				trophysDefeneder = -13;
+				trophysAtacker = +15;
 				totalMoneyGanied = Integer.parseInt(user.getTotalMoneyGenerated()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.20) + 10;
 					
 			} else if (acuracy <= 2){
-				eggsGained = Integer.parseInt(user.getEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.10) + 5;
-				goldenEggsGained = Integer.parseInt(user.getGoldenEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
-				trophysDefeneder = defender.getTrophys()-2;
-				trophysAtacker = atacker.getTrophys()+5;
+				// ALMOST PERFECT
+				eggsGained = (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.10) + 5;
+				goldenEggsGained = 4.0;
+				trophysDefeneder = -2;
+				trophysAtacker = +5;
 				totalMoneyGanied = Integer.parseInt(user.getTotalMoneyGenerated()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.10) + 5;
 				
 			} else {
-				eggsGained = Integer.parseInt(user.getEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
-				goldenEggsGained = Double.parseDouble(user.getGoldenEggs());
-				trophysDefeneder = defender.getTrophys()+5;
-				trophysAtacker = atacker.getTrophys()-10;
+				// FAILED
+				eggsGained = (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
+				goldenEggsGained = 0.0;
+				trophysDefeneder = +5;
+				trophysAtacker = -10;
 				totalMoneyGanied = Integer.parseInt(user.getTotalMoneyGenerated()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
 				
 			}
@@ -399,23 +402,29 @@ public class GuildV2Controller {
 			Integer goldenEggsGainedInt = (int) Math.round(goldenEggsGained);
 			Integer totalMoneyGeneratedInt = (int) Math.round(totalMoneyGanied);
 			
-			user.setGoldenEggs(goldenEggsGainedInt+"");
-			user.setEggs(eggsGainedInt+"");
+			user.setGoldenEggs((Integer.parseInt(user.getGoldenEggs()) + goldenEggsGainedInt) + "");
+			user.setEggs((Integer.parseInt(user.getEggs()) + eggsGainedInt) + "");
 			user.setTotalMoneyGenerated(totalMoneyGeneratedInt+"");
+			
+			AttackRewards rewards = new AttackRewards();
+			
+			rewards.setEggs(eggsGainedInt);
+			rewards.setGoldenEggs(goldenEggsGainedInt);
+			rewards.setTrophys(trophysAtacker);
 			
 			boolean updateUser = userService.update(user);
 			
-			defender.setTrophys(trophysDefeneder);
+			defender.setTrophys(defender.getTrophys()+trophysDefeneder);
 			
 			boolean updateDefender = mainService.update(defender);
 			
-			atacker.setTrophys(trophysAtacker);
+			atacker.setTrophys(atacker.getTrophys()+trophysAtacker);
 			
 			boolean updateAtacker = mainService.update(atacker);
 			
 			if(updateUser && updateDefender && updateAtacker) {
 				//POSIBLE RETURNEAR DATOS DE ALGUNA MANERA
-				return ResponseEntity.status(HttpStatus.OK).body("Atack succesfull");
+				return ResponseEntity.status(HttpStatus.OK).body(rewards);
 			} else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
 			}		
@@ -441,6 +450,38 @@ public class GuildV2Controller {
 		}
 		
 		return out;
+	}
+}
+
+class AttackRewards {
+	private Integer eggs;
+	private Integer GoldenEggs;
+	private Integer Trophys;
+	
+	public AttackRewards() {}
+
+	public Integer getEggs() {
+		return eggs;
+	}
+
+	public void setEggs(Integer eggs) {
+		this.eggs = eggs;
+	}
+
+	public Integer getGoldenEggs() {
+		return GoldenEggs;
+	}
+
+	public void setGoldenEggs(Integer goldenEggs) {
+		GoldenEggs = goldenEggs;
+	}
+
+	public Integer getTrophys() {
+		return Trophys;
+	}
+
+	public void setTrophys(Integer trophys) {
+		Trophys = trophys;
 	}
 }
 
