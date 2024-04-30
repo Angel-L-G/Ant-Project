@@ -200,7 +200,7 @@ const Social = ({ navigation, route }: Props) => {
                         {(activeTab === 0) && 
                             <View style={{height: "100%", width: "100%"}}>
                                 <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}
@@ -232,7 +232,7 @@ const Social = ({ navigation, route }: Props) => {
                         {(activeTab === 1) && 
                             <View style={{height: "100%", width: "100%"}}>
                                 <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}
@@ -264,7 +264,7 @@ const Social = ({ navigation, route }: Props) => {
                         {(activeTab === 2) && 
                             <View style={{height: "100%", width: "100%"}}>
                                 <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 35, width: "50%", borderRadius: 100}} onChangeText={handleChangeInput} />
+                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                                     start={{ x: 0.5, y: 0 }}
                                     end={{ x: 0.5, y: 1 }}

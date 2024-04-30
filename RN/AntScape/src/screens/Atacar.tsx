@@ -6,9 +6,9 @@ import { AppContext } from '../context/AppContextProvider'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
 import { ClanType } from '../types/types'
-import { Icon, Image } from 'react-native-elements'
+import { Image } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native';
-import { set } from 'date-fns';
 import LinearGradient from 'react-native-linear-gradient';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Atacar">;
@@ -84,15 +84,15 @@ const Atacar = ({ navigation, route }: Props) => {
                     <Image source={{ uri: ruta + "v1/files/" + user.img }} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
                 </View>
                 <View>
-                    <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>{clan.name}</Text>
+                    <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>{enemigo.name}</Text>
                 </View>
                 <View style={{ width: "20%", height: "60%" }}>
                     <Image source={require('../assets/imgs/tablon.png')} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
-                </View>
-                <View style={{ position: 'absolute', marginLeft: 253, justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(0, 0, 0, 0.6)", width: "20%", height: "60%", borderRadius: 100, flexDirection: 'row' }}>
-                    <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>{clan.trophys}</Text>
-                    <View style={{ width: "18%", height: "60%", marginLeft: 5 }}>
-                        <Image source={require('../assets/imgs/Trophy.png')} style={{ width: "100%", height: "100%" }} />
+                    <View style={{ position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(0, 0, 0, 0.6)", width: "100%", height: "100%", borderRadius: 100, flexDirection: 'row' }}>
+                        <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>{enemigo.trophys}</Text>
+                        <View style={{ width: "18%", height: "60%", marginLeft: 5 }}>
+                            <Image source={require('../assets/imgs/Trophy.png')} style={{ width: "100%", height: "100%" }} />
+                        </View>
                     </View>
                 </View>
             </View>
