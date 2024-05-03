@@ -90,8 +90,7 @@ const UseChat = () => {
                 sentAt: nuevoMensaje.sentAt,
                 senderId: nuevoMensaje.senderId
             };
-    
-            
+   
             setHistorico((arr) => {
                 let array =  arr.filter(m => true);
                 array.unshift(messageRecieved);
@@ -100,9 +99,7 @@ const UseChat = () => {
             });
         }else{
             console.log("No Pa Ti");
-            
         }
-        
     }
 
     /*
