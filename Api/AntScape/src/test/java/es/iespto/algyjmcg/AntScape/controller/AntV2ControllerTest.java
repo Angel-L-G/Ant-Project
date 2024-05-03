@@ -76,7 +76,7 @@ public class AntV2ControllerTest {
         mockMvc.perform(get("/api/v2/ants/name/{name}", name)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.name").value(name))
             .andExpect(jsonPath("$.type").value("AntType"));
     }
@@ -92,7 +92,7 @@ public class AntV2ControllerTest {
         mockMvc.perform(get("/api/v2/ants/name/{name}", name)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isNoContent())
-            .andExpect(content().string("No Content Found"));
+            .andExpect((ResultMatcher) content().string("No Content Found"));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class AntV2ControllerTest {
         mockMvc.perform(get("/api/v2/ants/type/{type}", type)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.name").value("AntName"))
             .andExpect(jsonPath("$.type").value(type));
     }
@@ -125,6 +125,6 @@ public class AntV2ControllerTest {
         mockMvc.perform(get("/api/v2/ants/type/{type}", type)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isNoContent())
-            .andExpect(content().string("No Content Found"));
+            .andExpect((ResultMatcher) content().string("No Content Found"));
     }
 }

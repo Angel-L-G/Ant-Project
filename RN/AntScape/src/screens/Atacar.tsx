@@ -25,6 +25,35 @@ const Atacar = ({ navigation, route }: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [victoria, setVictoria] = useState(false);
 
+    const [currentNumber, setCurrentNumber] = useState(0);
+    const [repetitions, setRepetitions] = useState(0);
+    const maxRepetitions = 7;
+    const [animationRunning, setAnimationRunning] = useState(false);
+  
+    const generateRandomNumber = () => {
+      return Math.floor(Math.random() * 100) + 1;
+    };
+  
+    useEffect(() => {
+        if (animationRunning && repetitions < maxRepetitions) {
+            const interval = setInterval(() => {
+                setCurrentNumber(generateRandomNumber());
+                setRepetitions(prevRepetitions => prevRepetitions + 1);
+            }, 1000);
+    
+            return () => clearInterval(interval);
+        } else {
+            apostar();
+            setAnimationRunning(false);
+        }
+    }, [animationRunning, repetitions]);
+
+    const startAnimation = () => {
+        setAnimationRunning(true);
+        setCurrentNumber(0);
+        setRepetitions(0);
+    };
+
     useEffect(() => {
         async function buscarOponente() {
             try {
@@ -141,6 +170,7 @@ const Atacar = ({ navigation, route }: Props) => {
                         </LinearGradient>
                     </View>
                 </Modal>
+
             </View>
             <View style={{ width: "100%", height: "11%" }}>
                 <View style={{ flexDirection: "row", width: "100%", height: "100%" }}>
@@ -159,10 +189,24 @@ const Atacar = ({ navigation, route }: Props) => {
                                 style={{ width: "100%", height: "100%" }}
                                 numColumns={4}
                             />
+
+                            <Modal>
+                                {/*<View style={{ justifyContent: 'center', marginTop: 50 }}>
+                                    <Text>Animación de números aleatorios</Text>
+                                    <View style={{ fontSize: '48px', padding: '20px', border: '1px solid #ccc', borderRadius: '5px', width: '100px', margin: '0 auto', transition: 'all 0.5s ease' }}>{currentNumber}</View>
+                                    <TouchableHighlight onPress={startAnimation} disabled={animationRunning}>
+                                        <View>
+                                            <Text>
+                                                {animationRunning ? 'Generando...' : 'Comenzar animación'}
+                                            </Text>
+                                        </View>
+                                    </TouchableHighlight>
+                                </View>*/}
+                            </Modal>
                         </View>
                     </View>
                     <View style={{ width: "25%", height: "100%", alignItems: 'center', justifyContent: "center" }}>
-                        <TouchableHighlight underlayColor={"orange"} onPress={() => apostar()} style={{ height: "80%", width: "74%", backgroundColor: "yellow", borderRadius: 100, alignItems: 'center', justifyContent: "center", borderWidth: 2 }}>
+                        <TouchableHighlight underlayColor={"orange"} onPress={() => startAnimation()} style={{ height: "80%", width: "74%", backgroundColor: "yellow", borderRadius: 100, alignItems: 'center', justifyContent: "center", borderWidth: 2 }}>
                             <Icon name="dice" size={40} color={"black"}></Icon>
                         </TouchableHighlight>
                     </View>
