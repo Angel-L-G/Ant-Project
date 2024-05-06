@@ -16,8 +16,8 @@ import { RootStackParamList } from '../../App';
 type Props = NativeStackScreenProps<RootStackParamList, "Social">;
 
 const Social = ({ navigation, route }: Props) => {
-    const {ruta} = Globals();
-    const {token, user} = useContext(AppContext);
+    const { ruta } = Globals();
+    const { token, user } = useContext(AppContext);
     const [activeTab, setActiveTab] = useState(0);
     const [usuarios, setUsuarios] = useState<Array<User>>([]);
     const [amigos, setAmigos] = useState<Array<User>>([]);
@@ -34,7 +34,7 @@ const Social = ({ navigation, route }: Props) => {
         async function getUsuarios() {
             try {
                 const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
-                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
+                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
                     usuario.name.includes(valorInput) && usuario.name !== user.name
                 );
                 setUsuarios(usuariosFiltrados);
@@ -48,7 +48,7 @@ const Social = ({ navigation, route }: Props) => {
         async function getAmigos() {
             try {
                 const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
-                const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
+                const amigosFiltrados: Array<User> = response.data.filter((amigo: User) =>
                     amigo.name.includes(valorInput) && amigo.name !== user.name
                 );
                 setAmigos(amigosFiltrados);
@@ -68,7 +68,7 @@ const Social = ({ navigation, route }: Props) => {
                         setTieneClan(true);
                     }
                 }
-                const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) => 
+                const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) =>
                     c.name.includes(valorInput) && c !== clan
                 );
                 setClanes(clanesFiltrados);
@@ -99,7 +99,7 @@ const Social = ({ navigation, route }: Props) => {
     const handleTabPress = (tabIndex: number) => {
         setActiveTab(tabIndex);
         setValorInput('');
-    
+
         if (tabIndex === 0) {
             buscarUsuarios("");
         } else if (tabIndex === 1) {
@@ -118,7 +118,7 @@ const Social = ({ navigation, route }: Props) => {
     async function buscarUsuarios(inputValue: string) {
         try {
             const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
-            const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) => 
+            const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
                 usuario.name.includes(inputValue) && usuario.name !== user.name
             );
             setUsuarios(usuariosFiltrados);
@@ -127,11 +127,11 @@ const Social = ({ navigation, route }: Props) => {
             console.log(error);
         }
     }
-    
+
     async function buscarAmigos(inputValue: string) {
         try {
             const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
-            const amigosFiltrados: Array<User> = response.data.filter((amigo: User) => 
+            const amigosFiltrados: Array<User> = response.data.filter((amigo: User) =>
                 amigo.name.includes(inputValue) && amigo.name !== user.name
             );
             setAmigos(amigosFiltrados);
@@ -158,7 +158,7 @@ const Social = ({ navigation, route }: Props) => {
     async function buscarClanes(texto: string) {
         try {
             const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
-            const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) => 
+            const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) =>
                 c.name.includes(valorInput) && c !== clan
             );
             setClanes(clanesFiltrados);
@@ -196,104 +196,104 @@ const Social = ({ navigation, route }: Props) => {
                             <Text style={styles.tabText}>Clan</Text>
                         </TouchableHighlight>
                     </View>
-                    <View style={{alignItems: 'center', height: "92.5%", width: "100%"}}>
-                        {(activeTab === 0) && 
-                            <View style={{height: "100%", width: "100%"}}>
-                                <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
+                    <View style={{ alignItems: 'center', height: "92.5%", width: "100%" }}>
+                        {(activeTab === 0) &&
+                            <View style={{ height: "100%", width: "100%" }}>
+                                <View style={{ height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%" }}>
+                                    <TextInput style={{ backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black" }} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
-                                    start={{ x: 0.5, y: 0 }}
-                                    end={{ x: 0.5, y: 1 }}
-                                    style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
-                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                        start={{ x: 0.5, y: 0 }}
+                                        end={{ x: 0.5, y: 1 }}
+                                        style={{ justifyContent: 'center', marginLeft: -30, height: 35 }}>
+                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarUsuarios(valorInput)} style={{ justifyContent: 'center', width: 40 }}>
                                             <Icon name="search" size={30} color={"yellow"}></Icon>
                                         </TouchableHighlight>
                                     </LinearGradient>
                                 </View>
-                                <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
-                                    {(usuarios.length > 0) ? 
+                                <View style={{ height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)" }}>
+                                    {(usuarios.length > 0) ?
                                         <FlatList
-                                        data={usuarios}
-                                        renderItem={({ item }) =>
-                                            <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard usu={item} navigation={navigation}/></TouchableHighlight>
-                                                <View style={{height: 1, backgroundColor: "black"}}></View>
-                                            </View>
-                                        }
-                                        style={{}}
+                                            data={usuarios}
+                                            renderItem={({ item }) =>
+                                                <View>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", { usu: item })}><UsuarioCard usu={item} navigation={navigation} /></TouchableHighlight>
+                                                    <View style={{ height: 1, backgroundColor: "black" }}></View>
+                                                </View>
+                                            }
+                                            style={{}}
                                         />
-                                    :
-                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado usuarios</Text>
+                                        :
+                                        <Text style={{ marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center' }}>No se han encontrado usuarios</Text>
                                     }
                                 </View>
                             </View>
                         }
 
-                        {(activeTab === 1) && 
-                            <View style={{height: "100%", width: "100%"}}>
-                                <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
+                        {(activeTab === 1) &&
+                            <View style={{ height: "100%", width: "100%" }}>
+                                <View style={{ height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%" }}>
+                                    <TextInput style={{ backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black" }} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
-                                    start={{ x: 0.5, y: 0 }}
-                                    end={{ x: 0.5, y: 1 }}
-                                    style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
-                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarAmigos(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                        start={{ x: 0.5, y: 0 }}
+                                        end={{ x: 0.5, y: 1 }}
+                                        style={{ justifyContent: 'center', marginLeft: -30, height: 35 }}>
+                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarAmigos(valorInput)} style={{ justifyContent: 'center', width: 40 }}>
                                             <Icon name="search" size={30} color={"yellow"}></Icon>
                                         </TouchableHighlight>
                                     </LinearGradient>
                                 </View>
-                                <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
-                                    {(amigos.length > 0) ? 
+                                <View style={{ height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)" }}>
+                                    {(amigos.length > 0) ?
                                         <FlatList
-                                        data={amigos}
-                                        renderItem={({ item }) =>
-                                            <View>
-                                                <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", {usu: item})}><UsuarioCard usu={item} navigation={navigation}/></TouchableHighlight>
-                                                <View style={{height: 1, backgroundColor: "black"}}></View>
-                                            </View>
-                                        }
-                                        style={{}}
+                                            data={amigos}
+                                            renderItem={({ item }) =>
+                                                <View>
+                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", { usu: item })}><UsuarioCard usu={item} navigation={navigation} /></TouchableHighlight>
+                                                    <View style={{ height: 1, backgroundColor: "black" }}></View>
+                                                </View>
+                                            }
+                                            style={{}}
                                         />
-                                    :
-                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center', width: "70%", textAlign: 'center'}}>No se han encontrado amigos</Text>
+                                        :
+                                        <Text style={{ marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center', width: "70%", textAlign: 'center' }}>No se han encontrado amigos</Text>
                                     }
                                 </View>
                             </View>
                         }
 
-                        {(activeTab === 2) && 
-                            <View style={{height: "100%", width: "100%"}}>
-                                <View style={{height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%"}}>
-                                    <TextInput style={{backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black"}} onChangeText={handleChangeInput} />
+                        {(activeTab === 2) &&
+                            <View style={{ height: "100%", width: "100%" }}>
+                                <View style={{ height: "14%", flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', width: "100%" }}>
+                                    <TextInput style={{ backgroundColor: "white", height: 40, width: "50%", borderRadius: 100, color: "black" }} onChangeText={handleChangeInput} />
                                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
-                                    start={{ x: 0.5, y: 0 }}
-                                    end={{ x: 0.5, y: 1 }}
-                                    style={{justifyContent: 'center', marginLeft: -30, height: 35}}>
-                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarClanes(valorInput)} style={{justifyContent: 'center', width: 40}}>
+                                        start={{ x: 0.5, y: 0 }}
+                                        end={{ x: 0.5, y: 1 }}
+                                        style={{ justifyContent: 'center', marginLeft: -30, height: 35 }}>
+                                        <TouchableHighlight underlayColor={"rgba(20, 40, 140, 1)"} onPress={() => buscarClanes(valorInput)} style={{ justifyContent: 'center', width: 40 }}>
                                             <Icon name="search" size={30} color={"yellow"}></Icon>
                                         </TouchableHighlight>
                                     </LinearGradient>
                                 </View>
-                                <View style={{height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)"}}>
-                                    {(clanes.length > 0) ? 
+                                <View style={{ height: "86%", width: "100%", backgroundColor: "rgb(15, 47, 150)" }}>
+                                    {(clanes.length > 0) ?
                                         <FlatList
-                                        data={clanes}
-                                        renderItem={({ item }) =>
-                                            (user.id_guild === item.id || item.leader === user.id) ?
-                                                <View>
-                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", {clan: item})}><ClanCard clan={item} navigation={navigation}/></TouchableHighlight>
-                                                    <View style={{height: 1, backgroundColor: "black"}}></View>
-                                                </View>
-                                            :
-                                                <View>
-                                                    <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfileOther", {clan: item})}><ClanCard clan={item} navigation={navigation}/></TouchableHighlight>
-                                                    <View style={{height: 1, backgroundColor: "black"}}></View>
-                                                </View>
-                                        }
-                                        style={{}}
+                                            data={clanes}
+                                            renderItem={({ item }) =>
+                                                (user.id_guild === item.id || item.leader === user.id) ?
+                                                    <View>
+                                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfile", { clan: item })}><ClanCard clan={item} navigation={navigation} /></TouchableHighlight>
+                                                        <View style={{ height: 1, backgroundColor: "black" }}></View>
+                                                    </View>
+                                                    :
+                                                    <View>
+                                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ClanProfileOther", { clan: item })}><ClanCard clan={item} navigation={navigation} /></TouchableHighlight>
+                                                        <View style={{ height: 1, backgroundColor: "black" }}></View>
+                                                    </View>
+                                            }
+                                            style={{}}
                                         />
-                                    :
-                                        <Text style={{marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center'}}>No se han encontrado clanes</Text>
+                                        :
+                                        <Text style={{ marginTop: 40, color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", alignSelf: 'center' }}>No se han encontrado clanes</Text>
                                     }
                                 </View>
                             </View>
@@ -334,6 +334,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'MadimiOneRegular',
         color: 'yellow',
+        backgroundColor: "blue"
     }
 });
 

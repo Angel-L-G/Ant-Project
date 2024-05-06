@@ -5,7 +5,7 @@ import Globals from '../components/Globals'
 import { AppContext } from '../context/AppContextProvider'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
-import { ClanType } from '../types/types'
+import { ClanType, ResultAttack } from '../types/types'
 import { Image } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native';
@@ -24,6 +24,7 @@ const Atacar = ({ navigation, route }: Props) => {
     const [rangoSuperior, setRangoSuperior] = useState<number>(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [victoria, setVictoria] = useState(false);
+    const [resultado, setResultado] = useState<ResultAttack>({} as ResultAttack)
 
     const [currentNumber, setCurrentNumber] = useState(0);
     const [repetitions, setRepetitions] = useState(0);
@@ -93,6 +94,7 @@ const Atacar = ({ navigation, route }: Props) => {
             }
             const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/attack/" + enemigo.id, null, { params: params, headers: { Authorization: "Bearer " + token } });
             console.log(response.data);
+            setResultado(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -104,6 +106,7 @@ const Atacar = ({ navigation, route }: Props) => {
         setModalVisible(false);
         setSumaTotal(0);
         setUltimasTiradas([]);
+        navigation.navigate("Clan");
     }
 
     return (
@@ -158,10 +161,16 @@ const Atacar = ({ navigation, route }: Props) => {
                             end={{ x: 0.5, y: 1.25 }}
                             style={stylesModal.modalView}>
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-
+                                <View style={{ height: "90%", width: "100%" }}>
+                                    <View style={{ width: "100%", height: "100%" }}>
+                                        <View style={{ width: "100%", height: "100%", alignItems: "center", marginTop: "7%" }}>
+                                            <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>Huevos ganados: {resultado.eggs}</Text>
+                                            <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>Huevos dorados ganados: {resultado.goldenEggs}</Text>
+                                            <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>Trofeos ganados: {resultado.trophys}</Text>
+                                        </View>
+                                    </View>
                                 </View>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', height: "8%", width: "100%", marginTop: "2%" }}>
                                     <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => salir()} style={{ width: 40, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
                                         <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 26 }}>X</Text>
                                     </TouchableHighlight>
@@ -234,11 +243,12 @@ export default Atacar
 
 const stylesModal = StyleSheet.create({
     modalView: {
-        backgroundColor: '#00a8d6',
-        borderRadius: 20,
-        padding: 30,
-        elevation: 15,
-        height: "auto",
-        width: 320
-    },
+		backgroundColor: '#00a8d6',
+		borderRadius: 20,
+		padding: 20,
+		elevation: 15,
+		width: "80%",
+        height: "30%",
+        borderWidth: 2,
+	},
 })

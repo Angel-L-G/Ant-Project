@@ -10,6 +10,7 @@ import axios from 'axios';
 import { User } from '../types/types';
 import UsuarioCard from '../components/UsuarioCard';
 import UsuarioCardClan from '../components/UsuarioCardClan';
+import Social from './Social';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfile">;
 
@@ -45,11 +46,10 @@ const ClanProfile = ({navigation, route}: Props) => {
     async function abandonar() {
 
         try {
-            console.log(ruta + "v2/guilds/" + clan.id + "/leaveguild");
-            
-            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {params: {newLeader: -1}, headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {}, {params: {newLeader: -1}, headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
             setUser({...user, id_guild: undefined});
+            navigation.navigate("Social", {tab: 2});
         } catch (error) {
             console.log(error);
         }

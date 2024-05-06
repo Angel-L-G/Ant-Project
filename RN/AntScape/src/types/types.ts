@@ -44,17 +44,6 @@ export type Hormiguero = {
     biome: string,
 }
 
-export type Chat = {
-    id: number,
-    name: string,
-    messages: Array<Message>
-}
-
-export type Message = {
-    idUser: number,
-    message: string
-}
-
 export type AlmacenImg ={
     nombre: string;
     ubicacion: ReturnType<any>;
@@ -113,4 +102,10 @@ export type GuildLevel = {
     efect: string,
     level: number,
     name: string
+}
+
+export type ResultAttack = {
+    eggs: number,
+    goldenEggs: number,
+    trophys: number
 }

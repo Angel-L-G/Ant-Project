@@ -55,8 +55,6 @@ const chatStyles = StyleSheet.create({
     messageContainer: {
         width: '100%',
         height: '93%',
-        backgroundColor: "rgba(30, 70, 200, 1)"
-
     },
 
     messageInput: {

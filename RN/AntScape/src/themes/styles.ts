@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         border: 'none',
         radius: 4,
         cursor: 'pointer',
-        width: 120
+        width: 120,
     },
 
     nestViewContainer: {

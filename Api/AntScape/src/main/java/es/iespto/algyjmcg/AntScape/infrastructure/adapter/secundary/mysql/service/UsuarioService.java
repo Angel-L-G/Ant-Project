@@ -118,7 +118,7 @@ public class UsuarioService implements IUsuarioRepository{
 					findByName.get().setGuild(gm.toPersistance(in.getGuild()));
 				}
 				
-				if(in.getNests() != null) {
+				if(in.getNests() != null ) {
 					for (Nest nest : in.getNests()) {
 						findByName.get().getNests().add(nm.toPersistance(nest));
 					}

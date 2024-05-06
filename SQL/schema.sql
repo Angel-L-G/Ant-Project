@@ -129,7 +129,6 @@ CREATE TABLE `nest_levels` (
   `multiplier` DECIMAL(10, 2) NOT NULL,
   CONSTRAINT pk_nest_levels PRIMARY KEY(id),
   CONSTRAINT fk_nest_level FOREIGN KEY (nest_id) REFERENCES nests(id),
-  CONSTRAINT uk_nest_level UNIQUE(nest_id, level)
 );
 
 CREATE TABLE `bosses` (

@@ -101,12 +101,13 @@ public class GuildV2Controller {
 			if(user!=null && byId!=null && guild!=null) {
 				if(guild.getLeader() == user.getId()) {
 					guild.getUsuarios().remove(byId);
+					guild.setQuantity(guild.getUsuarios().size());
 					byId.setGuild(null);
 					
-					Guild guildSaved = mainService.save(guild);
-					Usuario userSaved = userService.save(byId);
+					boolean updateGuild = mainService.update(guild);
+					boolean updateUser = userService.update(byId);
 					
-					if(guildSaved!=null && userSaved!=null) {
+					if(updateGuild && updateUser) {
 						return ResponseEntity.ok("User Kicked Correctly");
 					}else {
 						return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong, and user could not be kicked");
@@ -136,14 +137,14 @@ public class GuildV2Controller {
 			guild.addUsuario(user);
 			guild.setQuantity(guild.getUsuarios().size());
 			
-			Guild save = mainService.save(guild);
+			boolean updateGuild = mainService.update(guild);
 			
 
 			user.setGuild(guild);
 			
 			boolean update = userService.update(user);
 			
-			if(save != null && update) {
+			if(updateGuild && update) {
 				return ResponseEntity.ok("User Joined The Guild Correctly");
 			}else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
@@ -268,7 +269,7 @@ public class GuildV2Controller {
 			
 			guild.setName(guildName);
 			guild.setDescription(guildDescription);
-			guild.setDefenseRange("1-6");
+			guild.setDefenseRange("12-18");
 			guild.setDefenseNumber(num);
 			guild.getUsuarios().add(user);
 			guild.setTrophys(10);
@@ -335,11 +336,11 @@ public class GuildV2Controller {
 	@GetMapping(path="/{idGuild}/seekChallenger")
 	public ResponseEntity<?> seekChallenger(@RequestHeader HttpHeaders headers, @PathVariable Integer idGuild){
 		if(idGuild != null) {
-			String token = headers.getFirst("Authorization");
-			String resultado = token.substring(7);
-			String username = jwtService.extractUsername(resultado);
+			//String token = headers.getFirst("Authorization");
+			//String resultado = token.substring(7);
+			//String username = jwtService.extractUsername(resultado);
 			
-			Usuario user = userService.findByName(username);
+			//Usuario user = userService.findByName(username);
 			Guild guild = mainService.findById(idGuild);
 			
 			Guild oponent = nearestGuild(guild);
@@ -374,52 +375,78 @@ public class GuildV2Controller {
 			Double totalMoneyGanied = null;
 			
 			if(acuracy == 0) {
-				eggsGained = Integer.parseInt(user.getEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.20) + 10;
-				goldenEggsGained = Integer.parseInt(user.getGoldenEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.01) + 2;
-				trophysDefeneder = defender.getTrophys()-13;
-				trophysAtacker = atacker.getTrophys()+15;
+				// PERFECT
+				eggsGained = (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.20) + 10;
+				goldenEggsGained =  8.0;
+				trophysDefeneder = -13;
+				trophysAtacker = +15;
 				totalMoneyGanied = Integer.parseInt(user.getTotalMoneyGenerated()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.20) + 10;
 					
 			} else if (acuracy <= 2){
-				eggsGained = Integer.parseInt(user.getEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.10) + 5;
-				goldenEggsGained = Integer.parseInt(user.getGoldenEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
-				trophysDefeneder = defender.getTrophys()-2;
-				trophysAtacker = atacker.getTrophys()+5;
+				// ALMOST PERFECT
+				eggsGained = (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.10) + 5;
+				goldenEggsGained = 4.0;
+				trophysDefeneder = -2;
+				trophysAtacker = +5;
 				totalMoneyGanied = Integer.parseInt(user.getTotalMoneyGenerated()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.10) + 5;
 				
 			} else {
-				eggsGained = Integer.parseInt(user.getEggs()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
-				goldenEggsGained = Double.parseDouble(user.getGoldenEggs());
-				trophysDefeneder = defender.getTrophys()+5;
-				trophysAtacker = atacker.getTrophys()-10;
+				// FAILED
+				eggsGained = (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
+				goldenEggsGained = 0.0;
+				trophysDefeneder = +5;
+				trophysAtacker = -10;
 				totalMoneyGanied = Integer.parseInt(user.getTotalMoneyGenerated()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
-				
 			}
 			
 			Integer eggsGainedInt = (int) Math.round(eggsGained);
 			Integer goldenEggsGainedInt = (int) Math.round(goldenEggsGained);
 			Integer totalMoneyGeneratedInt = (int) Math.round(totalMoneyGanied);
 			
-			user.setGoldenEggs(goldenEggsGainedInt+"");
-			user.setEggs(eggsGainedInt+"");
+			user.setGoldenEggs((Integer.parseInt(user.getGoldenEggs()) + goldenEggsGainedInt) + "");
+			user.setEggs((Integer.parseInt(user.getEggs()) + eggsGainedInt) + "");
 			user.setTotalMoneyGenerated(totalMoneyGeneratedInt+"");
+			
+			AttackRewards rewards = new AttackRewards();
+			
+			rewards.setEggs(eggsGainedInt);
+			rewards.setGoldenEggs(goldenEggsGainedInt);
+			rewards.setTrophys(trophysAtacker);
 			
 			boolean updateUser = userService.update(user);
 			
-			defender.setTrophys(trophysDefeneder);
+			defender.setTrophys(defender.getTrophys()+trophysDefeneder);
 			
 			boolean updateDefender = mainService.update(defender);
 			
-			atacker.setTrophys(trophysAtacker);
+			atacker.setTrophys(atacker.getTrophys()+trophysAtacker);
 			
 			boolean updateAtacker = mainService.update(atacker);
 			
 			if(updateUser && updateDefender && updateAtacker) {
-				//POSIBLE RETURNEAR DATOS DE ALGUNA MANERA
-				return ResponseEntity.status(HttpStatus.OK).body("Atack succesfull");
+				return ResponseEntity.status(HttpStatus.OK).body(rewards);
 			} else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
 			}		
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
+		}
+	}
+	
+	@PutMapping(path="/{id}/defensenumber")
+	public ResponseEntity<?> updatedefenseNumber(@RequestHeader HttpHeaders headers, @PathVariable Integer id, @RequestParam Integer newDefenseNumber){
+		if(id != null && newDefenseNumber != null) {
+			Guild guild = mainService.findById(id);
+			
+			guild.setDefenseNumber(newDefenseNumber);
+			
+			boolean update = mainService.update(guild);
+			
+			if(update) {
+				return ResponseEntity.status(HttpStatus.OK).body("Defense Number Updated");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
+			}
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
 		}
@@ -442,6 +469,38 @@ public class GuildV2Controller {
 		}
 		
 		return out;
+	}
+}
+
+class AttackRewards {
+	private Integer eggs;
+	private Integer GoldenEggs;
+	private Integer Trophys;
+	
+	public AttackRewards() {}
+
+	public Integer getEggs() {
+		return eggs;
+	}
+
+	public void setEggs(Integer eggs) {
+		this.eggs = eggs;
+	}
+
+	public Integer getGoldenEggs() {
+		return GoldenEggs;
+	}
+
+	public void setGoldenEggs(Integer goldenEggs) {
+		GoldenEggs = goldenEggs;
+	}
+
+	public Integer getTrophys() {
+		return Trophys;
+	}
+
+	public void setTrophys(Integer trophys) {
+		Trophys = trophys;
 	}
 }
 

@@ -99,11 +99,13 @@ public class ChatV2Controller {
 		if(in != null) {
 			Chat c = new Chat();
 			
-			c.setId(in.getId());
-			c.setIdGuild(in.getIdGuild());
+			if(in.getIdGuild() != null) {
+				c.setIdGuild(in.getIdGuild());
+			} else {
+				c.setUsuario2(userService.findByName(in.getNameUser2()));
+			}
 			
 			c.setUsuario1(userService.findByName(username));
-			c.setUsuario2(userService.findByName(in.getNameUser2()));
 			
 			Chat save = chatService.save(c);
 			
@@ -144,8 +146,6 @@ public class ChatV2Controller {
 		String username = jwtService.extractUsername(resultado);
 		Usuario user = userService.findByName(username);
 		
-		System.err.println("MSG: " + message + " bool: " + message.isBlank());
-		
 		if(!message.isBlank()) {
 			Chat chat = chatService.findById(id);
 			Message m = new Message();
@@ -174,19 +174,10 @@ public class ChatV2Controller {
 }
 
 class ChatInPutDTO {
-	private Integer id;
 	private Integer idGuild;
 	private String nameUser2;
 	
 	public ChatInPutDTO() {}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public Integer getIdGuild() {
 		return idGuild;

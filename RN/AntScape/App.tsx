@@ -31,7 +31,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Register from './src/screens/Register';
 import Main from './src/screens/Main';
 import Social from './src/screens/Social';
-import Settings from './src/screens/Settings';
 import Outside from './src/screens/Outside';
 import NewHormiguero from './src/screens/NewHormiguero';
 import Profile from './src/screens/Profile';
@@ -56,7 +55,7 @@ export type RootStackParamList = {
     Register: undefined,
     Login: undefined,
     Social: {tab: number},
-    NuevoChat: {name: string},
+    NuevoChat: {idOtherUser: number, nameOtherUser: string},
     Profile: undefined,
     Personal: undefined,
     ProfileOther: {usu: User},
