@@ -9,54 +9,60 @@ type Props = {
     navigation: any
 }
 
-const Login = ({navigation}: Props) => {
+const Login = ({ navigation }: Props) => {
     //const {findByName} = UseUser();
-    const {login} = UseSesion();
+    const { login, loading } = UseSesion();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    function searchUser(){
+    function searchUser() {
         login(username, password, navigation);
     }
 
     return (
-        <ImageBackground source={require('../assets/imgs/Portada.png')} style={{ position: "absolute", width: Dimensions.get('window').width, height: Dimensions.get('window').height}}>
+        <ImageBackground source={require('../assets/imgs/Portada.png')} style={{ position: "absolute", width: Dimensions.get('window').width, height: Dimensions.get('window').height }}>
             <View style={styles.container}>
                 <View style={styles.formTitle}>
-                    <Text style={{fontSize: 50, color: 'rgba(20, 40, 140, 1)', fontFamily: "MadimiOneRegular"}}>Inicia Sesión</Text>
+                    <Text style={{ fontSize: 50, color: 'rgba(20, 40, 140, 1)', fontFamily: "MadimiOneRegular" }}>Inicia Sesión</Text>
                 </View>
-                <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1}}
-                extraScrollHeight={175}
-                enableOnAndroid={true}
-                scrollEnabled={false}>
+                <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}
+                    extraScrollHeight={175}
+                    enableOnAndroid={true}
+                    scrollEnabled={false}>
                     <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
-                    start={{ x: 0.5, y: 0 }}
-                    end={{ x: 0.5, y: 1 }}
-                    style={ styles.formContainer }>
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={styles.formContainer}>
                         <View style={{}}>
 
                             <View style={styles.innerFormContainer}>
                                 <Text style={styles.formText}>Nick:</Text>
-                                <TextInput placeholder='Nick' onChangeText={setUsername} style={{width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white", }} placeholderTextColor={"white"}/>
+                                <TextInput placeholder='Nick' onChangeText={setUsername} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white", }} placeholderTextColor={"white"} />
                             </View>
-                            
+
                             <View style={styles.innerFormContainer}>
                                 <Text style={styles.formText}>Password:</Text>
-                                <TextInput placeholder='Password' onChangeText={setPassword} secureTextEntry={true} style={{width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white"}} placeholderTextColor={"white"}/>
+                                <TextInput placeholder='Password' onChangeText={setPassword} secureTextEntry={true} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white" }} placeholderTextColor={"white"} />
                             </View>
 
                             <Text></Text>
-                            
-                            <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+
+                            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                                 <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
-                                start={{ x: 0.5, y: 0 }}
-                                end={{ x: 0.5, y: 1 }}
-                                style={{ }}>
-                                    <TouchableOpacity onPress={searchUser} style={styles.button}>
-                                        <Text style={{fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18}}>Log In</Text>
-                                    </TouchableOpacity>
+                                    start={{ x: 0.5, y: 0 }}
+                                    end={{ x: 0.5, y: 1 }}
+                                    style={{}}>
+                                    {(loading) ? 
+                                        <View style={styles.button}>
+                                            <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Cargando...</Text>
+                                        </View>
+                                    :
+                                        <TouchableOpacity onPress={searchUser} style={styles.button}>
+                                            <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Log In</Text>
+                                        </TouchableOpacity>
+                                    }
                                 </LinearGradient>
-                                
+
 
                                 <Text></Text>
 

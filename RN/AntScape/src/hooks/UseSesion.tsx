@@ -1,5 +1,5 @@
 import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import EncryptedStorage from 'react-native-encrypted-storage'
@@ -8,14 +8,15 @@ import AppContextProvider, { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals'
 
 type Props = {
-    navigation:any
+    navigation: any
 }
-  
-const UseSesion = () => {
-    const {setUser,setToken,setRol,token} = useContext(AppContext);
-    const {ruta} = Globals();
 
-    async function register(nick: string, password: string, email: string, navigation: any){
+const UseSesion = () => {
+    const { setUser, setToken, setRol, token } = useContext(AppContext);
+    const { ruta } = Globals();
+    const [loading, setLoading] = useState(false);
+
+    async function register(nick: string, password: string, email: string, navigation: any) {
         console.log("register");
         let user: UserRegister = {
             email: email,
@@ -27,17 +28,17 @@ const UseSesion = () => {
 
         const axiospost = async (ruta: string) => {
             console.log("hola");
-            
+
             let response;
-            try{
-                response = await axios.post(ruta+"v1/register", user);
-                
-                if(response.status>199 && response.status < 300){
+            try {
+                response = await axios.post(ruta + "v1/register", user);
+
+                if (response.status > 199 && response.status < 300) {
                     ToastAndroid.show('Registrado! Ahora verifique su usuario', ToastAndroid.LONG);
                     navigation.navigate("Login");
                 }
 
-            } catch (error){
+            } catch (error) {
                 console.log(error);
             }
         }
@@ -45,9 +46,9 @@ const UseSesion = () => {
         axiospost(ruta);
     }
 
-    async function login(nick: string, password: string, navigation: any){
-        console.log("h");
-        
+    async function login(nick: string, password: string, navigation: any) {
+        setLoading(true);
+
         let user: UserLogin = {
             nombre: nick,
             password: password
@@ -55,16 +56,16 @@ const UseSesion = () => {
 
         const axiospost = async (ruta: string) => {
             console.log("a");
-            
-            try{
-                const response = await axios.post(ruta+"v1/login", user);
+
+            try {
+                const response = await axios.post(ruta + "v1/login", user);
                 console.log("q");
-                
-                if(response.status>199 && response.status < 300){
-                    
-                    const responseGet = await axios.get(ruta + "v2/users/me", {headers: { "Authorization": "Bearer " + response.data }});
+
+                if (response.status > 199 && response.status < 300) {
+
+                    const responseGet = await axios.get(ruta + "v2/users/me", { headers: { "Authorization": "Bearer " + response.data } });
                     console.log(responseGet.data);
-                        
+
                     setUser(responseGet.data);
 
                     setToken(response.data);
@@ -75,17 +76,17 @@ const UseSesion = () => {
                     //await AsyncStorage.setItem('rol', rolFromBack.data);
 
                     navigation.navigate("Personal");
-                }else {
-                    if(response.status == 428){
+                } else {
+                    if (response.status == 428) {
                         console.log("Falta Validar");
                     }
                 }
-            } catch (error: any){   
-                console.log("ho");   
+            } catch (error: any) {
+                console.log("ho");
                 console.log(error);
 
-                if(error.response.status == 428){
-                    ToastAndroid.show('Verifique su usuario primero',ToastAndroid.SHORT);
+                if (error.response.status == 428) {
+                    ToastAndroid.show('Verifique su usuario primero', ToastAndroid.SHORT);
                 } else {
                     ToastAndroid.show('Usuario o contraseña erroneo', ToastAndroid.LONG);
                 }
@@ -95,10 +96,11 @@ const UseSesion = () => {
         axiospost(ruta);
     }
 
-  return {
-    login,
-    register,
-  }
+    return {
+        login,
+        register,
+        loading
+    }
 }
 
 export default UseSesion

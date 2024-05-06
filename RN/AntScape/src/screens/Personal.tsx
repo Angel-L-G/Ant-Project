@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity, ToastAndroid } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native';
 import { ImageBackground } from 'react-native';
@@ -111,7 +111,7 @@ const Personal = ({ navigation }: Props) => {
         } else {
             console.log("No tienes huevos");
             console.log(eg.current);
-
+            ToastAndroid.show("Huevos insuficientes", ToastAndroid.SHORT);
         }
     }
 

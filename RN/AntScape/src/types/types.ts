@@ -103,3 +103,9 @@ export type GuildLevel = {
     level: number,
     name: string
 }
+
+export type ResultAttack = {
+    eggs: number,
+    goldenEggs: number,
+    trophys: number
+}

@@ -36,6 +36,7 @@ const Clan = ({ navigation }: Props) => {
             if (user.id_guild != null) {
                 console.log("Tiene Clan");
                 getClan(user.id_guild);
+                setClanId(user.id_guild);
                 setTieneClan(true);
             } else {
                 console.log("No tieneClan o es lider");

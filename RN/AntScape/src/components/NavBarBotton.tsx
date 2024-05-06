@@ -32,7 +32,7 @@ const NavBarBotton = ({navigation, icon}: Props) => {
 
             {(icon == "clan") ? 
                 <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Clan", {tab: 0})}>
-                    <Icon name="shield" size={40} color={"yellow"}></Icon>
+                    <Icon name="shield-half" size={40} color={"yellow"}></Icon>
                 </TouchableHighlight>
             : 
                 <TouchableHighlight style={{borderWidth: 2, width: "25%", height: "100%", justifyContent: 'center', alignItems: 'center'}} underlayColor={"transparent"} onPress={() => navigation.navigate("Clan", {tab: 0})}>
