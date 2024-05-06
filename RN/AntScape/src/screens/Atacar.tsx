@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, Animated } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import Globals from '../components/Globals'
@@ -12,6 +12,7 @@ import { FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Atacar">;
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
 const Atacar = ({ navigation, route }: Props) => {
     const clan = route.params.clan;
@@ -27,31 +28,68 @@ const Atacar = ({ navigation, route }: Props) => {
 
     const [currentNumber, setCurrentNumber] = useState(0);
     const [repetitions, setRepetitions] = useState(0);
-    const maxRepetitions = 7;
+    const maxRepetitions = 12;
     const [animationRunning, setAnimationRunning] = useState(false);
-  
+    
+    const [animation] = useState(new Animated.Value(0));
+    const delayBeforeClose = 1500; // 5 segundos antes de cerrar el modal
+    const transitionDuration = 1; // Duración de la transición en milisegundos
+
     const generateRandomNumber = () => {
-      return Math.floor(Math.random() * 100) + 1;
+        return Math.floor(Math.random() * 6) + 1; // Generar números del 1 al 6
     };
-  
+
+    const startAnimation = () => {
+        Animated.timing(animation, {
+            toValue: 1,
+            duration: transitionDuration,
+            useNativeDriver: true,
+        }).start(() => {
+            // Si aún no se han generado suficientes números aleatorios
+            if (repetitions < maxRepetitions-1) {
+                const newNumber = generateRandomNumber();
+                setCurrentNumber(newNumber);
+                setRepetitions(prevRepetitions => prevRepetitions + 1);
+            } else {
+                // Si se han generado suficientes números, detener la animación
+                // y esperar antes de cerrar el modal
+                setTimeout(() => {
+                    setAnimationRunning(false);
+
+                    if (ultimasTiradas.length < 4) {
+                        setUltimasTiradas([...ultimasTiradas, currentNumber]);
+                    } else {
+                        const nuevasTiradas = ultimasTiradas.slice(1);
+                        setUltimasTiradas([...nuevasTiradas, currentNumber]);
+                    }
+
+                    setSumaTotal(prevTotal => prevTotal + currentNumber);
+                }, delayBeforeClose);
+            }
+        });
+    };
+
     useEffect(() => {
         if (animationRunning && repetitions < maxRepetitions) {
-            const interval = setInterval(() => {
-                setCurrentNumber(generateRandomNumber());
-                setRepetitions(prevRepetitions => prevRepetitions + 1);
-            }, 1000);
-    
-            return () => clearInterval(interval);
-        } else {
-            apostar();
-            setAnimationRunning(false);
+            startAnimation();
         }
     }, [animationRunning, repetitions]);
 
-    const startAnimation = () => {
-        setAnimationRunning(true);
-        setCurrentNumber(0);
-        setRepetitions(0);
+    const startAnimationOnPress = () => {
+        if (ultimasTiradas.length < 4) {
+            setAnimationRunning(true);
+            setCurrentNumber(0);
+            setRepetitions(0);
+        }else {
+            ToastAndroid.show("Tiradas Agotadas", ToastAndroid.SHORT);
+        }
+    };
+
+    const animatedStyles = {
+        opacity: animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 1],
+        }),
     };
 
     useEffect(() => {
@@ -70,21 +108,6 @@ const Atacar = ({ navigation, route }: Props) => {
 
         buscarOponente();
     }, [])
-
-    function apostar() {
-        const dadoAleatorio = Math.floor(Math.random() * 6) + 1;
-        setSumaTotal(sumaTotal + dadoAleatorio);
-
-        if (ultimasTiradas.length < 4) {
-            setUltimasTiradas([...ultimasTiradas, dadoAleatorio]);
-        } else {
-            const nuevasTiradas = ultimasTiradas.slice(1);
-            setUltimasTiradas([...nuevasTiradas, dadoAleatorio]);
-        }
-
-        console.log(dadoAleatorio);
-        console.log(ultimasTiradas);
-    }
 
     async function comprobarResultados() {
         try {
@@ -190,23 +213,21 @@ const Atacar = ({ navigation, route }: Props) => {
                                 numColumns={4}
                             />
 
-                            <Modal>
-                                {/*<View style={{ justifyContent: 'center', marginTop: 50 }}>
-                                    <Text>Animación de números aleatorios</Text>
-                                    <View style={{ fontSize: '48px', padding: '20px', border: '1px solid #ccc', borderRadius: '5px', width: '100px', margin: '0 auto', transition: 'all 0.5s ease' }}>{currentNumber}</View>
-                                    <TouchableHighlight onPress={startAnimation} disabled={animationRunning}>
-                                        <View>
-                                            <Text>
-                                                {animationRunning ? 'Generando...' : 'Comenzar animación'}
-                                            </Text>
-                                        </View>
-                                    </TouchableHighlight>
-                                </View>*/}
+                            <Modal
+                                transparent={true}
+                                visible={animationRunning}
+                                onRequestClose={() => setAnimationRunning(false)} // Cierra el modal cuando se pulsa fuera de él
+                            >
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                                    <Animated.Text style={[{ fontSize: 48, padding: 20, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, width: 100, textAlign: 'center' }, animatedStyles]}>
+                                        {currentNumber}
+                                    </Animated.Text>
+                                </View>
                             </Modal>
                         </View>
                     </View>
                     <View style={{ width: "25%", height: "100%", alignItems: 'center', justifyContent: "center" }}>
-                        <TouchableHighlight underlayColor={"orange"} onPress={() => startAnimation()} style={{ height: "80%", width: "74%", backgroundColor: "yellow", borderRadius: 100, alignItems: 'center', justifyContent: "center", borderWidth: 2 }}>
+                        <TouchableHighlight underlayColor={"orange"} onPress={startAnimationOnPress} style={{ height: "80%", width: "74%", backgroundColor: "yellow", borderRadius: 100, alignItems: 'center', justifyContent: "center", borderWidth: 2 }}>
                             <Icon name="dice" size={40} color={"black"}></Icon>
                         </TouchableHighlight>
                     </View>
