@@ -101,12 +101,13 @@ public class GuildV2Controller {
 			if(user!=null && byId!=null && guild!=null) {
 				if(guild.getLeader() == user.getId()) {
 					guild.getUsuarios().remove(byId);
+					guild.setQuantity(guild.getUsuarios().size());
 					byId.setGuild(null);
 					
-					Guild guildSaved = mainService.save(guild);
-					Usuario userSaved = userService.save(byId);
+					boolean updateGuild = mainService.update(guild);
+					boolean updateUser = userService.update(byId);
 					
-					if(guildSaved!=null && userSaved!=null) {
+					if(updateGuild && updateUser) {
 						return ResponseEntity.ok("User Kicked Correctly");
 					}else {
 						return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong, and user could not be kicked");
@@ -136,14 +137,14 @@ public class GuildV2Controller {
 			guild.addUsuario(user);
 			guild.setQuantity(guild.getUsuarios().size());
 			
-			Guild save = mainService.save(guild);
+			boolean updateGuild = mainService.update(guild);
 			
 
 			user.setGuild(guild);
 			
 			boolean update = userService.update(user);
 			
-			if(save != null && update) {
+			if(updateGuild && update) {
 				return ResponseEntity.ok("User Joined The Guild Correctly");
 			}else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something didn't work and you couldn't join that guild");
@@ -335,11 +336,11 @@ public class GuildV2Controller {
 	@GetMapping(path="/{idGuild}/seekChallenger")
 	public ResponseEntity<?> seekChallenger(@RequestHeader HttpHeaders headers, @PathVariable Integer idGuild){
 		if(idGuild != null) {
-			String token = headers.getFirst("Authorization");
-			String resultado = token.substring(7);
-			String username = jwtService.extractUsername(resultado);
+			//String token = headers.getFirst("Authorization");
+			//String resultado = token.substring(7);
+			//String username = jwtService.extractUsername(resultado);
 			
-			Usuario user = userService.findByName(username);
+			//Usuario user = userService.findByName(username);
 			Guild guild = mainService.findById(idGuild);
 			
 			Guild oponent = nearestGuild(guild);
@@ -396,7 +397,6 @@ public class GuildV2Controller {
 				trophysDefeneder = +5;
 				trophysAtacker = -10;
 				totalMoneyGanied = Integer.parseInt(user.getTotalMoneyGenerated()) + (Integer.parseInt(user.getTotalMoneyGenerated()) * 0.005) + 1;
-				
 			}
 			
 			Integer eggsGainedInt = (int) Math.round(eggsGained);
@@ -434,7 +434,7 @@ public class GuildV2Controller {
 	}
 	
 	@PutMapping(path="/{id}/defensenumber")
-	public ResponseEntity<?> atackGuild(@RequestHeader HttpHeaders headers, @PathVariable Integer id, @RequestParam Integer newDefenseNumber){
+	public ResponseEntity<?> updatedefenseNumber(@RequestHeader HttpHeaders headers, @PathVariable Integer id, @RequestParam Integer newDefenseNumber){
 		if(id != null && newDefenseNumber != null) {
 			Guild guild = mainService.findById(id);
 			
@@ -447,9 +447,9 @@ public class GuildV2Controller {
 			} else {
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
 			}
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
 		}
-		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
 	}
 	
 	private Guild nearestGuild(Guild seeker) {
