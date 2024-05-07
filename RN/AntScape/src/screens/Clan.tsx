@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, ImageBackground } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import NavBarTop from '../components/NavBarTop'
 import NavBarBotton from '../components/NavBarBotton'
@@ -32,7 +32,7 @@ const Clan = ({ navigation }: Props) => {
 
         async function carga() {
             console.log("UseEffect");
-
+            
             if (user.id_guild != null) {
                 console.log("Tiene Clan");
                 getClan(user.id_guild);
@@ -152,24 +152,31 @@ const Clan = ({ navigation }: Props) => {
             <View style={{ height: "93%", width: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
                 {(tieneClan) ?
                     <View style={{ height: "93%", width: "100%" }}>
+                        
+                        <ImageBackground source={require('../assets/imgs/Fondo.jpg')} style={{ flex: 1 }}>
 
-                        <View>
                             <View style={{height: "33%", width: "100%", justifyContent: "center", alignItems: "flex-end"}}>
-                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalUno()} style={{width: "40%", height: "60%", backgroundColor: "blue", justifyContent: "center", alignItems: "center"}}>
-                                    <Text style={{fontSize: 40}}>IMG</Text>
+                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalUno()} style={{width: "40%", height: "70%", justifyContent: "center", alignItems: "center"}}>
+                                    <View style={{width: "100%", height: "100%"}}>
+                                        <Image source={require('../assets/imgs/Entrance.png')} style={{ width: "100%", height: "100%" }} />
+                                    </View>
                                 </TouchableHighlight>
                             </View>
                             <View style={{height: "34%", width: "100%", justifyContent: "center"}}>
-                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalDos()} style={{width: "40%", height: "60%", backgroundColor: "blue", justifyContent: "center", alignItems: "center"}}>
-                                    <Text style={{fontSize: 40}}>IMG</Text>
+                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalDos()} style={{width: "40%", height: "70%", justifyContent: "center", alignItems: "center"}}>
+                                    <View style={{width: "100%", height: "100%"}}>
+                                        <Image source={require('../assets/imgs/Attack.png')} style={{ width: "100%", height: "100%" }} />
+                                    </View>
                                 </TouchableHighlight>
                             </View>
                             <View style={{height: "33%", width: "100%", justifyContent: "center", alignItems: "center"}}>
-                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalTres()} style={{width: "40%", height: "60%", backgroundColor: "blue", justifyContent: "center", alignItems: "center"}}>
-                                    <Text style={{fontSize: 40}}>IMG</Text>
+                                <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalTres()} style={{width: "40%", height: "70%", justifyContent: "center", alignItems: "center"}}>
+                                    <View style={{width: "100%", height: "100%"}}>
+                                        <Image source={require('../assets/imgs/FoodStorage.png')} style={{ width: "100%", height: "100%" }} />
+                                    </View>
                                 </TouchableHighlight>
                             </View>
-                        </View>
+                        </ImageBackground>
                         
                         <View style={{position: "absolute", width: "20%", height: "15%", bottom: 0, right: 10, justifyContent: 'center', alignItems: 'center'}}>
                             <TouchableHighlight underlayColor={"orange"} onPress={() => navigation.navigate("Atacar", {clan: clan})} style={{width: 70, height: 70, backgroundColor: "yellow", borderRadius: 100, elevation: 10, justifyContent: 'center'}}>
@@ -221,8 +228,8 @@ const Clan = ({ navigation }: Props) => {
                             <View style={{height: "90%", width: "100%"}}>
                                 <View style={{width: "100%", height: "100%"}}>
                                     <View style={{width: "100%", height: "30%", justifyContent: 'space-between', flexDirection: "row"}}>
-                                        <View style={{width: "40%", height: "100%"}}>
-                                            <Image source={require('../assets/imgs/Background.png')} style={{width: "100%", height: "100%"}} />
+                                        <View style={{width: "40%", height: "100%" }}>
+                                            <Image source={require('../assets/imgs/Entrance.png')} style={{width: "90%", height: "100%", marginLeft: "5%" }} />
                                         </View>
                                         <View style={{width: "5%"}}></View>
                                         <View style={{width: "55%", borderLeftWidth: 2, alignItems: "center"}}>
@@ -277,7 +284,7 @@ const Clan = ({ navigation }: Props) => {
                                 <View style={{width: "100%", height: "100%"}}>
                                     <View style={{width: "100%", height: "30%", justifyContent: 'space-between', flexDirection: "row"}}>
                                         <View style={{width: "40%", height: "100%"}}>
-                                            <Image source={require('../assets/imgs/Background.png')} style={{width: "100%", height: "100%"}} />
+                                            <Image source={require('../assets/imgs/Attack.png')} style={{width: "90%", height: "100%", marginLeft: "5%" }} />
                                         </View>
                                         <View style={{width: "5%"}}></View>
                                         <View style={{width: "55%", borderLeftWidth: 2, alignItems: "center"}}>
@@ -332,7 +339,7 @@ const Clan = ({ navigation }: Props) => {
                                 <View style={{width: "100%", height: "100%"}}>
                                     <View style={{width: "100%", height: "30%", justifyContent: 'space-between', flexDirection: "row"}}>
                                         <View style={{width: "40%", height: "100%"}}>
-                                            <Image source={require('../assets/imgs/Background.png')} style={{width: "100%", height: "100%"}} />
+                                            <Image source={require('../assets/imgs/FoodStorage.png')} style={{width: "90%", height: "100%", marginLeft: "5%" }} />
                                         </View>
                                         <View style={{width: "5%"}}></View>
                                         <View style={{width: "55%", borderLeftWidth: 2, alignItems: "center"}}>

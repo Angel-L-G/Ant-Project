@@ -322,8 +322,8 @@ const styles = StyleSheet.create({
     tab: {
         flex: 1,
         alignItems: 'center',
-        paddingVertical: 14,
         borderBottomWidth: 2,
+        justifyContent: "center",
         borderBottomColor: 'rgb(28, 64, 169)',
     },
     activeTab: {
@@ -334,7 +334,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'MadimiOneRegular',
         color: 'yellow',
-        backgroundColor: "blue"
     }
 });
 

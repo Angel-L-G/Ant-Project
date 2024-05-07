@@ -18,6 +18,22 @@ const Profile = ({navigation}: Props) => {
     const {setUser, user, eggsContext, token} = useContext(AppContext);
     const [selectedImage, setSelectedImage] = useState<string>(ruta + "v1/files/" + user.img);
     const [selectedImage64, setSelectedImage64] = useState<string>("");
+
+    useEffect(() => {
+        async function getClan() {
+            try {
+                console.log(user);
+                
+                const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, {headers: { "Authorization": "Bearer " + token }});
+                console.log(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getClan();
+    }, [])
+    
     
     const openImagePicker = () => {
         const options: any = {

@@ -9,10 +9,16 @@ type Props = {
 }
 
 const NavBarTop = ({navigation}: Props) => {
-    const {user, eggsContext} = useContext(AppContext);
+    const {user, eggsContext, goldenEggsContext} = useContext(AppContext);
     const {ruta} = Globals();
     const [img, setImg] = useState(ruta + "v1/files/" + user.img);
 
+    useEffect(() => {
+        console.log("aaaaaaaaaaaaaaaaaaaa");
+        
+        setImg(ruta + "v1/files/" + user.img);
+    }, [])
+    
     function abreviarNumero(valor: number): string {
         if (valor < 10000) {
             return valor.toString();
@@ -57,7 +63,7 @@ const NavBarTop = ({navigation}: Props) => {
             <View style={{ width: "20%", height: "60%" }}>
                 <Image source={require('../assets/imgs/tablon.png')} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
                 <View style={{ position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "100%", height: "100%", borderRadius: 100, flexDirection: 'row' }}>
-                    <Text style={{ color: "black", fontWeight: "bold" }}>{user.goldenEggs}</Text>
+                    <Text style={{ color: "black", fontWeight: "bold" }}>{goldenEggsContext}</Text>
                     <View style={{ width: "18%", height: "60%", marginLeft: 5 }}>
                         <Image source={require('../assets/imgs/GoldenAntEgg2.png')} style={{ width: "100%", height: "100%" }} />
                     </View>

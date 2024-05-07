@@ -16,7 +16,7 @@ type Props = {
 
 const Personal = ({ navigation }: Props) => {
     const { ruta } = Globals();
-    const { token, user, totalEggsContext, setEggsContext, setTotalEggsContext } = useContext(AppContext);
+    const { token, user, totalEggsContext, setEggsContext, setTotalEggsContext, setGoldenEggsContext } = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
@@ -30,6 +30,7 @@ const Personal = ({ navigation }: Props) => {
         setEggsContext(user.eggs);
         totalEggs.current = Number(user.totalMoneyGenerated);
         setTotalEggsContext(user.totalMoneyGenerated);
+        setGoldenEggsContext(user.goldenEggs);
 
         async function getOwnNests() {
             const response = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
@@ -138,7 +139,6 @@ const Personal = ({ navigation }: Props) => {
     }, []);
 
     async function ganarDinero(produccion: number) {
-        console.log("Ganar dinero: " + produccion);
         
         let eggs1 = eg.current;
 
@@ -155,8 +155,6 @@ const Personal = ({ navigation }: Props) => {
 
             setTotalEggsContext(dineroNuevo + "");
             totalEggs.current = dineroNuevo;
-            console.log(totalEggs.current);
-            console.log(totalEggsContext);
         }
     }
 
@@ -167,7 +165,6 @@ const Personal = ({ navigation }: Props) => {
     function updateEggs(egg: number) {
         setEggs(egg);
         eg.current = egg;
-        console.log(eg.current);
         setEggsContext(eg.current);
     }
     

@@ -64,6 +64,7 @@ const UseSesion = () => {
                 if (response.status > 199 && response.status < 300) {
 
                     const responseGet = await axios.get(ruta + "v2/users/me", { headers: { "Authorization": "Bearer " + response.data } });
+                    setLoading(false);
                     console.log(responseGet.data);
 
                     setUser(responseGet.data);
@@ -75,10 +76,12 @@ const UseSesion = () => {
                     //setRol(rolFromBack.data);
                     //await AsyncStorage.setItem('rol', rolFromBack.data);
 
+                    
                     navigation.navigate("Personal");
                 } else {
                     if (response.status == 428) {
                         console.log("Falta Validar");
+                        setLoading(false);
                     }
                 }
             } catch (error: any) {
@@ -87,8 +90,10 @@ const UseSesion = () => {
 
                 if (error.response.status == 428) {
                     ToastAndroid.show('Verifique su usuario primero', ToastAndroid.SHORT);
+                    setLoading(false);
                 } else {
                     ToastAndroid.show('Usuario o contraseña erroneo', ToastAndroid.LONG);
+                    setLoading(false);
                 }
             }
         }
