@@ -66,7 +66,6 @@ export type RootStackParamList = {
     CrearClan: undefined,
     ClanProfileOther: {clan: ClanType},
     Atacar: {clan: ClanType},
-    AnimatedGif: undefined,
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -77,7 +76,6 @@ function App(): JSX.Element {
         <AppContextProvider>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
-                    <Stack.Screen name="AnimatedGif" component={AnimatedGif}/>
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Profile" component={Profile}/>

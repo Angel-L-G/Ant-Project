@@ -92,7 +92,7 @@ public class AntV2ControllerTest {
         /*mockMvc.perform(get("/api/v2/ants/name/{name}", name)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isNoContent())
-            .andExpect(content().string("No Content Found"));
+            .andExpect(content().string("No Content Found"));*/
     }
 
     @Test

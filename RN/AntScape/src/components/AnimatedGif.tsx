@@ -28,8 +28,12 @@ const AnimatedGif = () => {
     ];
 
     useEffect(() => {
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        
         async function generateGifNumber() {
             setRnd(Math.floor(Math.random() * 8));
+            console.log("RND: " + rnd);
+            
             setGifPath(aux[rnd]);
             setLoading(false);
         }
