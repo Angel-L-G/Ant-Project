@@ -46,6 +46,7 @@ import CrearClan from './src/screens/CrearClan';
 import NuevoChat from './src/screens/NuevoChat';
 import ClanProfileOther from './src/screens/ClanProfileOther';
 import Atacar from './src/screens/Atacar';
+import AnimatedGif from './src/components/AnimatedGif';
 
 type SectionProps = PropsWithChildren<{
     title: string;
