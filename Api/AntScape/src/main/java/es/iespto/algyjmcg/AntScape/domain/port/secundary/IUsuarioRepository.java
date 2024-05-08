@@ -2,6 +2,7 @@ package es.iespto.algyjmcg.AntScape.domain.port.secundary;
 
 import java.util.List;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 
 public interface IUsuarioRepository {
@@ -27,4 +28,5 @@ public interface IUsuarioRepository {
 	public boolean unBan(Integer id);
 	
 	public boolean updateGuild(Usuario u);
+	public Guild findUserGuild(Integer id);
 }

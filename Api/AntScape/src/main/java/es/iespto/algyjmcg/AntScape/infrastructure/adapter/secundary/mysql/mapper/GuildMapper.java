@@ -23,6 +23,7 @@ public class GuildMapper {
 			out.setTrophys(in.getTrophys());
 			out.setDescription(in.getDescription());
 			out.setLeader(in.getLeader());
+			out.setGuildImage(in.getGuildImage());
 			
 			if(in.getGuildLevels() != null) {
 				List<GuildLevelEntity> list = new ArrayList<GuildLevelEntity>();
@@ -48,6 +49,7 @@ public class GuildMapper {
 			out.setTrophys(in.getTrophys());
 			out.setDescription(in.getDescription());
 			out.setLeader(in.getLeader());
+			out.setGuildImage(in.getGuildImage());
 			
 			if(in.getGuildLevels() != null) {
 				for (GuildLevelEntity entity : in.getGuildLevels()) {

@@ -10,6 +10,7 @@ public class Guild {
 	private String defenseRange;
 	private String name;
 	private String description;
+	private String guildImage;
 	private Integer quantity;
 	private Integer trophys;
 	private List<GuildLevel> guildLevels;
@@ -126,5 +127,13 @@ public class Guild {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getGuildImage() {
+		return guildImage;
+	}
+
+	public void setGuildImage(String guildImage) {
+		this.guildImage = guildImage;
 	}
 }
