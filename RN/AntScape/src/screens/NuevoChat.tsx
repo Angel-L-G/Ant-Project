@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import UseChat from '../hooks/UseChat'
 import chatStyles from '../themes/chatStyles';
-import { View, Image, Text, FlatList, StyleSheet, TextInput, TouchableHighlight } from 'react-native';
+import { View, Image, Text, FlatList, StyleSheet, TextInput, TouchableHighlight, KeyboardAvoidingView, Platform } from 'react-native';
 import { AppContext } from '../context/AppContextProvider';
 import UseChatHistory from '../hooks/UseChatHistory';
 import { Chat, ChatInputSaveDTO, Message } from '../types/chatTypes';
@@ -39,15 +39,13 @@ const NuevoChat = ({navigation, route}: Props) => {
             const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;            
 
             if (chatEncontrado) {
-                console.log("Chat Encontrado LOG .......................");
-                
                 chatActual.current = chatEncontrado;
+
                 if(chatEncontrado.messages != null){
                     const mensajesInvertidos = chatEncontrado.messages.slice().reverse();
                     setHistorico(mensajesInvertidos);
                 }else {
                     setHistorico([]);
-                    console.log("SE HA BORADO TODOOOOOOOOOOOOOOOOOOOOOOO")
                 }
                 
                 setLoading(false);
@@ -60,14 +58,12 @@ const NuevoChat = ({navigation, route}: Props) => {
                 const fetchData = async() => {
                     try {
                         const chatData: Chat | undefined = await save(chatInput) as Chat | undefined;
-
                         chatActual.current = chatData;
-                        
+
                     } catch (error) {
                         console.error('Error al obtener el chat:', error);
+
                     } finally {
-                        console.log("Recoger Historico LOG ");
-                        
                         const mensajesInvertidos = chatActual.current?.messages.slice().reverse();
                         setHistorico(mensajesInvertidos ?? []);
                         setLoading(false);
@@ -83,21 +79,20 @@ const NuevoChat = ({navigation, route}: Props) => {
     }, [conectado]);
     
     function sendMessage() {
-        console.log("1: " + historico.length);
         saveMessages(chatActual.current?.id as number, mensaje);
-        console.log("2: " + historico.length);
         enviarPrivado(user.name, nameOtherUser, mensaje, user.id);
-        console.log("3: " + historico.length);
     }
 
     return (
-        <View style={chatStyles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{flex: 1}}
+        >
             <View style={chatStyles.upperBar}>
                 <View style={chatStyles.profilePicContainer}>
                     <Image
                         style={chatStyles.profilePic}
-                        source={require('../assets/imgs/profile.png')}
-                    //source={{ uri: img}}
+                        source={{ uri: img}}
                     />
                 </View>
 
@@ -107,7 +102,6 @@ const NuevoChat = ({navigation, route}: Props) => {
                     </Text>
                 </View>
             </View>
-
             <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                 start={{ x: 0.5, y: 0 }}
                 end={{ x: 0.5, y: 1 }}
@@ -147,7 +141,7 @@ const NuevoChat = ({navigation, route}: Props) => {
                     </View>
                 </View>
             </LinearGradient>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
