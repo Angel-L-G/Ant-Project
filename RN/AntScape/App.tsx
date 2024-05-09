@@ -47,6 +47,8 @@ import NuevoChat from './src/screens/NuevoChat';
 import ClanProfileOther from './src/screens/ClanProfileOther';
 import Atacar from './src/screens/Atacar';
 import AnimatedGif from './src/components/AnimatedGif';
+import ChatScreen from './src/screens/ChatScreen';
+import TestChatGrupal from './src/screens/TestChatGrupal';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -66,6 +68,7 @@ export type RootStackParamList = {
     CrearClan: undefined,
     ClanProfileOther: {clan: ClanType},
     Atacar: {clan: ClanType},
+    TestChatGrupal: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -77,6 +80,7 @@ function App(): JSX.Element {
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
                     <Stack.Screen name="Login" component={Login}/>
+                    <Stack.Screen name="TestChatGrupal" component={TestChatGrupal}/>
                     <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Profile" component={Profile}/>
                     <Stack.Screen name="ProfileOther" component={ProfileOther}/>

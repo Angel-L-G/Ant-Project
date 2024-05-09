@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
-import es.iespto.algyjmcg.AntScape.domain.service.UsuarioDomainService;
 
 class MessageTo{
 	public MessageTo() {}
@@ -63,10 +63,8 @@ class MessageTo{
 @CrossOrigin
 public class WebsocketController { //el controlador es para una conexión establecida en: ws://ip_de_la_api:8080/websocket
 	
-	@Autowired
-	private SimpMessagingTemplate simpMessagingTemplate;
-	@Autowired
-	private IUsuarioService userService;
+	@Autowired private SimpMessagingTemplate simpMessagingTemplate;
+	@Autowired private IUsuarioService userService;
 	
 	//se manejan los mensajes enviados a la ruta (recibida por el websocket ) de:  /app/publicmessage
 	//y lo que corresponde hacer se envía a la ruta: /topic/chatroom y lo recibirán los que estén suscritos 
@@ -85,12 +83,20 @@ public class WebsocketController { //el controlador es para una conexión establ
 	     Principal user, 
 	     @Header("simpSessionId") String sessionId
      ) throws Exception { 
-    	
     	Usuario sender = userService.findByName(msg.getAuthor());
     	msg.setSenderId(sender.getId());
     	
     	simpMessagingTemplate.convertAndSendToUser(msg.getReceiver(), "/cola/mensajes", msg);
     	//si queremos una copia al autor, como cuando es una partida entre dos:
     	//simpMessagingTemplate.convertAndSendToUser(msg.getAuthor(), "/cola/mensajes", msg);
+    }
+    
+    @MessageMapping("/groups/{groupId}")
+    public void publishToGroup(@DestinationVariable Integer groupId, MessageTo msg) {
+    	System.err.println("GRUPAL: " + msg.author);
+    	Usuario sender = userService.findByName(msg.getAuthor());
+    	msg.setSenderId(sender.getId());
+    	
+        simpMessagingTemplate.convertAndSend("/topic/chatroom/" + groupId, msg);
     }
 }

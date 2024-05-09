@@ -122,9 +122,20 @@ public class UserV2Controller {
 		String resultado = token.substring(7);
 		String username = jwtService.extractUsername(resultado);
 		
-		Usuario findByName = userService.findByName(username);
+		Usuario u = userService.findByName(username);
+		Guild guild = userService.findUserGuild(u.getId());
 		
-		return ResponseEntity.ok(findByName);
+		UsuarioOutput out = new UsuarioOutput();
+		
+		out.setEggs(u.getEggs());
+		out.setGoldenEggs(u.getGoldenEggs());
+		out.setId(u.getId());
+		out.setId_guild(guild.getId());
+		out.setImg(out.getImg());
+		out.setName(u.getName());
+		out.setNests(u.getNests());
+		
+		return ResponseEntity.ok(out);
 	}
 	
 	@GetMapping(path="/me/guild")

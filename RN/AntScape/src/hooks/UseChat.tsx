@@ -5,13 +5,12 @@ import { Client } from '@stomp/stompjs'
 import Globals from '../components/Globals'
 import * as encoding from 'text-encoding';
 import { AppContext } from '../context/AppContextProvider';
-import { Chat, Message, websocketMessage } from '../types/chatTypes'
+import { Chat, groupMessage, Message, websocketMessage } from '../types/chatTypes'
 import UseChatHistory from './UseChatHistory'
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
     const {token, user} = useContext(AppContext);
-    const {findAllMessagesByChatId} = UseChatHistory();
     const [conectado, setConectado] = useState(false);
     const [historico, setHistorico] = useState<Message[]>(new Array<Message>());
     const chatActual = useRef<Chat>();
@@ -46,6 +45,7 @@ const UseChat = () => {
             let stompClient = stompRef.current;
             stompClient.subscribe('/salas/general', onPublicMessageReceived);
             stompClient.subscribe('/usuarios/cola/mensajes', onPrivateMessageReceived);
+            stompClient.subscribe('/topic/chatroom/' + user.id_guild, onGroupMessageReceived);
         }
 
         function conectarError() {
@@ -55,12 +55,37 @@ const UseChat = () => {
         stompRef.current.activate();
     }
 
+    ////////////////////////////////////////////////////////
+    function onGroupMessageReceived(datos: any) {
+        console.log("Grupal");
+        console.log("datos: " + datos.body);
+
+        let nuevoMensaje = JSON.parse(datos.body);
+
+        console.log("_---------------------------------------_" + nuevoMensaje.idGuild);
+        console.log("_---------------------------------------_" + user.id_guild);
+        
+        if(nuevoMensaje.idGuild == user.id_guild){
+            let messageRecieved: Message = {
+                body: nuevoMensaje.content,
+                sentAt: nuevoMensaje.sentAt,
+                senderId: nuevoMensaje.senderId,
+                idGuild: nuevoMensaje.idGuild?? -1
+            };
+   
+            setHistorico((arr) => {
+                let array =  arr.filter(m => true);
+                array.unshift(messageRecieved);
+                return array
+            });
+        }else{
+            console.log("No Pa Ti");
+        }
+    }
+    //////////////////////////////////////////////////////////////
+
     function onPublicMessageReceived(datos: any) {
         console.log("Publico");
-        console.log("datos: " + datos.content);
-        
-        let nuevoMensaje = JSON.parse(datos.content);
-        console.log("2222222222222222 " + nuevoMensaje);
 
         let messageRecieved: Message = {
             body: datos.content,
@@ -71,18 +96,14 @@ const UseChat = () => {
         setHistorico((arr) => {
             let array =  arr.filter(m => true);
             array.unshift(messageRecieved);
-            console.log("Size2: " + arr.length);
             return array
         });
     }
 
     function onPrivateMessageReceived(datos: any) {
         console.log("Privado");
-        console.log("Size: " + historico.length);
-        console.log("Id chat: " + chatActual.current?.id);
         
         let nuevoMensaje = JSON.parse(datos.body);
-        console.log("2222222222222222 " + JSON.stringify(nuevoMensaje));
         
         if(nuevoMensaje.receiver == user.name && (chatActual.current?.nameUser1 == nuevoMensaje.receiver || chatActual.current?.nameUser2 == nuevoMensaje.receiver)){
             let messageRecieved: Message = {
@@ -94,7 +115,6 @@ const UseChat = () => {
             setHistorico((arr) => {
                 let array =  arr.filter(m => true);
                 array.unshift(messageRecieved);
-                console.log("Size2: " + arr.length);
                 return array
             });
         }else{
@@ -102,30 +122,21 @@ const UseChat = () => {
         }
     }
 
-    /*
-    async function onPrivateMessageReceived(datos: any) {
-        const messagesAll = await findAllMessagesByChatId(chatActual.current?.id ?? null);
-        const mensajesInvertidos = messagesAll.slice().reverse();
-        console.log("Privado");
-        console.log("Size: " + historico.length);
-        console.log("Size2: " + messagesAll.length);
-        console.log("Size ref: " + chatActual.current?.id);
-        
-        let nuevoMensaje = JSON.parse(datos.body);
-
-        let messageRecieved: Message = {
-            body: nuevoMensaje.content,
-            sentAt: nuevoMensaje.sentAt,
-            senderId: nuevoMensaje.senderId
+    //////////////////////////////////////////////////////////
+    function sendGroupMessage(msg: Message) {
+        let stompClient = stompRef.current;
+        let messageTo: websocketMessage = {
+            author: user.name,
+            receiver: msg.idGuild+"" ?? "No Hay Reciver",
+            content: msg.body,
+            sentAt: new Date(),
+            senderId: msg.senderId
         };
-        
-        console.log(JSON.stringify(messageRecieved));
 
-        let arr = mensajesInvertidos;
-        arr.unshift(messageRecieved);
-        setHistorico([...arr]);
+        stompClient.publish({ destination: '/app/groups/' + user.id_guild, body: JSON.stringify(messageTo) });
+        console.log("enviado Grupal");
     }
-    */
+    //////////////////////////////////////////////////////
 
     function enviar(autor: string, mensaje: string, senderId: number) {
         let stompClient = stompRef.current;
@@ -149,7 +160,6 @@ const UseChat = () => {
         setHistorico((arr) => {
             let array =  arr.filter(m => true);
             array.unshift(messageRecieved);
-            console.log("Size2: " + arr.length);
             return array
         });
     }
@@ -176,7 +186,6 @@ const UseChat = () => {
         setHistorico((arr) => {
             let array =  arr.filter(m => true);
             array.unshift(messageRecieved);
-            console.log("Size2: " + arr.length);
             return array
         });
     }
@@ -188,7 +197,8 @@ const UseChat = () => {
         conectado,
         historico,
         setHistorico,
-        chatActual
+        chatActual,
+        sendGroupMessage
     }
 }
 
