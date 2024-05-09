@@ -35,7 +35,7 @@ class AdministrativeInfoServiceTest {
     void findAllInfo() {
         List<AdministrativeInfo> findAll = (List<AdministrativeInfo>)service.findAll();
         assertNotNull(findAll);
-        assertTrue(findAll.size() == 3);
+        assertTrue(findAll.size() == 2);
     }
 
     @Test
@@ -44,13 +44,13 @@ class AdministrativeInfoServiceTest {
     	AdministrativeInfo find = service.findById(1);
     	
     	assertNotNull(find);
-    	assertEquals(find.getInformacion(), "Información administrativa para el usuario 1");
+    	assertEquals(find.getInformacion(), "Administrative info for User1");
     	
     	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	Date parsedDate;
     	
 		try {
-			parsedDate = dateFormat.parse("2024-03-25 15:30:00");
+			parsedDate = dateFormat.parse("2024-03-26 10:00:00");
 			Timestamp timestamp = new Timestamp(parsedDate.getTime());
 			
 			assertEquals(find.getCreatedAt(), timestamp);

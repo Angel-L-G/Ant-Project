@@ -40,10 +40,10 @@ class AntServiceTest {
     	Ant find = service.findById(2);
     	
     	assertNotNull(find);
-    	assertEquals(find.getName(), "Red Ant");
-    	assertEquals(find.getType(), "Warrior");
-    	assertEquals(find.getBiome(), "Forests");
-    	assertTrue(find.getDescription().length() > 0);
+    	assertEquals(find.getName(), "Ant2");
+    	assertEquals(find.getType(), "Type2");
+    	assertEquals(find.getBiome(), "Biome2");
+    	assertEquals(find.getDescription(),"Description for Ant2");
     	
     	find = service.findById(40);
     	

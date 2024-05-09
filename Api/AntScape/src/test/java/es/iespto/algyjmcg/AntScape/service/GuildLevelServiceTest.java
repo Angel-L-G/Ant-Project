@@ -31,7 +31,7 @@ class GuildLevelServiceTest {
 
     @Test
     @Transactional
-    void GuildLevelGuildLevel() {
+    void GuildLevelFindAll() {
         List<GuildLevel> findAll = (List<GuildLevel>)service.findAll();
         assertNotNull(findAll);
         assertTrue(findAll.size() == 4);

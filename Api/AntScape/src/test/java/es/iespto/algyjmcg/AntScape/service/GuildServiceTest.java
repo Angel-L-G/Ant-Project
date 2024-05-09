@@ -32,7 +32,7 @@ class GuildServiceTest {
     void findAllGuild() {
         List<Guild> findAll = (List<Guild>)service.findAll();
         assertNotNull(findAll);
-        assertTrue(findAll.size() == 3);
+        assertTrue(findAll.size() == 2);
     }
 
     @Test
@@ -41,11 +41,13 @@ class GuildServiceTest {
     	Guild entity = service.findById(2);
     	
     	assertNotNull(entity);
-    	assertEquals(entity.getName(), "Guild2");
+    	assertEquals(entity.getLeader(), 2);
+    	assertEquals(entity.getName(), "Guild 2");
+    	assertEquals(entity.getDescription(), "Description for Guild 2");
     	assertEquals(entity.getTrophys(), 15);
-    	assertEquals(entity.getQuantity(), 7);
-    	assertEquals(entity.getDefenseRange(), 2);
-    	assertEquals(entity.getDefenseNumber(), 5);
+    	assertEquals(entity.getQuantity(), 5);
+    	assertEquals(entity.getDefenseRange(), "1-4");
+    	assertEquals(entity.getDefenseNumber(), 3);
     }
     
     @Test
@@ -72,7 +74,7 @@ class GuildServiceTest {
     @Test
     @Transactional
     void updateGuild() {
-    	Guild guild = service.findById(3);
+    	Guild guild = service.findById(2);
     	
     	guild.setName("Updated");
     	guild.setTrophys(1);
@@ -84,7 +86,7 @@ class GuildServiceTest {
     	
     	assertTrue(update);
     	
-    	Guild find = service.findById(3);
+    	Guild find = service.findById(2);
     	
     	assertNotNull(find);
     	assertEquals(guild.getName(), find.getName());

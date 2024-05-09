@@ -32,7 +32,7 @@ class NestLevelServiceTest {
     void findAllNestLevel() {
         List<NestLevel> findAll = (List<NestLevel>)service.findAll();
         assertNotNull(findAll);
-        assertTrue(findAll.size() == 4);
+        assertTrue(findAll.size() == 2);
     }
 
     @Test
@@ -41,11 +41,11 @@ class NestLevelServiceTest {
     	NestLevel find = service.findById(2);
     	
     	assertNotNull(find);
-    	assertEquals(find.getName(), "Level2");
-    	assertEquals(find.getProduction(), 20.0);
-    	assertEquals(find.getCost(), 100.0F);
-    	assertEquals(find.getLevel(), 2);
-    	assertEquals(find.getMultiplier().doubleValue(), 2.00);
+    	assertEquals(find.getName(), "Level 1");
+    	assertEquals(find.getProduction(), 12.0);
+    	assertEquals(find.getCost(), 60.0F);
+    	assertEquals(find.getLevel(), 1);
+    	assertEquals(find.getMultiplier().doubleValue(), 1.70);
     	
     	find = service.findById(40);
     	
@@ -64,7 +64,7 @@ class NestLevelServiceTest {
     	obj.setLevel(2);
     	obj.setMultiplier(new BigDecimal(1.3));
     	
-    	Nest nest = nestService.findById(3);
+    	Nest nest = nestService.findById(1);
     	nest.addNestLevel(obj);
     	
     	boolean update = nestService.update(nest);
@@ -83,7 +83,7 @@ class NestLevelServiceTest {
     	assertEquals(save.getMultiplier(), obj.getMultiplier());
     	assertNull(save.getNest());
     	
-    	Nest byId = nestService.findById(3);
+    	Nest byId = nestService.findById(1);
     	
     	assertNotNull(byId);
     	assertTrue(byId.getNestLevels().size() > 0);

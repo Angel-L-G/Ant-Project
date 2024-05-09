@@ -43,16 +43,17 @@ class UserServiceTest {
     	Usuario user = service.findById(1);
     	
     	assertNotNull(user);
-    	assertEquals(user.getName(), "Usuario1");
+    	assertEquals(user.getName(), "User1");
     	assertEquals(user.getPassword(), "password1");
     	assertEquals(user.getRol(), "ROLE_USER");
-    	assertEquals(user.getEmail(), "usuario1@example.com");
+    	assertEquals(user.getEmail(), "user1@example.com");
     	assertTrue(user.getActive());
-    	assertEquals(user.getHash(), "hash1");
     	assertFalse(user.getBanned());
-    	assertEquals(user.getEggs(), "10");
-    	assertEquals(user.getGoldenEggs(), "5");
-    	assertEquals(user.getImg(), "profile1.png");
+    	assertEquals(user.getHash(), "hash1");
+    	assertEquals(user.getEggs(), "15");
+    	assertEquals(user.getGoldenEggs(), "2");
+    	assertEquals(user.getImg(), "user1.jpg");
+    	assertEquals(user.getTotalMoneyGenerated(), "500");
     	
     	//assertNotNull(user.getGuild());
     	//assertNotNull(user.getAmigos());
@@ -146,5 +147,4 @@ class UserServiceTest {
     	
     	assertNull(find);
     }
-
 }

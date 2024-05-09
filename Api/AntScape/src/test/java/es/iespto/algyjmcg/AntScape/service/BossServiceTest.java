@@ -40,10 +40,10 @@ class BossServiceTest {
     	Boss find = service.findById(2);
     	
     	assertNotNull(find);
-    	assertEquals(find.getName(), "Boss2");
+    	assertEquals(find.getName(), "Boss 2");
     	assertEquals(find.getLife(), 150);
     	assertEquals(find.getDamage(), 30);
-    	assertEquals(find.getReward(), 750);
+    	assertEquals(find.getReward(), 800);
     	
     	find = service.findById(40);
     	
