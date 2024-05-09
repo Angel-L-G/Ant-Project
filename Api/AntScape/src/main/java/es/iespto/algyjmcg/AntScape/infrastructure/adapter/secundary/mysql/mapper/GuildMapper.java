@@ -12,9 +12,10 @@ public class GuildMapper {
 	private GuildLevelMapper glm = new GuildLevelMapper();
 	
 	public GuildEntity toPersistance(Guild in) {
-		GuildEntity out = new GuildEntity();
+		GuildEntity out = null;
 		
 		if(in != null) {
+			out = new GuildEntity();
 			out.setId(in.getId());
 			out.setName(in.getName());
 			out.setDefenseNumber(in.getDefenseNumber());
@@ -38,9 +39,10 @@ public class GuildMapper {
 	}
 	
 	public Guild toDomain(GuildEntity in) {
-		Guild out = new Guild();
+		Guild out = null;
 		
-		if(in.getName() != null) {
+		if(in != null) {
+			out = new Guild();
 			out.setId(in.getId());
 			out.setName(in.getName());
 			out.setDefenseNumber(in.getDefenseNumber());

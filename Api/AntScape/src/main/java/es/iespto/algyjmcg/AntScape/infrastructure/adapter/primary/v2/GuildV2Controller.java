@@ -150,13 +150,18 @@ public class GuildV2Controller {
 			
 			Usuario user = userService.findByName(username);
 			
+			Guild userGuild = userService.findUserGuild(user.getId());
+			
+			if(userGuild != null) {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("ya tienes un gremio");
+			}
+			
 			Guild guild = mainService.findById(id);
 			
 			guild.addUsuario(user);
-			guild.setQuantity(guild.getUsuarios().size());
+			guild.setQuantity(guild.getQuantity()+1);
 			
 			boolean updateGuild = mainService.update(guild);
-			
 
 			user.setGuild(guild);
 			
@@ -214,8 +219,22 @@ public class GuildV2Controller {
 			String username = jwtService.extractUsername(resultado);
 			
 			Usuario user = userService.findByName(username);
-			Guild guild = mainService.findById(id);
+			
 			List<Usuario> guildUsersByGuildId = mainService.findGuildUsersByGuildId(id);
+			boolean ok = true;
+			
+			for (Usuario u : guildUsersByGuildId) {
+				if(u.getId() == user.getId()) {
+					ok = false;
+				}
+			}
+			
+			if(ok) {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No tienes ningun gremio");
+			}
+			
+			Guild guild = mainService.findById(id);
+			
 			int pos = -1;
 			
 			for (int i = 0; i < guildUsersByGuildId.size(); i++) {
@@ -227,7 +246,7 @@ public class GuildV2Controller {
 			guildUsersByGuildId.remove(pos);
 		
 			guild.setUsuarios(guildUsersByGuildId);
-			guild.setQuantity(guild.getUsuarios().size());
+			guild.setQuantity(guild.getQuantity()-1);
 			
 			user.setGuild(null);
 			
