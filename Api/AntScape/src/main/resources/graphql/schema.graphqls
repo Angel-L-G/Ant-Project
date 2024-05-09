@@ -72,9 +72,17 @@ type AdministrativeInfo {
     usuario: Usuario
 }
 
+type UserRegistrations {
+    date: String
+    count: Int
+}
+
 
 
 type Query {
 	findAllNests: [Nest]
     findAdministrativeInfoByUserId(userId: Int!): AdministrativeInfo
+    findLastLogins: [UserRegistrations]
+    findRegisterAlongTime(ok: Boolean!): [UserRegistrations]
+    calcularMediaDePersonas(aux: String!): Float
 }
