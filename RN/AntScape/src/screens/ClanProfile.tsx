@@ -8,9 +8,8 @@ import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 import axios from 'axios';
 import { User } from '../types/types';
-import UsuarioCard from '../components/UsuarioCard';
 import UsuarioCardClan from '../components/UsuarioCardClan';
-import Social from './Social';
+import images from '../assets/imgs';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfile">;
 
@@ -20,6 +19,9 @@ const ClanProfile = ({navigation, route}: Props) => {
     const {token, user, setUser} = useContext(AppContext);
     const [valorInput, setValorInput] = useState('');
     const [users, setUsers] = useState<Array<User>>([]);
+
+    const imageName = clan.guildImage;
+    const imageSource = images[imageName as keyof typeof images];
 
     useEffect(() => {
         async function getClanUsers() {
@@ -61,7 +63,7 @@ const ClanProfile = ({navigation, route}: Props) => {
                 <View style={{ height: "100%", width: "100%" }}>
                     <View style={{height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%"}}>
                         <View style={{width: "19%", height: "100%", marginHorizontal: "5%", justifyContent: 'center'}}>
-                            <Image source={require('../assets/imgs/clan/baseballgreenyellow.png')} style={{width: "100%", height: "65%", borderRadius: 100}} />
+                            <Image source={imageSource} style={{width: "100%", height: "65%", borderRadius: 100}} />
                         </View>
                         <View style={{width: "66%", height: "75%", marginRight: "5%", flexDirection: 'column'}}>
                             <Text style={{color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center'}}>{clan.name}</Text>
