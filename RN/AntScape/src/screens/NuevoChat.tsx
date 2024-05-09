@@ -17,14 +17,14 @@ import { Icon } from 'react-native-elements';
 
 type Props = NativeStackScreenProps<RootStackParamList, "NuevoChat">;
 
-const NuevoChat = ({navigation, route}: Props) => {
+const NuevoChat = ({ navigation, route }: Props) => {
     const idOtherUser = route.params.idOtherUser;
     const nameOtherUser = route.params.nameOtherUser;
-    
-    const {conectar, conectado, historico, enviarPrivado, setHistorico, chatActual} = UseChat();
-    const {chats, save, saveMessages, findAllMessagesByChatId} = UseChatHistory();
-    const {token, user} = useContext(AppContext);
-    const {ruta} = Globals();
+
+    const { conectar, conectado, historico, enviarPrivado, setHistorico, chatActual } = UseChat();
+    const { chats, save, saveMessages, findAllMessagesByChatId } = UseChatHistory();
+    const { token, user } = useContext(AppContext);
+    const { ruta } = Globals();
     const [img, setImg] = useState(ruta + "v1/files/" + user.img);
     const [loading, setLoading] = useState(true);
 
@@ -35,19 +35,19 @@ const NuevoChat = ({navigation, route}: Props) => {
     }, []);
 
     useEffect(() => {
-        if(conectado == true){
-            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;            
+        if (conectado == true) {
+            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;
 
             if (chatEncontrado) {
                 chatActual.current = chatEncontrado;
 
-                if(chatEncontrado.messages != null){
+                if (chatEncontrado.messages != null) {
                     const mensajesInvertidos = chatEncontrado.messages.slice().reverse();
                     setHistorico(mensajesInvertidos);
-                }else {
+                } else {
                     setHistorico([]);
                 }
-                
+
                 setLoading(false);
 
             } else {
@@ -55,7 +55,7 @@ const NuevoChat = ({navigation, route}: Props) => {
                     nameUser2: nameOtherUser
                 }
 
-                const fetchData = async() => {
+                const fetchData = async () => {
                     try {
                         const chatData: Chat | undefined = await save(chatInput) as Chat | undefined;
                         chatActual.current = chatData;
@@ -71,13 +71,13 @@ const NuevoChat = ({navigation, route}: Props) => {
                 }
 
                 fetchData();
-                
+
             }
-        }else {
+        } else {
             console.log("Fallo de conexion");
         }
     }, [conectado]);
-    
+
     function sendMessage() {
         saveMessages(chatActual.current?.id as number, mensaje);
         enviarPrivado(user.name, nameOtherUser, mensaje, user.id);
@@ -86,13 +86,13 @@ const NuevoChat = ({navigation, route}: Props) => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{flex: 1}}
+            style={{ flex: 1 }}
         >
             <View style={chatStyles.upperBar}>
                 <View style={chatStyles.profilePicContainer}>
                     <Image
                         style={chatStyles.profilePic}
-                        source={{ uri: img}}
+                        source={{ uri: img }}
                     />
                 </View>
 
@@ -106,36 +106,39 @@ const NuevoChat = ({navigation, route}: Props) => {
                 start={{ x: 0.5, y: 0 }}
                 end={{ x: 0.5, y: 1 }}
                 style={chatStyles.messageContainer}>
-                <View style={{height: "92%"}}>
-                    {(loading) 
-                    ? <View><Text>Loading...</Text></View>
-                    : <FlatList
-                        data={historico}
-                        renderItem={({ item }) =>
-                            (item.senderId === user.id) ?
-                                <View style={{ alignSelf: 'flex-end' }}>
-                                    <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                    <View style={styles.myMessage}>
-                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                <View style={{ height: "92%" }}>
+                    {(loading) ?
+                        <View>
+                            <Text>Loading...</Text>
+                        </View>
+                        :
+                        <FlatList
+                            data={historico}
+                            renderItem={({ item }) =>
+                                (item.senderId === user.id) ?
+                                    <View style={{ alignSelf: 'flex-end' }}>
+                                        <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                        <View style={styles.myMessage}>
+                                            <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                        </View>
                                     </View>
-                                </View>
-                                :
-                                <View style={{ alignSelf: 'flex-start' }}>
-                                    <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                    <View style={styles.otherMessage}>
-                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                    :
+                                    <View style={{ alignSelf: 'flex-start' }}>
+                                        <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                        <View style={styles.otherMessage}>
+                                            <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                        </View>
                                     </View>
-                                </View>
-                        }
-                        keyExtractor={(item, index) => index.toString()}
-                        inverted
-                    />
+                            }
+                            keyExtractor={(item, index) => index.toString()}
+                            inverted
+                        />
                     }
                 </View>
-                <View style={{height: "8%"}}>
-                    <View style={{height: "100%", flexDirection: "row", justifyContent: 'space-between'}}>
-                        <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", paddingHorizontal: 20, fontSize: 16, backgroundColor: "white", height: "80%", alignSelf: "center", marginLeft: "2%"}}/>
-                        <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: "80%", borderRadius: 20, alignSelf: 'center', marginRight: "2%"}}>
+                <View style={{ height: "8%" }}>
+                    <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
+                        <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", paddingHorizontal: 20, fontSize: 16, backgroundColor: "white", height: "80%", alignSelf: "center", marginLeft: "2%" }} />
+                        <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: "80%", borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
                             <Icon name="send" size={30} color={"yellow"}></Icon>
                         </TouchableHighlight>
                     </View>

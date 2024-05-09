@@ -61,7 +61,7 @@ const ClanProfile = ({navigation, route}: Props) => {
                 <View style={{ height: "100%", width: "100%" }}>
                     <View style={{height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%"}}>
                         <View style={{width: "19%", height: "100%", marginHorizontal: "5%", justifyContent: 'center'}}>
-                            <Image source={{uri: ruta + "v1/files/" + user.img}} style={{width: "100%", height: "65%", borderRadius: 100}} />
+                            <Image source={require('../assets/imgs/clan/baseballgreenyellow.png')} style={{width: "100%", height: "65%", borderRadius: 100}} />
                         </View>
                         <View style={{width: "66%", height: "75%", marginRight: "5%", flexDirection: 'column'}}>
                             <Text style={{color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center'}}>{clan.name}</Text>
