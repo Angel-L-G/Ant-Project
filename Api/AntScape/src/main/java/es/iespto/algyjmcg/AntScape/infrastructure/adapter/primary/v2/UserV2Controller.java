@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Ant;
+import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
@@ -124,6 +125,19 @@ public class UserV2Controller {
 		Usuario findByName = userService.findByName(username);
 		
 		return ResponseEntity.ok(findByName);
+	}
+	
+	@GetMapping(path="/me/guild")
+	public ResponseEntity<?> findMyGuild(@RequestHeader HttpHeaders headers) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		
+		Guild guild = userService.findUserGuild(findByName.getId());
+		
+		return ResponseEntity.ok(guild);
 	}
 	
 	@GetMapping

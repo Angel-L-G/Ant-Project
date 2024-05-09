@@ -86,6 +86,24 @@ public class GuildV2Controller {
 		}
 	}
 	
+	@PutMapping(path = "/{id}/image")
+	public ResponseEntity<?> findById(@PathVariable Integer id, @RequestParam String img) {
+		if(id != null && img != null) {
+			Guild find = mainService.findById(id);
+			
+			find.setGuildImage(img);
+			
+			boolean update = mainService.update(find);
+			if(update) {
+				return ResponseEntity.ok(find);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
 	@PutMapping(path="{idGuild}/kick/users/{idKicked}")
 	public ResponseEntity<?> kickPlayer(@PathVariable Integer idGuild, @PathVariable Integer idKicked, @RequestHeader HttpHeaders headers){
 		if(idGuild != null) {
@@ -132,13 +150,18 @@ public class GuildV2Controller {
 			
 			Usuario user = userService.findByName(username);
 			
+			Guild userGuild = userService.findUserGuild(user.getId());
+			
+			if(userGuild != null) {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("ya tienes un gremio");
+			}
+			
 			Guild guild = mainService.findById(id);
 			
 			guild.addUsuario(user);
-			guild.setQuantity(guild.getUsuarios().size());
+			guild.setQuantity(guild.getQuantity()+1);
 			
 			boolean updateGuild = mainService.update(guild);
-			
 
 			user.setGuild(guild);
 			
@@ -196,8 +219,22 @@ public class GuildV2Controller {
 			String username = jwtService.extractUsername(resultado);
 			
 			Usuario user = userService.findByName(username);
-			Guild guild = mainService.findById(id);
+			
 			List<Usuario> guildUsersByGuildId = mainService.findGuildUsersByGuildId(id);
+			boolean ok = true;
+			
+			for (Usuario u : guildUsersByGuildId) {
+				if(u.getId() == user.getId()) {
+					ok = false;
+				}
+			}
+			
+			if(ok) {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No tienes ningun gremio");
+			}
+			
+			Guild guild = mainService.findById(id);
+			
 			int pos = -1;
 			
 			for (int i = 0; i < guildUsersByGuildId.size(); i++) {
@@ -209,7 +246,7 @@ public class GuildV2Controller {
 			guildUsersByGuildId.remove(pos);
 		
 			guild.setUsuarios(guildUsersByGuildId);
-			guild.setQuantity(guild.getUsuarios().size());
+			guild.setQuantity(guild.getQuantity()-1);
 			
 			user.setGuild(null);
 			
@@ -250,7 +287,7 @@ public class GuildV2Controller {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> createGuild(@RequestHeader HttpHeaders headers, @RequestParam String guildName, @RequestParam String guildDescription){
+	public ResponseEntity<?> createGuild(@RequestHeader HttpHeaders headers, @RequestParam String guildName, @RequestParam String guildDescription, @RequestParam String guildImage){
 		if(guildName != null) {
 			String token = headers.getFirst("Authorization");
 			String resultado = token.substring(7);
@@ -264,11 +301,16 @@ public class GuildV2Controller {
 				guildDescription = "Default Description";
 			}
 			
+			if(guildImage == null || guildImage.isBlank()) {
+				guildImage = "img.png";
+			}
+			
 			Random rnd = new Random();
 			int num = rnd.nextInt(6) + 1;
 			
 			guild.setName(guildName);
 			guild.setDescription(guildDescription);
+			guild.setGuildImage(guildImage);
 			guild.setDefenseRange("12-18");
 			guild.setDefenseNumber(num);
 			guild.getUsuarios().add(user);

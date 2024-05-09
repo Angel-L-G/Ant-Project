@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
-import es.iespto.algyjmcg.AntScape.domain.model.GuildLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
-import es.iespto.algyjmcg.AntScape.domain.port.secundary.IGuildLevelRepository;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IGuildRepository;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.GuildEntity;
@@ -136,6 +134,7 @@ public class GuildService implements IGuildRepository{
 				findByName.get().setName(in.getName());
 				findByName.get().setQuantity(in.getQuantity());
 				findByName.get().setTrophys(in.getTrophys());
+				findByName.get().setGuildImage(in.getGuildImage());
 				
 				for (Usuario domain : in.getUsuarios()) {
 					findByName.get().getUsuarios().add(um.toPersistance(domain));

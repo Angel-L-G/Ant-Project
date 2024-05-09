@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
@@ -98,6 +99,11 @@ public class UsuarioDomainService implements IUsuarioService {
 	@Override
 	public boolean updateGuild(Usuario in) {
 		return service.updateGuild(in);
+	}
+
+	@Override
+	public Guild findUserGuild(Integer id) {
+		return service.findUserGuild(id);
 	}
 
 }

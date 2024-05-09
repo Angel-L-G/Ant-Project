@@ -2,14 +2,15 @@ package es.iespto.algyjmcg.AntScape.domain.port.primary;
 
 import java.util.List;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 
 public interface IUsuarioService {
-	Usuario findById(Integer id);
-	Usuario save(Usuario u);
-	Iterable<Usuario> findAll();
-	void deleteById(Integer id);
-	boolean update(Usuario u);
+	public Usuario findById(Integer id);
+	public Usuario save(Usuario u);
+	public Iterable<Usuario> findAll();
+	public void deleteById(Integer id);
+	public boolean update(Usuario u);
 	
 	public Usuario findByName(String n);
 	public Usuario findByEmail(String e);
@@ -28,4 +29,5 @@ public interface IUsuarioService {
 	public boolean unBan(Integer id);
 	
 	public boolean updateGuild(Usuario u);
+	public Guild findUserGuild(Integer id);
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Ant;
+import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
@@ -332,6 +333,7 @@ public class UsuarioService implements IUsuarioRepository{
 	@Override
 	public boolean block(String name, String nameFriend) {
 		boolean ok = false;
+		
 		if(name != null && nameFriend != null) {
 			Optional<UsuarioEntity> user = usuarioRepo.findByName(name);
 			Optional<UsuarioEntity> bloqued = usuarioRepo.findByName(nameFriend);
@@ -342,9 +344,11 @@ public class UsuarioService implements IUsuarioRepository{
 				
 				usuarioRepo.save(user.get());
 				usuarioRepo.save(bloqued.get());
+				
 				ok = true;
 			}
 		}
+		
 		return ok;
 	}
 
@@ -361,9 +365,25 @@ public class UsuarioService implements IUsuarioRepository{
 				
 				usuarioRepo.save(user.get());
 				usuarioRepo.save(bloqued.get());
+				
 				ok = true;
 			}
 		}
 		return ok;
+	}
+
+	@Override
+	public Guild findUserGuild(Integer id) {
+		Guild out = null;
+		
+		if(id != null) {
+			Optional<UsuarioEntity> find = usuarioRepo.findById(id);
+			
+			if(find.isPresent()) {
+				out = gm.toDomain(find.get().getGuild());
+			}
+		}
+		
+		return out;
 	}
 }

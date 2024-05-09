@@ -38,6 +38,9 @@ public class GuildEntity implements Serializable {
 
 	@Column(name="defense_range")
 	private String defenseRange;
+	
+	@Column(name="guild_image")
+	private String guildImage;
 
 	@Column(length=45)
 	private String name;
@@ -168,5 +171,13 @@ public class GuildEntity implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getGuildImage() {
+		return guildImage;
+	}
+
+	public void setGuildImage(String guildImage) {
+		this.guildImage = guildImage;
 	}
 }
