@@ -51,11 +51,17 @@ public class ChatV2Controller {
 				ChatOutPutDTO output = new ChatOutPutDTO();
 				
 				output.setId(c.getId());
-				output.setIdGuild(c.getIdGuild());
 				output.setLastMessage(c.getLastMessage());
 				output.setNameUser1(c.getUsuario1().getName());
-				output.setNameUser2(c.getUsuario2().getName());
 				output.setMessages(c.getMessages());
+				
+				if(c.getUsuario2() != null) {
+					output.setNameUser2(c.getUsuario2().getName());
+				}
+				
+				if(c.getIdGuild() != null) {
+					output.setIdGuild(c.getIdGuild());
+				}
 				
 				list.add(output);
 			}
@@ -90,6 +96,30 @@ public class ChatV2Controller {
 		}
 	}
 	
+	@GetMapping(path = "/guild/{idGuild}")
+	public ResponseEntity<?> findByGuildId(@PathVariable Integer idGuild, @RequestHeader HttpHeaders headers) {
+		if(idGuild != null) {
+			Chat c = chatService.findByGuildId(idGuild);
+			
+			if(c != null) {
+				ChatOutPutDTO output = new ChatOutPutDTO();
+				
+				output.setId(c.getId());
+				output.setIdGuild(c.getIdGuild());
+				output.setLastMessage(c.getLastMessage());
+				output.setNameUser1(c.getUsuario1().getName());
+				output.setIdGuild(idGuild);
+				output.setMessages(c.getMessages());
+				
+				return ResponseEntity.ok(output);
+			}else {
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody ChatInPutDTO in, @RequestHeader HttpHeaders headers) {
 		String token = headers.getFirst("Authorization");
@@ -97,27 +127,39 @@ public class ChatV2Controller {
 		String username = jwtService.extractUsername(resultado);
 		
 		if(in != null) {
+			System.err.println(in.getNameUser2() + " -------------------------------------------------------------");
 			Chat c = new Chat();
 			
 			if(in.getIdGuild() != null) {
 				c.setIdGuild(in.getIdGuild());
+				c.setUsuario2(null);
 			} else {
 				c.setUsuario2(userService.findByName(in.getNameUser2()));
+				c.setIdGuild(null);
+				
+				System.err.println(c.getUsuario2().getName());
 			}
 			
 			c.setUsuario1(userService.findByName(username));
 			
-			Chat save = chatService.save(c);
+			Chat save = chatService.save(c);	
 			
 			if(save != null) {
+				System.err.println(save.getUsuario2().getName());
 				ChatOutPutDTO output = new ChatOutPutDTO();
 				
 				output.setId(save.getId());
-				output.setIdGuild(save.getIdGuild());
 				output.setLastMessage(save.getLastMessage());
 				output.setNameUser1(save.getUsuario1().getName());
-				output.setNameUser2(save.getUsuario2().getName());
 				output.setMessages(save.getMessages());
+				
+				if(save.getUsuario2() != null) {
+					output.setNameUser2(save.getUsuario2().getName());
+				}
+				
+				if(save.getIdGuild() != null) {
+					output.setIdGuild(save.getIdGuild());
+				}
 				
 				return ResponseEntity.ok(output);
 			}else {

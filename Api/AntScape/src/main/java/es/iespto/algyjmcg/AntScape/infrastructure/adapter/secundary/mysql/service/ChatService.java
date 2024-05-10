@@ -116,11 +116,13 @@ public class ChatService implements IChatRepository{
 			
 			out = cm.toDomain(chatEntity);
 		
-			List<Message> list = new ArrayList<Message>();
-			for (MessageEntity m : chatEntity.getMessages()) {
-				list.add(mem.toDomain(m));
+			if(chatEntity != null && chatEntity.getMessages() != null) {
+				List<Message> list = new ArrayList<Message>();
+				for (MessageEntity m : chatEntity.getMessages()) {
+					list.add(mem.toDomain(m));
+				}
+				out.setMessages(list);
 			}
-			out.setMessages(list);
 		}
 		
 		return out;

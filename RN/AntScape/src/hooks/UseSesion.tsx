@@ -77,7 +77,7 @@ const UseSesion = () => {
                     //await AsyncStorage.setItem('rol', rolFromBack.data);
 
                     
-                    navigation.navigate("TestChatGrupal");
+                    navigation.navigate("Personal");
                 } else {
                     if (response.status == 428) {
                         console.log("Falta Validar");

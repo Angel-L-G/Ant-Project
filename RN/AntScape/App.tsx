@@ -67,8 +67,7 @@ export type RootStackParamList = {
     ClanProfile: {clan: ClanType},
     CrearClan: undefined,
     ClanProfileOther: {clan: ClanType},
-    Atacar: {clan: ClanType},
-    TestChatGrupal: undefined
+    Atacar: {clan: ClanType}
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -80,7 +79,6 @@ function App(): JSX.Element {
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
                     <Stack.Screen name="Login" component={Login}/>
-                    <Stack.Screen name="TestChatGrupal" component={TestChatGrupal}/>
                     <Stack.Screen name="Personal" component={Personal}/>
                     <Stack.Screen name="Profile" component={Profile}/>
                     <Stack.Screen name="ProfileOther" component={ProfileOther}/>

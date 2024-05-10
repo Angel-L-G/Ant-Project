@@ -130,10 +130,15 @@ public class UserV2Controller {
 		out.setEggs(u.getEggs());
 		out.setGoldenEggs(u.getGoldenEggs());
 		out.setId(u.getId());
-		out.setId_guild(guild.getId());
 		out.setImg(out.getImg());
 		out.setName(u.getName());
 		out.setNests(u.getNests());
+		
+		if(guild != null) {
+			out.setId_guild(guild.getId());
+		}else {
+			out.setId_guild(null);
+		}
 		
 		return ResponseEntity.ok(out);
 	}

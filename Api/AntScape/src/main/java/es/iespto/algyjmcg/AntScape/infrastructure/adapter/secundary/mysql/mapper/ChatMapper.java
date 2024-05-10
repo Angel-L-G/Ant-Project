@@ -17,10 +17,16 @@ public class ChatMapper {
 		
 		if(in != null){
 			out.setId(in.getId());
-			out.setIdGuild(in.getIdGuild());
-			out.setUsuario1(um.toPersistance(in.getUsuario1()));
-			out.setUsuario2(um.toPersistance(in.getUsuario2()));
 			out.setLastMessage(in.getLastMessage());
+			out.setUsuario1(um.toPersistance(in.getUsuario1()));
+			
+			if(in.getIdGuild() != null) {
+				out.setIdGuild(in.getIdGuild());
+			}
+			
+			if(in.getUsuario2() != null) {
+				out.setUsuario2(um.toPersistance(in.getUsuario2()));
+			}
 			
 			if (in.getMessages() != null && in.getMessages().size() != 0) {
 				List<MessageEntity> list = new ArrayList<MessageEntity>();
@@ -39,9 +45,16 @@ public class ChatMapper {
 		
 		if(in != null){
 			out.setId(in.getId());
-			out.setUsuario1(um.toDomain(in.getUsuario1()));
-			out.setUsuario2(um.toDomain(in.getUsuario2()));
 			out.setLastMessage(in.getLastMessage());
+			out.setUsuario1(um.toDomain(in.getUsuario1()));
+			
+			if(in.getIdGuild() != null) {
+				out.setIdGuild(in.getIdGuild());
+			}
+			
+			if(in.getUsuario2() != null) {
+				out.setUsuario2(um.toDomain(in.getUsuario2()));
+			}
 			
 			if (in.getMessages() != null && in.getMessages().size() != 0) {
 				List<Message> list = new ArrayList<Message>();

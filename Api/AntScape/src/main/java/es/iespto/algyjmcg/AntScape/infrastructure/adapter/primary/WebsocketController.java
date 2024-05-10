@@ -62,7 +62,6 @@ class MessageTo{
 @Controller
 @CrossOrigin
 public class WebsocketController { //el controlador es para una conexión establecida en: ws://ip_de_la_api:8080/websocket
-	
 	@Autowired private SimpMessagingTemplate simpMessagingTemplate;
 	@Autowired private IUsuarioService userService;
 	

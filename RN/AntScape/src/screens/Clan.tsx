@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, ImageBackground, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, ImageBackground, TextInput, FlatList } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import NavBarTop from '../components/NavBarTop'
 import NavBarBotton from '../components/NavBarBotton'
@@ -8,7 +8,12 @@ import { AppContext } from '../context/AppContextProvider'
 import { ClanType, GuildLevel } from '../types/types'
 import { Image } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { es } from 'date-fns/locale';
 import LinearGradient from 'react-native-linear-gradient';
+import UseChat from '../hooks/UseChat';
+import UseChatHistory from '../hooks/UseChatHistory';
+import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
+import { formatDistanceToNow } from 'date-fns';
 
 type Props = {
     navigation: any,
@@ -26,9 +31,39 @@ const Clan = ({ navigation }: Props) => {
     const [guildLevelDos, setGuildLevelDos] = useState<GuildLevel>({} as GuildLevel);
     const [modalConstruccionTres, setModalConstruccionTres] = useState(false);
     const [guildLevelTres, setGuildLevelTres] = useState<GuildLevel>({} as GuildLevel);
-    const [modalChatVisible, setModalChatVisible] = useState(false);
 
+    const { sendGroupMessage, conectado, conectar, chatActual, historico, setHistorico} = UseChat();
+    const { chats, save, saveMessages, findGuildChat } = UseChatHistory();
+    const [modalChatVisible, setModalChatVisible] = useState(false);
     const [mensaje, setMensaje] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        conectar();
+    }, []);
+
+    useEffect(() => {
+        if (conectado == true) {
+            const fetchData = async () => {
+                const chatGremio: Chat | undefined = await findGuildChat(user.id_guild ?? -1);
+
+                chatActual.current = chatGremio;
+
+                if (chatGremio?.messages != null) {
+                    const mensajesInvertidos = chatGremio.messages.slice().reverse();
+                    setHistorico(mensajesInvertidos);
+                } else {
+                    setHistorico([]);
+                }
+
+                setLoading(false);
+            }
+            
+            fetchData();
+        } else {
+            console.log("Fallo de conexion");
+        }
+    }, [conectado]);
 
     useEffect(() => {
         console.log(user);
@@ -42,7 +77,7 @@ const Clan = ({ navigation }: Props) => {
                 setClanId(user.id_guild);
                 setTieneClan(true);
             } else {
-                console.log("No tieneClan o es lider");
+                console.log("No tiene Clan o es lider");
 
                 try {
                     const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
@@ -68,8 +103,6 @@ const Clan = ({ navigation }: Props) => {
         }
 
         carga();
-
-
     }, [])
 
     async function getClan(id: Number) {
@@ -79,6 +112,11 @@ const Clan = ({ navigation }: Props) => {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    function sendMessage() {
+        saveMessages(chatActual.current?.id as number, mensaje);
+        sendGroupMessage(mensaje);
     }
 
     function abrirModalUno() {
@@ -404,12 +442,38 @@ const Clan = ({ navigation }: Props) => {
                         style={stylesModal.modalChatView}>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <View style={{height: "92%", width: "100%" }}>
-
+                            {(loading) ?
+                                <View>
+                                    <Text>Loading...</Text>
+                                </View>
+                                :
+                                <FlatList
+                                    data={historico}
+                                    renderItem={({ item }) =>
+                                        (item.senderId === user.id) ?
+                                            <View style={{ alignSelf: 'flex-end' }}>
+                                                <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                                <View style={styles.myMessage}>
+                                                    <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                </View>
+                                            </View>
+                                            :
+                                            <View style={{ alignSelf: 'flex-start' }}>
+                                                <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                                <View style={styles.otherMessage}>
+                                                    <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                </View>
+                                            </View>
+                                    }
+                                    keyExtractor={(item, index) => index.toString()}
+                                    inverted
+                                />
+                            }
                             </View>
                             <View style={{ height: "8%", width: "100%", marginTop: "2%" }}>
                                 <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
                                     <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", fontSize: 16, backgroundColor: "white", height: 30, alignSelf: "center", marginLeft: "2%" }} />
-                                    <TouchableHighlight style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: 30, borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
+                                    <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: 30, borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
                                         <Icon name="send" size={20} color={"yellow"}></Icon>
                                     </TouchableHighlight>
                                 </View>
@@ -452,3 +516,32 @@ const stylesModal = StyleSheet.create({
         borderColor: "yellow"
     },
 })
+
+const styles = StyleSheet.create({
+    myMessage: {
+        borderBottomEndRadius: 0,
+        alignSelf: 'flex-end',
+        backgroundColor: '#D68200',
+        borderRadius: 18,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        padding: 12,
+        elevation: 5,
+        maxWidth: '60%',
+    },
+    otherMessage: {
+        borderBottomStartRadius: 0,
+        alignSelf: 'flex-start',
+        backgroundColor: '#00a8d6',
+        borderRadius: 18,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        padding: 12,
+        elevation: 5,
+        maxWidth: '60%',
+    },
+    messageText: {
+        fontSize: 16,
+        fontFamily: "MadimiOneRegular",
+    },
+});

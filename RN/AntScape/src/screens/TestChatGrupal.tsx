@@ -20,7 +20,7 @@ const TestChatGrupal = () => {
             senderId: user.id
         };
 
-        sendGroupMessage(messageRecieved);
+        //sendGroupMessage(messageRecieved);
     }
 
     return (

@@ -28,6 +28,7 @@ public class Usuario {
 	public Usuario() {
 		nests = new ArrayList<Nest>();
 		ants = new ArrayList<Ant>();
+		chats = new ArrayList<Chat>();
 	}
 
 	public Integer getId() {

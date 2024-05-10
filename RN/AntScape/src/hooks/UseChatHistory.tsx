@@ -34,6 +34,16 @@ const UseChatHistory = () => {
         }
     }
 
+    async function findGuildChat(id: number) {
+        try {
+            const response = await axios.get(ruta + "v2/chats/guild/" + id, { headers: { "Authorization": "Bearer " + token } });
+
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async function save(chat: ChatInputSaveDTO): Promise<Chat | undefined> {
         try {
             const response = await axios.post(ruta + "v2/chats", chat, {
@@ -73,7 +83,8 @@ const UseChatHistory = () => {
         findById,
         findUserChats,
         save,
-        saveMessages
+        saveMessages,
+        findGuildChat
     }
 }
 

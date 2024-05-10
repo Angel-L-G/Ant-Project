@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.iespto.algyjmcg.AntScape.domain.model.Chat;
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.GuildLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IChatService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildLevelService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
@@ -33,6 +35,7 @@ public class GuildV2Controller {
 	@Autowired private IGuildService mainService;
 	@Autowired private IUsuarioService userService;
 	@Autowired private IGuildLevelService guildLevelService;
+	@Autowired private IChatService chatService;
 	@Autowired private JwtService jwtService;
 	
 	@GetMapping
@@ -253,6 +256,11 @@ public class GuildV2Controller {
 			if(guild.getLeader() == user.getId()) {
 				if(guild.getUsuarios().size() == 0) {
 					boolean updateUser = userService.updateGuild(user);
+					
+					Chat chat = chatService.findByGuildId(guild.getId());
+					
+					chatService.deleteById(chat.getId());
+					
 					mainService.deleteById(id);
 					
 					if(updateUser) {
@@ -306,7 +314,7 @@ public class GuildV2Controller {
 			}
 			
 			Random rnd = new Random();
-			int num = rnd.nextInt(6) + 1;
+			int num = rnd.nextInt(7) + 12;
 			
 			guild.setName(guildName);
 			guild.setDescription(guildDescription);
@@ -318,14 +326,24 @@ public class GuildV2Controller {
 			guild.setQuantity(1);
 			guild.setLeader(user.getId());
 			
-			Guild save = mainService.save(guild);
+			Guild guildSave = mainService.save(guild);
 			
-			user.setGuild(save);
+			user.setGuild(guildSave);
 			
 			boolean updateGuild = userService.updateGuild(user);
 			
-			if(save != null && updateGuild) {
-				return ResponseEntity.status(HttpStatus.ACCEPTED).body(save);
+			Chat guildChat = new Chat();
+			
+			guildChat.setIdGuild(guildSave.getId());
+			guildChat.setLastMessage(null);
+			guildChat.setMessages(null);
+			guildChat.setUsuario1(user);
+			guildChat.setUsuario2(null);
+			
+			Chat chatSave = chatService.save(guildChat);
+			
+			if(guildSave != null && chatSave != null && updateGuild) {
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body(guildSave);
 			}else {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("Error while creating the guild try later");
 			}

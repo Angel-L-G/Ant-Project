@@ -2,7 +2,6 @@ export type Message = {
     body: string,
     sentAt?: Date,
     senderId: number,
-    idGuild?: number,
 }
 
 export type groupMessage = {

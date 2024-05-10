@@ -62,15 +62,13 @@ const UseChat = () => {
 
         let nuevoMensaje = JSON.parse(datos.body);
 
-        console.log("_---------------------------------------_" + nuevoMensaje.idGuild);
-        console.log("_---------------------------------------_" + user.id_guild);
+        console.log("DATO: " + nuevoMensaje.receiver);
         
-        if(nuevoMensaje.idGuild == user.id_guild){
+        if(nuevoMensaje.receiver != undefined && nuevoMensaje.receiver == user.id_guild){
             let messageRecieved: Message = {
                 body: nuevoMensaje.content,
                 sentAt: nuevoMensaje.sentAt,
-                senderId: nuevoMensaje.senderId,
-                idGuild: nuevoMensaje.idGuild?? -1
+                senderId: nuevoMensaje.senderId
             };
    
             setHistorico((arr) => {
@@ -123,14 +121,14 @@ const UseChat = () => {
     }
 
     //////////////////////////////////////////////////////////
-    function sendGroupMessage(msg: Message) {
+    function sendGroupMessage(mensaje: string) {
         let stompClient = stompRef.current;
         let messageTo: websocketMessage = {
             author: user.name,
-            receiver: msg.idGuild+"" ?? "No Hay Reciver",
-            content: msg.body,
+            receiver: user.id_guild+"",
+            content: mensaje,
             sentAt: new Date(),
-            senderId: msg.senderId
+            senderId: user.id
         };
 
         stompClient.publish({ destination: '/app/groups/' + user.id_guild, body: JSON.stringify(messageTo) });
