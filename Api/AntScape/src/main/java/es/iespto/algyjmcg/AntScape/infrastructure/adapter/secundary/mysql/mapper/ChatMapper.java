@@ -18,7 +18,10 @@ public class ChatMapper {
 		if(in != null){
 			out.setId(in.getId());
 			out.setLastMessage(in.getLastMessage());
-			out.setUsuario1(um.toPersistance(in.getUsuario1()));
+
+			if(in.getUsuario1() != null) {
+				out.setUsuario1(um.toPersistance(in.getUsuario1()));
+			}
 			
 			if(in.getIdGuild() != null) {
 				out.setIdGuild(in.getIdGuild());
@@ -46,7 +49,10 @@ public class ChatMapper {
 		if(in != null){
 			out.setId(in.getId());
 			out.setLastMessage(in.getLastMessage());
-			out.setUsuario1(um.toDomain(in.getUsuario1()));
+			
+			if(in.getUsuario1() != null) {
+				out.setUsuario1(um.toDomain(in.getUsuario1()));
+			}
 			
 			if(in.getIdGuild() != null) {
 				out.setIdGuild(in.getIdGuild());

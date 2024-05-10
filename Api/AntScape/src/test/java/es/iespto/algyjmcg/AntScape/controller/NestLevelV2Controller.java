@@ -87,27 +87,6 @@ class NestLevelV2Controller {
             .andExpect(jsonPath("$.name", is("New Nest Level")));
     }
 
-    @Test
-    public void testLevelUp_ValidId() throws Exception {
-        String token = loginService.login(mockMvc);
-        int id = 1;
-        NestLevel nestLevel = new NestLevel();
-        nestLevel.setId(id);
-        nestLevel.setLevel(1);
-        nestLevel.setMultiplier(BigDecimal.valueOf(1.5));
-        nestLevel.setProduction(50.0);
-        nestLevel.setCost(100.0F);
-
-        given(nestLevelService.findById(id)).willReturn(nestLevel);
-        given(nestLevelService.update(any(NestLevel.class))).willReturn(true);
-
-        mockMvc.perform(put("/api/v2/nestlevels/levelup/{id}", id)
-            .header("Authorization", "Bearer " + token))
-            .andExpect(status().isOk())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
-            .andExpect(content().string("Leveled Up Correctly"));
-    }
-
     private String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

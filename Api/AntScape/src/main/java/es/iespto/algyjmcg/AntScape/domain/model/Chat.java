@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Chat {
@@ -10,7 +11,9 @@ public class Chat {
 	private Usuario usuario2;
 	private List<Message> messages;
 	
-	public Chat() {}
+	public Chat() {
+		messages = new ArrayList<>();
+	}
 	
 	public Integer getId() {
 		return id;
