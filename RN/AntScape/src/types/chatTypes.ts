@@ -4,6 +4,14 @@ export type Message = {
     senderId: number,
 }
 
+export type groupMessage = {
+    guildId: number,
+    senderId: number,
+    author: string,
+    content: string,
+    sentAt?: Date
+}
+
 export type websocketMessage ={
     author: string,
 	receiver: string,

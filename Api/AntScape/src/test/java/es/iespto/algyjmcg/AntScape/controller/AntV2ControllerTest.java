@@ -1,8 +1,8 @@
 package es.iespto.algyjmcg.AntScape.controller;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,7 +43,7 @@ public class AntV2ControllerTest {
         mockMvc.perform(get("/api/v2/ants/{id}", id)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(id))
             .andExpect(jsonPath("$.name").value("AntName"))
             .andExpect(jsonPath("$.type").value("AntType"));
@@ -59,7 +59,7 @@ public class AntV2ControllerTest {
         mockMvc.perform(get("/api/v2/ants/{id}", id)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isNoContent())
-            .andExpect((ResultMatcher) content().string("No Content Found"));
+            .andExpect(content().string("No Content Found"));
     }
 
     @Test
@@ -73,12 +73,12 @@ public class AntV2ControllerTest {
 
         when(antService.findByName(name)).thenReturn(ant);
 
-        /*mockMvc.perform(get("/api/v2/ants/name/{name}", name)
+        mockMvc.perform(get("/api/v2/ants/name/{name}", name)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.name").value(name)
-            .andExpect(jsonPath("$.type").value("AntType");*/
+            .andExpect(jsonPath("$.name").value(name))
+            .andExpect(jsonPath("$.type").value("AntType"));
     }
 
     @Test
@@ -89,10 +89,10 @@ public class AntV2ControllerTest {
 
         when(antService.findByName(name)).thenReturn(null);
 
-        /*mockMvc.perform(get("/api/v2/ants/name/{name}", name)
+        mockMvc.perform(get("/api/v2/ants/name/{name}", name)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isNoContent())
-            .andExpect(content().string("No Content Found"));*/
+            .andExpect(content().string("No Content Found"));
     }
 
     @Test
@@ -106,12 +106,12 @@ public class AntV2ControllerTest {
 
         when(antService.findByType(type)).thenReturn(ant);
 
-        /*mockMvc.perform(get("/api/v2/ants/type/{type}", type)
+        mockMvc.perform(get("/api/v2/ants/type/{type}", type)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.name").value("AntName"))
-            .andExpect(jsonPath("$.type").value(type));*/
+            .andExpect(jsonPath("$.type").value(type));
     }
 
     @Test
@@ -122,9 +122,9 @@ public class AntV2ControllerTest {
 
         when(antService.findByType(type)).thenReturn(null);
 
-        /*mockMvc.perform(get("/api/v2/ants/type/{type}", type)
+        mockMvc.perform(get("/api/v2/ants/type/{type}", type)
         	.header("Authorization", "Bearer " + token))
             .andExpect(status().isNoContent())
-            .andExpect(content().string("No Content Found"));*/
+            .andExpect(content().string("No Content Found"));
     }
 }

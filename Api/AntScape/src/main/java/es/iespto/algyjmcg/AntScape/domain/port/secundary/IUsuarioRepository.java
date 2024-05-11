@@ -29,4 +29,6 @@ public interface IUsuarioRepository {
 	
 	public boolean updateGuild(Usuario u);
 	public Guild findUserGuild(Integer id);
+	
+	boolean updateChats(Usuario in);
 }

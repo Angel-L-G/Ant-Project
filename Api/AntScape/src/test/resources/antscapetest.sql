@@ -175,7 +175,7 @@ VALUES (1, 'Administrative info for User1', '2024-03-26 10:00:00', '2024-03-26 1
 -- Inserts de ejemplo para la tabla guild_levels
 INSERT INTO guild_levels (id_guild, name, cost, level, efect) 
 VALUES (1, 'Level 1', 100.00, 1, 'Effect 1'),
-       (2, 'Level 1', 150.00, 1, 'Effect 2');
+       (2, 'Level 2', 150.00, 1, 'Effect 2');
 
 -- Inserts de ejemplo para la tabla friends
 INSERT INTO friends (id_user, id_friend) 
@@ -217,12 +217,7 @@ INSERT INTO chats (last_message, id_guild, id_user1, id_user2)
 VALUES ('Last message for chat 1', 1, 1, 2),
        ('Last message for chat 2', 2, 2, 1);
 
--- Inserts de ejemplo para la tabla user_chats
-INSERT INTO user_chats (user_id, chat_id) 
-VALUES (1, 1),
-       (2, 1);
-
 -- Inserts de ejemplo para la tabla messages
 INSERT INTO messages (chat_id, sender_id, body, sent_at) 
 VALUES (1, 1, 'Message 1 for chat 1', '2024-03-26 10:00:00'),
-       (1, 2, 'Message 1 for chat 2', '2024-03-26 10:00:00');
+       (2, 2, 'Message 1 for chat 2', '2024-03-26 10:00:00');

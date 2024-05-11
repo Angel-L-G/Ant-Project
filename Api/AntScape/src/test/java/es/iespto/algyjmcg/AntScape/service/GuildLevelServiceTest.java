@@ -34,7 +34,7 @@ class GuildLevelServiceTest {
     void GuildLevelFindAll() {
         List<GuildLevel> findAll = (List<GuildLevel>)service.findAll();
         assertNotNull(findAll);
-        assertTrue(findAll.size() == 4);
+        assertTrue(findAll.size() == 2);
     }
 
     @Test
@@ -43,10 +43,10 @@ class GuildLevelServiceTest {
     	GuildLevel find = service.findById(2);
     	
     	assertNotNull(find);
-    	assertEquals(find.getName(), "Level2");
-    	assertEquals(find.getCost(), 200);
-    	assertEquals(find.getLevel(), 2);
-    	assertEquals(find.getEfect(), "Efecto nivel 2");
+    	assertEquals(find.getName(), "Level 2");
+    	assertEquals(find.getCost(), 150.0);
+    	assertEquals(find.getLevel(), 1);
+    	assertEquals(find.getEfect(), "Effect 2");
     	
     	find = service.findById(40);
     	
@@ -56,7 +56,7 @@ class GuildLevelServiceTest {
     @Test
     @Transactional
     void saveGuildLevel() {
-    	Guild guild = guildservice.findById(3);
+    	Guild guild = guildservice.findById(2);
     	
     	GuildLevel obj = new GuildLevel();
     	obj.setId(10);

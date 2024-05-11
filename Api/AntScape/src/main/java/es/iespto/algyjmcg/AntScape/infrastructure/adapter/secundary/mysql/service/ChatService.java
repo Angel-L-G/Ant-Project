@@ -15,10 +15,12 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.ChatMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.MessageMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.ChatJPARepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.MessageJPARepository;
 
 @Service
 public class ChatService implements IChatRepository{
 	@Autowired private ChatJPARepository repository;
+	@Autowired private MessageJPARepository messageRepository;
 	private ChatMapper cm = new ChatMapper();
 	private MessageMapper mem = new MessageMapper();
 
@@ -78,6 +80,12 @@ public class ChatService implements IChatRepository{
 	@Override
 	public void deleteById(Integer id) {
 		if(id != null) {
+			Optional<ChatEntity> chat = repository.findById(id);
+			
+			for (MessageEntity m : chat.get().getMessages()) {
+				messageRepository.deleteById(m.getId());
+			}
+			
 			repository.deleteById(id);
 		}
 	}
@@ -116,11 +124,13 @@ public class ChatService implements IChatRepository{
 			
 			out = cm.toDomain(chatEntity);
 		
-			List<Message> list = new ArrayList<Message>();
-			for (MessageEntity m : chatEntity.getMessages()) {
-				list.add(mem.toDomain(m));
+			if(chatEntity != null && chatEntity.getMessages() != null) {
+				List<Message> list = new ArrayList<Message>();
+				for (MessageEntity m : chatEntity.getMessages()) {
+					list.add(mem.toDomain(m));
+				}
+				out.setMessages(list);
 			}
-			out.setMessages(list);
 		}
 		
 		return out;

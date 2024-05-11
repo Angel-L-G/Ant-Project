@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Ant;
+import es.iespto.algyjmcg.AntScape.domain.model.Chat;
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IUsuarioRepository;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.ChatEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.ChatMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.GuildMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
@@ -28,6 +31,7 @@ public class UsuarioService implements IUsuarioRepository{
 	private AntMapper am = new AntMapper();
 	private NestMapper nm = new NestMapper();
 	private GuildMapper gm = new GuildMapper();
+	private ChatMapper cm = new ChatMapper();
 	
 	@Override
 	public Usuario findById(Integer id) {
@@ -45,6 +49,14 @@ public class UsuarioService implements IUsuarioRepository{
 						lista.add(nm.toDomain(entity));
 					}
 					out.setNests(lista);
+				}
+				
+				if(findById.get().getChats() != null && findById.get().getChats().size() != 0) {
+					List<Chat> lista = new ArrayList<Chat>();
+					for (ChatEntity entity : findById.get().getChats()) {
+						lista.add(cm.toDomain(entity));
+					}
+					out.setChats(lista);
 				}
 			}
 		}
@@ -131,6 +143,14 @@ public class UsuarioService implements IUsuarioRepository{
 					}
 				}
 				
+				if(in.getChats() != null) {
+					List<ChatEntity> lista = new ArrayList<ChatEntity>();
+					for (Chat domain : in.getChats()) {
+						lista.add(cm.toPersistance(domain));
+					}
+					findByName.get().setChats(lista);
+				}
+				
 				usuarioRepo.save(findByName.get());
 				
 				ok = true;
@@ -152,6 +172,33 @@ public class UsuarioService implements IUsuarioRepository{
 					find.get().setGuild(gm.toPersistance(in.getGuild()));
 				}else {
 					find.get().setGuild(null);
+				}
+				
+				usuarioRepo.save(find.get());
+				
+				ok = true;
+			}
+		}
+		
+		return ok;
+	}
+	
+	@Override
+	public boolean updateChats(Usuario in) {
+		boolean ok = false;
+		
+		if(in != null) {
+			Optional<UsuarioEntity> find = usuarioRepo.findById(in.getId());
+			
+			if(find.isPresent()) {
+				if(in.getChats() != null) {
+					List<ChatEntity> lista = new ArrayList<ChatEntity>();
+					for (Chat domain : in.getChats()) {
+						lista.add(cm.toPersistance(domain));
+					}
+					find.get().setChats(lista);
+				} else {
+					find.get().setChats(null);
 				}
 				
 				usuarioRepo.save(find.get());

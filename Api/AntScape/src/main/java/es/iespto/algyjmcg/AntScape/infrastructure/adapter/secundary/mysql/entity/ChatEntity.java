@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -51,9 +52,9 @@ public class ChatEntity implements Serializable {
 	private UsuarioEntity usuario2;
 
 	//bi-directional many-to-one association to Message
-	@OneToMany(mappedBy="chat")
+	@OneToMany(mappedBy="chat", fetch= FetchType.EAGER)
 	private List<MessageEntity> messages;
-
+	
 	public ChatEntity() {
 	}
 
@@ -118,5 +119,4 @@ public class ChatEntity implements Serializable {
 
 		return message;
 	}
-
 }

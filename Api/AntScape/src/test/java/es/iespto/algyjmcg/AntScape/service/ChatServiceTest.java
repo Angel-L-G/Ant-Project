@@ -21,6 +21,7 @@ import es.iespto.algyjmcg.AntScape.domain.model.Message;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.service.ChatService;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.service.MessageService;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.service.UsuarioService;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -28,6 +29,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.servic
 @Sql(scripts = {"/antscapetest.sql"})
 class ChatServiceTest {
 	@Autowired ChatService chatService;
+	@Autowired UsuarioService userService;
 	@Autowired MessageService messageService;
 	
 	@Test
@@ -35,19 +37,12 @@ class ChatServiceTest {
 	
 	@Test
     public void testFindById() {
-        Chat chat = new Chat();
-        chat.setId(2);
-        chat.setLastMessage("Test message");
-        chat.setIdGuild(123);
-        chat.setUsuario1(new Usuario());
-        chat.setUsuario2(new Usuario());
-
         Chat result = chatService.findById(2);
 
         assertNotNull(result);
-        assertEquals(1, result.getId());
-        assertEquals("Test message", result.getLastMessage());
-        assertEquals(123, result.getIdGuild());
+        assertEquals(2, result.getId());
+        assertEquals("Last message for chat 2", result.getLastMessage());
+        assertEquals(2, result.getIdGuild());
     }
 
     @Test
@@ -55,24 +50,18 @@ class ChatServiceTest {
         Chat chat = new Chat();
         chat.setId(1);
         chat.setLastMessage("Test message");
-        chat.setIdGuild(123);
-        chat.setUsuario1(new Usuario());
-        chat.setUsuario2(new Usuario());
+        chat.setIdGuild(1);
 
         Chat savedChat = chatService.save(chat);
 
         assertNotNull(savedChat);
         assertEquals(1, savedChat.getId());
         assertEquals("Test message", savedChat.getLastMessage());
-        assertEquals(123, savedChat.getIdGuild());
+        assertEquals(1, savedChat.getIdGuild());
     }
 
     @Test
     public void testFindAll() {
-        List<Chat> chatList = new ArrayList<>();
-        chatList.add(new Chat());
-        chatList.add(new Chat());
-
         Iterable<Chat> result = chatService.findAll();
 
         assertNotNull(result);
@@ -107,10 +96,6 @@ class ChatServiceTest {
 
     @Test
     public void testFindUserChats() {
-        List<Chat> chatList = new ArrayList<>();
-        chatList.add(new Chat());
-        chatList.add(new Chat());
-
         List<Chat> result = chatService.findUserChats(1);
 
         assertNotNull(result);

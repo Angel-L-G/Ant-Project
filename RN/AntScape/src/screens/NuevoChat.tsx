@@ -178,39 +178,3 @@ const styles = StyleSheet.create({
         fontFamily: "MadimiOneRegular",
     },
 });
-
-/*
-conectar();
-
-        findAllMessagesByChatId(idOtherUser);
-
-        if (conectado == true) {
-            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;
-
-            if (chatEncontrado) {
-                console.log("Chat encontrado:", chatEncontrado);
-
-                chatActual.current = chatEncontrado;
-            } else {
-                const chatInput: ChatInputSaveDTO = {
-                    nameUser2: nameOtherUser
-                }
-
-                const fetchData = async () => {
-                    try {
-                        const chatData: Chat | undefined = await save(chatInput) as Chat | undefined;
-                        console.log(chatData);
-                        chatActual.current = chatData;
-                    } catch (error) {
-                        console.error('Error al obtener el chat:', error);
-                    } finally {
-                        setLoading(false);
-                    }
-                }
-
-                fetchData();
-            }
-        } else {
-            console.log("Fallo de conexion");
-        }
-*/

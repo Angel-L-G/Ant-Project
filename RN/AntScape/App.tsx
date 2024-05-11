@@ -47,6 +47,8 @@ import NuevoChat from './src/screens/NuevoChat';
 import ClanProfileOther from './src/screens/ClanProfileOther';
 import Atacar from './src/screens/Atacar';
 import AnimatedGif from './src/components/AnimatedGif';
+import ChatScreen from './src/screens/ChatScreen';
+import TestChatGrupal from './src/screens/TestChatGrupal';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -65,7 +67,7 @@ export type RootStackParamList = {
     ClanProfile: {clan: ClanType},
     CrearClan: undefined,
     ClanProfileOther: {clan: ClanType},
-    Atacar: {clan: ClanType},
+    Atacar: {clan: ClanType}
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

@@ -106,4 +106,8 @@ public class UsuarioDomainService implements IUsuarioService {
 		return service.findUserGuild(id);
 	}
 
+	@Override
+	public boolean updateChats(Usuario in) {
+		return service.updateChats(in);
+	}
 }
