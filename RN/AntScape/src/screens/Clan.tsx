@@ -14,6 +14,7 @@ import UseChat from '../hooks/UseChat';
 import UseChatHistory from '../hooks/UseChatHistory';
 import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
 import { formatDistanceToNow } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
     navigation: any,
@@ -31,8 +32,10 @@ const Clan = ({ navigation }: Props) => {
     const [guildLevelDos, setGuildLevelDos] = useState<GuildLevel>({} as GuildLevel);
     const [modalConstruccionTres, setModalConstruccionTres] = useState(false);
     const [guildLevelTres, setGuildLevelTres] = useState<GuildLevel>({} as GuildLevel);
+    const [puedeAtacar, setPuedeAtacar] = useState(true);
+    const [momentoDeAtaque, setMomentoDeAtaque] = useState("");
 
-    const { sendGroupMessage, conectado, conectar, chatActual, historico, setHistorico} = UseChat();
+    const { sendGroupMessage, conectado, conectar, chatActual, historico, setHistorico } = UseChat();
     const { chats, save, saveMessages, findGuildChat } = UseChatHistory();
     const [modalChatVisible, setModalChatVisible] = useState(false);
     const [mensaje, setMensaje] = useState("");
@@ -58,7 +61,7 @@ const Clan = ({ navigation }: Props) => {
 
                 setLoading(false);
             }
-            
+
             fetchData();
         } else {
             console.log("Fallo de conexion");
@@ -67,6 +70,26 @@ const Clan = ({ navigation }: Props) => {
 
     useEffect(() => {
         console.log(user);
+
+        const obtenerEstadoAsyncStorage = async () => {
+            try {
+                const estadoPuedeAtacar = await AsyncStorage.getItem('puedeAtacar');
+
+                if (estadoPuedeAtacar !== null) {
+                    setPuedeAtacar(false);
+                }
+
+                const tiempoDeAtaque = await AsyncStorage.getItem('momentoDeAtaque');
+
+                if (tiempoDeAtaque !== null) {
+                    setMomentoDeAtaque(tiempoDeAtaque);
+                }
+            } catch (error) {
+                console.log('Error al obtener el estado desde AsyncStorage:', error);
+            }
+        };
+
+        obtenerEstadoAsyncStorage();
 
         async function carga() {
             console.log("UseEffect");
@@ -185,7 +208,30 @@ const Clan = ({ navigation }: Props) => {
                 }
             }
         } else {
-            ToastAndroid.show("No tienes suficientes huevos dorados", ToastAndroid.LONG)
+            ToastAndroid.show("No tienes suficientes huevos dorados", ToastAndroid.LONG);
+        }
+    }
+
+    async function irAAtacar() {
+
+        if (puedeAtacar) {
+            setPuedeAtacar(false);
+            await AsyncStorage.setItem('puedeAtacar', 'false');
+            await AsyncStorage.setItem('momentoDeAtaque', String(new Date().getTime()));
+
+            setTimeout(async () => {
+                setPuedeAtacar(true);
+                await AsyncStorage.removeItem('puedeAtacar');
+                await AsyncStorage.removeItem('momentoDeAtaque');
+            }, 3600000);
+
+            navigation.navigate("Atacar", { clan: clan });
+        } else {
+            const currentTime = new Date().getTime();
+            const disabledTime = parseInt(momentoDeAtaque, 10);
+            const remainingTime = 3600000 - (currentTime - disabledTime);
+
+            ToastAndroid.show("Debes esperar " + remainingTime + " para volver a atacar", ToastAndroid.LONG)
         }
     }
 
@@ -223,7 +269,7 @@ const Clan = ({ navigation }: Props) => {
                         </ImageBackground>
 
                         <View style={{ position: "absolute", width: "20%", height: "15%", bottom: 0, right: 10, justifyContent: 'center', alignItems: 'center' }}>
-                            <TouchableHighlight underlayColor={"orange"} onPress={() => navigation.navigate("Atacar", { clan: clan })} style={{ width: 70, height: 70, backgroundColor: "yellow", borderRadius: 100, elevation: 10, justifyContent: 'center' }}>
+                            <TouchableHighlight underlayColor={"orange"} onPress={() => irAAtacar()} style={{ width: 70, height: 70, backgroundColor: "yellow", borderRadius: 100, elevation: 10, justifyContent: 'center' }}>
                                 <Image source={require('../assets/imgs/sword.png')} style={{ width: "70%", height: "80%", marginLeft: 10, marginTop: 5 }} />
                             </TouchableHighlight>
                         </View>
@@ -441,34 +487,34 @@ const Clan = ({ navigation }: Props) => {
                         end={{ x: 0.5, y: 1.25 }}
                         style={stylesModal.modalChatView}>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <View style={{height: "92%", width: "100%" }}>
-                            {(loading) ?
-                                <View>
-                                    <Text>Loading...</Text>
-                                </View>
-                                :
-                                <FlatList
-                                    data={historico}
-                                    renderItem={({ item }) =>
-                                        (item.senderId === user.id) ?
-                                            <View style={{ alignSelf: 'flex-end' }}>
-                                                <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                                <View style={styles.myMessage}>
-                                                    <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                            <View style={{ height: "92%", width: "100%" }}>
+                                {(loading) ?
+                                    <View>
+                                        <Text>Loading...</Text>
+                                    </View>
+                                    :
+                                    <FlatList
+                                        data={historico}
+                                        renderItem={({ item }) =>
+                                            (item.senderId === user.id) ?
+                                                <View style={{ alignSelf: 'flex-end' }}>
+                                                    <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                                    <View style={styles.myMessage}>
+                                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                            :
-                                            <View style={{ alignSelf: 'flex-start' }}>
-                                                <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                                <View style={styles.otherMessage}>
-                                                    <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                :
+                                                <View style={{ alignSelf: 'flex-start' }}>
+                                                    <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                                    <View style={styles.otherMessage}>
+                                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                    }
-                                    keyExtractor={(item, index) => index.toString()}
-                                    inverted
-                                />
-                            }
+                                        }
+                                        keyExtractor={(item, index) => index.toString()}
+                                        inverted
+                                    />
+                                }
                             </View>
                             <View style={{ height: "8%", width: "100%", marginTop: "2%" }}>
                                 <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
