@@ -17,13 +17,13 @@ public class Usuario {
 	private String rol;
 	private String totalMoneyGenerated;
 	private Guild guild;
-	private List<Nest> nests;
 	private List<Ant> ants;
+	private List<Nest> nests;
+	private List<Chat> chats;
+	private List<Message> messages;
 	private List<Usuario> amigos;
 	private List<Usuario> bloqued;
 	private List<AdministrativeInfo> administrativeInfos;
-	private List<Chat> chats;
-	private List<Message> messages;
 
 	public Usuario() {
 		nests = new ArrayList<Nest>();

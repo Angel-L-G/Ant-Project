@@ -7,5 +7,4 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 
 @Repository
 public interface GuildJPARepository extends JpaRepository<GuildEntity, Integer>{
-
 }

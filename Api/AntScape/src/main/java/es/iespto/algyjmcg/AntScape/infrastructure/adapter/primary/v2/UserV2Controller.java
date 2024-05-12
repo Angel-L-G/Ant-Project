@@ -156,6 +156,15 @@ public class UserV2Controller {
 		return ResponseEntity.ok(guild);
 	}
 	
+	@GetMapping(path="/{id}/guild")
+	public ResponseEntity<?> findUserGuild(@PathVariable Integer id) {	
+		Usuario findByName = userService.findById(id);
+		
+		Guild guild = userService.findUserGuild(findByName.getId());
+		
+		return ResponseEntity.ok(guild);
+	}
+	
 	@GetMapping
 	public ResponseEntity<?> findAll() {
 		Iterable<Usuario> findAll = userService.findAll();
