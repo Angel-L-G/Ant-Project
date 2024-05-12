@@ -1,7 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
 
-import java.lang.System.Logger;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.iespto.algyjmcg.AntScape.domain.model.AdministrativeInfo;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IAdministrativeInfoService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestLevelService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
@@ -28,13 +30,13 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
 @CrossOrigin
 @RequestMapping("/api/v1")
 public class LoginController {
-	Logger log;
 	@Autowired private AuthService service;
 	@Autowired private IUsuarioService userService;
 	@Autowired private INestService nestService;
 	@Autowired private INestLevelService nestLevelService;
 	@Autowired private IAntService antService;
-	private static final int BASE_ANT_ID = 1;
+	@Autowired private IAdministrativeInfoService adminInfoService;
+	private static final int BASE_ANT_ID = 3;
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody UserInputRegisterDTO request) {
@@ -62,6 +64,7 @@ public class LoginController {
 		if(!u.getBanned()) {
 			if(u.getActive()) {
 				String token = service.authenticate(userDetails);
+				adminInfoService.updateTimeStamp(u.getId(), 1);
 				if (token == null) {
 					return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User/pass erróneo");
 				}else{
@@ -104,7 +107,17 @@ public class LoginController {
 					
 					nestLevelService.save(nl);
 					
-					if(save == null) {
+					AdministrativeInfo admInfo = new AdministrativeInfo();
+					
+					admInfo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+					admInfo.setUsuario(user);
+					admInfo.setInformacion("Nothing About This User");
+					admInfo.setLastLogin(null);
+					admInfo.setUpdatedAt(null);
+					
+					AdministrativeInfo infoSave = adminInfoService.save(admInfo);
+					
+					if(save == null && infoSave == null) {
 						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error ocurred while setting up your information, try again later");
 					}
 					
@@ -121,16 +134,6 @@ public class LoginController {
 			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Data Found");
 		}
 	}
-	
-	/*@GetMapping("/{token}")
-	public ResponseEntity<?> getRol(@PathVariable String token){
-		if(token != null) {
-			String rol = service.getRol(token);
-			return ResponseEntity.ok(rol);
-		}else {
-			return (ResponseEntity<?>) ResponseEntity.noContent();
-		}
-	}*/
 }
 
 class UserInputRegisterDTO{

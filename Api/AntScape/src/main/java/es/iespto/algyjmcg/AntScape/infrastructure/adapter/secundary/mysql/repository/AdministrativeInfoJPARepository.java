@@ -10,5 +10,5 @@ import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity
 @Repository
 public interface AdministrativeInfoJPARepository extends JpaRepository<AdministrativeInfoEntity, Integer>{
 	@Query("SELECT a FROM AdministrativeInfoEntity a WHERE a.usuario.id = :id")
-    AdministrativeInfoEntity findUserChats(@Param("id") Integer id);
+    AdministrativeInfoEntity findByUserId(@Param("id") Integer id);
 }

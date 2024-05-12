@@ -22,6 +22,7 @@ import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IAdministrativeInfoService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.domain.service.IFileStorageService;
@@ -31,6 +32,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 @CrossOrigin
 @RequestMapping("/api/v2/users")
 public class UserV2Controller {
+	@Autowired private IAdministrativeInfoService adminInfoService;
 	@Autowired private IUsuarioService userService;
 	@Autowired private IAntService antService;
 	@Autowired private JwtService jwtService;
@@ -47,6 +49,7 @@ public class UserV2Controller {
 		boolean update = userService.update(u);
 		
 		if(update) {
+			adminInfoService.updateTimeStamp(u.getId(), 2);
 			return ResponseEntity.ok(u);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
@@ -70,6 +73,7 @@ public class UserV2Controller {
 		boolean update = userService.update(u);
 		
 		if(update) {
+			adminInfoService.updateTimeStamp(u.getId(), 2);
 			return ResponseEntity.ok(u);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Profile Picture Not Updated");
@@ -110,6 +114,7 @@ public class UserV2Controller {
 		boolean update = userService.update(findByName);
 		
 		if(update) {
+			adminInfoService.updateTimeStamp(u.getId(), 2);
 			return ResponseEntity.ok(findByName);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");

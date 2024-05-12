@@ -10,7 +10,7 @@ public class AdministrativeInfo {
 	private String informacion;
 	private Timestamp lastLogin;
 	private Timestamp updatedAt;
-	private UsuarioEntity usuario;
+	private Usuario usuario;
 
 	public AdministrativeInfo() {
 	}
@@ -55,11 +55,11 @@ public class AdministrativeInfo {
 		this.updatedAt = updatedAt;
 	}
 
-	public UsuarioEntity getUsuario() {
+	public Usuario getUsuario() {
 		return this.usuario;
 	}
 
-	public void setUsuario(UsuarioEntity usuario) {
+	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
 }

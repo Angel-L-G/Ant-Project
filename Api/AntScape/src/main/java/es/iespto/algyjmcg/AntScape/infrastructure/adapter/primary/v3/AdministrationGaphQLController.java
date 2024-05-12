@@ -30,7 +30,7 @@ import es.iespto.algyjmcg.AntScape.infrastructure.security.MailService;
 @Controller
 public class AdministrationGaphQLController {
 	@Autowired private IGuildService guildService;
-	@Autowired private IAdministrativeInfoService administrativeInfoService;
+	@Autowired private IAdministrativeInfoService adminInfoService;
 	@Autowired private IUsuarioService usuarioservice;
 	@Autowired private INestService nestService;
 	@Autowired private INestLevelService nestLevelService;
@@ -42,13 +42,13 @@ public class AdministrationGaphQLController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping
     public AdministrativeInfo findAdministrativeInfoByUserId(@Argument Integer userId) {
-        return administrativeInfoService.findByUserId(userId);
+        return adminInfoService.findByUserId(userId);
     }
     
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping
     public List<UserRegistration> findRegisterAlongTime(@Argument boolean ok) {
-    	Iterable<AdministrativeInfo> all = administrativeInfoService.findAll();
+    	Iterable<AdministrativeInfo> all = adminInfoService.findAll();
     	Map<String, Integer> usersRegisteredPerDay = new HashMap<>();
 
     	for (AdministrativeInfo info : all) {
@@ -70,7 +70,7 @@ public class AdministrationGaphQLController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping
     public List<UserRegistration> findLastLogins() {
-    	Iterable<AdministrativeInfo> all = administrativeInfoService.findAll();
+    	Iterable<AdministrativeInfo> all = adminInfoService.findAll();
     	Map<String, Integer> usersRegisteredPerDay = new HashMap<>();
 
     	for (AdministrativeInfo info : all) {
@@ -198,6 +198,8 @@ public class AdministrationGaphQLController {
     			response.setStatus(200); // HttpStatus.OK
         		response.setName("Ok");
         		response.setMsg("All went good");
+        		
+        		adminInfoService.updateTimeStamp(u.getId(), 2);
     		} else {
     			response.setStatus(304); // HttpStatus.NOT_MODIFIED
         		response.setName("Not Modified");
@@ -210,6 +212,27 @@ public class AdministrationGaphQLController {
     	}
     	
     	return response;
+    }
+    
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @SchemaMapping(typeName = "Mutation", field = "deleteUser")
+    public GraphqlResponse deleteUser(@Argument Integer id) {
+    	GraphqlResponse response = new GraphqlResponse();
+    	
+    	if(id != null) {
+    		usuarioservice.deleteById(id);
+    		
+			response.setStatus(200); // HttpStatus.OK
+    		response.setName("Ok");
+    		response.setMsg("All went good");
+			
+		} else {
+			response.setStatus(204); // HttpStatus.NO_CONTENT
+			response.setName("No Content");
+			response.setMsg("The request is empty");
+		}
+		
+		return response;
     }
 }
 
