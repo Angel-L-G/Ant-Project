@@ -114,7 +114,7 @@ public class UserV2Controller {
 		boolean update = userService.update(findByName);
 		
 		if(update) {
-			adminInfoService.updateTimeStamp(u.getId(), 2);
+			adminInfoService.updateTimeStamp(findByName.getId(), 2);
 			return ResponseEntity.ok(findByName);
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
