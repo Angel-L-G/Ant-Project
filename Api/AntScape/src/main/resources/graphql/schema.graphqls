@@ -116,6 +116,7 @@ input UsuarioSaveInputDTO {
 }
 
 input UsuarioInputGraphqlUpdateDTO {
+	id: Int
 	email: String
 	name: String
 	password: String

@@ -1,6 +1,7 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v3;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import es.iespto.algyjmcg.AntScape.domain.model.AdministrativeInfo;
 import es.iespto.algyjmcg.AntScape.domain.model.Guild;
@@ -25,6 +28,7 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestLevelService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.MailService;
 
 @Controller
@@ -36,8 +40,9 @@ public class AdministrationGaphQLController {
 	@Autowired private INestLevelService nestLevelService;
 	@Autowired private IAntService antService;
 	@Autowired private PasswordEncoder passwordEncoder;
+	@Autowired private JwtService jwtService;
 	@Autowired private MailService mailService;
-	private static final int BASE_ANT_ID = 1;
+	private static final int BASE_ANT_ID = 3;
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping
@@ -118,62 +123,78 @@ public class AdministrationGaphQLController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SchemaMapping(typeName = "Mutation", field = "saveUser")
     public GraphqlResponse saveUser(@Argument UsuarioSaveInputDTO user) {
-    	GraphqlResponse response = new GraphqlResponse();
-    	
-    	if(user != null) {
-    		Usuario userentity = new Usuario();
-    		userentity.setName(user.getName());
-    		userentity.setPassword(passwordEncoder.encode(user.getPassword()));
-    		userentity.setRol(user.getRol());
-    		userentity.setActive(user.getActive());
-    		userentity.setEmail(user.getEmail());
-    		userentity.setBanned(false);
-    		userentity.setEggs(user.getEggs()+"");
-    		userentity.setGoldenEggs(user.getGoldenEggs()+"");
-    		userentity.setImg(user.getImg());
-    		userentity.setTotalMoneyGenerated((user.getGoldenEggs()+user.getEggs()) + "");
-    		
-    		int randInt = (int)Math.random()*10000;
-    		String randStrHashed = passwordEncoder.encode(randInt+"");
-    		userentity.setHash(randStrHashed);
-    		
-    		Usuario save = usuarioservice.save(userentity);
-    		
-    		Nest baseNest = new Nest();
-			
-			baseNest.setAnt(antService.findById(BASE_ANT_ID));
-			baseNest.setUsuario(userentity);
-			baseNest.setDeleted(false);
-			
-			Nest nestSave = nestService.save(baseNest);
-			
-			NestLevel nl = new NestLevel();
-			
-			nl.setCost(10.0F);
-			nl.setLevel(1);
-			nl.setName(user.getName() + "-" + antService.findById(BASE_ANT_ID).getName() + "-0");
-			nl.setMultiplier(BigDecimal.valueOf(1.05));
-			nl.setProduction(2.0);
-			nl.setNest(nestSave);
-			
-			nestLevelService.save(nl);
-    		
-    		String message = "You have been registered to antscape by the name: " + userentity.getName();
-    		
-    		String asunto = "You have Been Registered By An Admin";
-    		
-    		mailService.send(save.getEmail(),asunto , message);
-    		
-    		response.setStatus(200); // HttpStatus.OK
-    		response.setName("Ok");
-    		response.setMsg("All went good");
-    	} else {
-    		response.setStatus(204); // HttpStatus.NO_CONTENT
-    		response.setName("No Content");
-    		response.setMsg("The request is empty");
-    	}
-    	
-    	return response;
+        GraphqlResponse response = new GraphqlResponse();
+
+        if(user != null) {
+            Usuario userentity = new Usuario();
+            userentity.setName(user.getName());
+            userentity.setPassword(passwordEncoder.encode(user.getPassword()));
+            userentity.setRol(user.getRol());
+            userentity.setActive(user.getActive());
+            userentity.setEmail(user.getEmail());
+            userentity.setBanned(false);
+            userentity.setEggs(user.getEggs()+"");
+            userentity.setGoldenEggs(user.getGoldenEggs()+"");
+            userentity.setImg(user.getImg());
+            userentity.setTotalMoneyGenerated((user.getGoldenEggs()+user.getEggs()) + "");
+
+            int randInt = (int)(Math.random() * 10000); // Corregido el cálculo de randInt
+            String randStrHashed = passwordEncoder.encode(String.valueOf(randInt));
+            userentity.setHash(randStrHashed);
+
+            Usuario save = usuarioservice.save(userentity);
+
+            // Verificar si el usuario se guardó correctamente antes de continuar
+            if (save != null) {
+                // Crear y guardar el nido solo si el usuario se guardó correctamente
+                Nest baseNest = new Nest();
+                baseNest.setAnt(antService.findById(BASE_ANT_ID));
+                baseNest.setUsuario(save); // Usar el usuario guardado en lugar del que se creó
+                baseNest.setDeleted(false);
+
+                Nest nestSave = nestService.save(baseNest);
+
+                NestLevel nl = new NestLevel();
+                nl.setCost(10.0F);
+                nl.setLevel(1);
+                nl.setName(user.getName() + "-" + antService.findById(BASE_ANT_ID).getName() + "-0");
+                nl.setMultiplier(BigDecimal.valueOf(1.05));
+                nl.setProduction(2.0);
+                nl.setNest(nestSave);
+
+                nestLevelService.save(nl);
+
+                AdministrativeInfo admInfo = new AdministrativeInfo();
+				
+				admInfo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+				admInfo.setUsuario(save);
+				admInfo.setInformacion("Nothing About This User");
+				admInfo.setLastLogin(null);
+				admInfo.setUpdatedAt(null);
+				
+				adminInfoService.save(admInfo);
+                
+                String message = "You have been registered to antscape by the name: " + userentity.getName();
+                String asunto = "You have Been Registered By An Admin";
+
+                mailService.send(save.getEmail(), asunto, message);
+
+                response.setStatus(200); // HttpStatus.OK
+                response.setName("Ok");
+                response.setMsg("All went good");
+            } else {
+                // Si hubo un error al guardar el usuario, devolver un error
+                response.setStatus(500); // HttpStatus.INTERNAL_SERVER_ERROR
+                response.setName("Error");
+                response.setMsg("Failed to save user");
+            }
+        } else {
+            response.setStatus(204); // HttpStatus.NO_CONTENT
+            response.setName("No Content");
+            response.setMsg("The request is empty");
+        }
+
+        return response;
     }
     
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -182,13 +203,13 @@ public class AdministrationGaphQLController {
     	GraphqlResponse response = new GraphqlResponse();
     	
     	if(user != null) {
-    		Usuario u = new Usuario();
+    		Usuario u = usuarioservice.findById(user.getId());
     		
     		u.setEggs(user.getEggs()+"");
     		u.setGoldenEggs(user.getGoldenEggs()+"");
     		u.setActive(user.getActive());
     		u.setImg(user.getImg());
-    		u.setPassword(user.getPassword());
+    		u.setPassword(passwordEncoder.encode(user.getPassword()));
     		u.setEmail(user.getEmail());
     		u.setName(user.getName());
     		
@@ -350,6 +371,7 @@ class UsuarioSaveInputDTO {
 }
 
 class UsuarioInputGraphqlUpdateDTO {
+	private Integer Id;
 	private Boolean active;
 	private Integer eggs;
 	private Integer goldenEggs;
@@ -423,6 +445,14 @@ class UsuarioInputGraphqlUpdateDTO {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Integer getId() {
+		return Id;
+	}
+
+	public void setId(Integer id) {
+		Id = id;
 	}
 }
 
