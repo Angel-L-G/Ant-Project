@@ -1,48 +1,21 @@
-import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import React, { useContext, useState } from 'react'
 import axios from 'axios'
+import { AppContext } from '../context/AppContextProvider'
+import { UserLogin } from '../type/types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import EncryptedStorage from 'react-native-encrypted-storage'
-import { ContextUser, User, UserLogin, UserRegister } from '../types/types'
-import AppContextProvider, { AppContext } from '../context/AppContextProvider';
-import Globals from '../components/Globals'
+import { ToastAndroid } from 'react-native'
+import Globals from '../assets/Globals'
 
 type Props = {
     navigation: any
 }
 
 const UseSesion = () => {
-    const { setUser, setToken, setRol, token } = useContext(AppContext);
-    const { ruta } = Globals();
+    const { setUser, setToken, token } = useContext(AppContext);
     const [loading, setLoading] = useState(false);
+    const {ruta} = Globals();
 
-    async function register(nick: string, password: string, email: string, navigation: any) {
-        let user: UserRegister = {
-            email: email,
-            nombre: nick,
-            password: password
-        }
-
-        const axiospost = async (ruta: string) => {
-
-            let response;
-            try {
-                response = await axios.post(ruta + "v1/register", user);
-
-                if (response.status > 199 && response.status < 300) {
-                    ToastAndroid.show('Registrado! Ahora verifique su usuario', ToastAndroid.LONG);
-                    navigation.navigate("Login");
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        axiospost(ruta);
-    }
-
-    async function login(nick: string, password: string, navigation: any) {
+    async function login(nick: string, password: string) {
         setLoading(true);
 
         let user: UserLogin = {
@@ -64,14 +37,10 @@ const UseSesion = () => {
                     setUser(responseGet.data);
 
                     setToken(response.data);
-                    await EncryptedStorage.setItem("token", response.data);
+                    await AsyncStorage.setItem("token", response.data);
 
-                    //const rolFromBack = await axios.get(ruta+"/"+tk);
-                    //setRol(rolFromBack.data);
-                    //await AsyncStorage.setItem('rol', rolFromBack.data);
-
-                    
-                    navigation.navigate("Personal");
+                    ////////////////////////////////////////////////////////////////
+                    //navigation.navigate("Personal");
                 } else {
                     if (response.status == 428) {
                         console.log("Falta Validar");
@@ -96,7 +65,6 @@ const UseSesion = () => {
 
     return {
         login,
-        register,
         loading
     }
 }

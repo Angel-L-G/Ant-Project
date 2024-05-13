@@ -56,8 +56,10 @@ public class AdministrationGaphQLController {
     	Map<String, Integer> usersRegisteredPerDay = new HashMap<>();
 
     	for (AdministrativeInfo info : all) {
-    	    String date = info.getCreatedAt().toLocalDateTime().toLocalDate().toString();
-    	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		if(info.getCreatedAt() != null) {
+    			String date = info.getCreatedAt().toLocalDateTime().toLocalDate().toString();
+        	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		}
     	}
 
     	List<UserRegistration> result = new ArrayList<>();
@@ -78,8 +80,10 @@ public class AdministrationGaphQLController {
     	Map<String, Integer> usersRegisteredPerDay = new HashMap<>();
 
     	for (AdministrativeInfo info : all) {
-    	    String date = info.getLastLogin().toLocalDateTime().toLocalDate().toString();
-    	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		if(info.getLastLogin() != null) {
+    			String date = info.getLastLogin().toLocalDateTime().toLocalDate().toString();
+        	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		}
     	}
 
     	List<UserRegistration> result = new ArrayList<>();
