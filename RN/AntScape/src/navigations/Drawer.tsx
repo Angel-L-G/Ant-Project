@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import Social from '../screens/Social';
-import Settings from '../screens/Settings';
+import Settings from '../screens/Ajustes';
 
 type Props = {}
 

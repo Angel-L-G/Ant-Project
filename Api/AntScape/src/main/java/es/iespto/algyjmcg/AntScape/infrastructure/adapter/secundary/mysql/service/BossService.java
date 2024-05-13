@@ -77,12 +77,15 @@ public class BossService implements IBossRepository{
 		boolean ok = false;
 		
 		if(in != null) {
-			Optional<BossEntity> findByName = bossRepo.findByName(in.getName());
+			Optional<BossEntity> find = bossRepo.findById(in.getId());
 			
-			if(findByName.isPresent()) {
-				findByName.get().setDamage(in.getDamage());
-				findByName.get().setLife(in.getLife());
-				findByName.get().setReward(in.getReward());
+			if(find.isPresent()) {
+				find.get().setName(in.getName());
+				find.get().setDamage(in.getDamage());
+				find.get().setLife(in.getLife());
+				find.get().setReward(in.getReward());
+				
+				bossRepo.save(find.get());
 				
 				ok = true;
 			}

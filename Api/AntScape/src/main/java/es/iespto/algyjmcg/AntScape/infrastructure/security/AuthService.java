@@ -25,6 +25,11 @@ public class AuthService {
 		userentity.setRol("ROLE_USER");
 		userentity.setActive(false);
 		userentity.setEmail(userdetails.email);
+		userentity.setBanned(false);
+		userentity.setEggs("10");
+		userentity.setGoldenEggs("0");
+		userentity.setImg("profile.png");
+		userentity.setTotalMoneyGenerated("10");
 		
 		int randInt = (int)Math.random()*10000;
 		String randStrHashed = passwordEncoder.encode(randInt+"");
@@ -65,5 +70,10 @@ public class AuthService {
 			}
 		}
 		return generateToken;
+	}
+	
+	public String getRol(String token) {
+		String role = jwtService.extractRole(token);
+		return role;
 	}
 }

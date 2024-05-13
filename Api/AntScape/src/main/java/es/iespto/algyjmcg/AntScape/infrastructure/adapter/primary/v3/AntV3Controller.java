@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,16 +49,15 @@ public class AntV3Controller {
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody AntInputDTO in) {
 		if(in != null) {
-			Ant ant = new Ant();
+			Ant a = new Ant();
 			
-			ant.setBiome(in.getBiome());
-			ant.setCost(in.getCost());
-			ant.setDamage(in.getDamage());
-			ant.setLife(in.getLife());
-			ant.setName(in.getName());
-			ant.setType(in.getType());
+			a.setBiome(in.getBiome());
+			a.setDescription(in.getDescription());
+			a.setId(in.getId());
+			a.setName(in.getName());
+			a.setType(in.getType());
 			
-			Ant save = antService.save(ant);
+			Ant save = antService.save(a);
 			if(save != null) {
 				return ResponseEntity.ok(save);
 			}else {
@@ -136,62 +134,39 @@ public class AntV3Controller {
 }
 
 class AntInputDTO{
+	private Integer id;
 	private String biome;
-
-	private Integer cost;
-
-	private Integer damage;
-
-	private Integer life;
-
+	private String description;
 	private String name;
-
 	private String type;
-
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getBiome() {
 		return biome;
 	}
-
 	public void setBiome(String biome) {
 		this.biome = biome;
 	}
-
-	public Integer getCost() {
-		return cost;
+	public String getDescription() {
+		return description;
 	}
-
-	public void setCost(Integer cost) {
-		this.cost = cost;
+	public void setDescription(String description) {
+		this.description = description;
 	}
-
-	public Integer getDamage() {
-		return damage;
-	}
-
-	public void setDamage(Integer damage) {
-		this.damage = damage;
-	}
-
-	public Integer getLife() {
-		return life;
-	}
-
-	public void setLife(Integer life) {
-		this.life = life;
-	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getType() {
 		return type;
 	}
-
 	public void setType(String type) {
 		this.type = type;
 	}

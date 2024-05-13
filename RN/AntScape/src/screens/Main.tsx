@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableHighlight, Modal, StyleSheet, Alert, Pressable } from 'react-native'
+import { View, Text, Image, TouchableHighlight, Modal, StyleSheet, Alert, Pressable, RefreshControl, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -7,6 +7,7 @@ import { Button } from 'react-native-elements';
 import NestDetails from '../components/NestDetails';
 import ActionButtonAux from '../navigations/ActionButtonAux';
 import UseHormiguero from '../hooks/UseHormiguero';
+import NestDetailsModal from '../components/NestDetails';
 
 type Props = {
     navigation: any,
@@ -23,6 +24,7 @@ const Main = ({navigation}: Props) => {
     const {save,drop,findAll,findByid,update,hormigueros} = UseHormiguero(navigation);
     const [modalVisible, setModalVisible] = useState(false);
     const [actual, setActual] = useState(0);
+    const [refreshing, setRefreshing] = useState(false);
 
     function showModal(index: number) {
         setModalVisible(true);
@@ -33,13 +35,17 @@ const Main = ({navigation}: Props) => {
         setModalVisible(false);
     }
 
+    function handleRefresh(){
+        findAll();
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.profileBar}>
                 <TouchableHighlight onPress={() => navigation.navigate("Profile")}>
                     <Image
                         style={styles.profilePicture}
-                        source={require('../img/profile.png')}
+                        source={require('../assets/imgs/profile.png')}
                     />
                 </TouchableHighlight>
                 
@@ -55,28 +61,38 @@ const Main = ({navigation}: Props) => {
 
             {/*<ActionButtonAux/>*/}
             
-            <View style={styles.mainConatiner}>
+            <View style={styles.mainConatiner} >
                 <Text style={styles.title}>Hormigueros</Text>
-                    {
-                        (hormigueros.length != 0)
-                        ?
-                            hormigueros.map((value, index) => {
-                                return <AntNest key={index} navigation={navigation} nest={value} showModal={showModal}/>
-                            })
-                        :
-                            <TouchableHighlight onPress={() => navigation.navigate("NewHormiguero")} style={styles.button}>
-                                <Text style={styles.textBody}>Crear Hormiguero</Text>
-                            </TouchableHighlight>
+
+                <FlatList
+                    style={{width:320}}
+                    data={hormigueros}
+                    renderItem={({item,index}) => {
+                        return <AntNest key={index} navigation={navigation} nest={item} showModal={showModal} pos={index}/>
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing = {refreshing}
+                            onRefresh={handleRefresh}
+                        />
                     }
+                />
+
+                <View style={{margin: 10}}>
+                    <TouchableHighlight onPress={() => navigation.navigate("NewHormiguero")} style={styles.button}>
+                        <Text style={styles.textBody}>Crear Hormiguero</Text>
+                    </TouchableHighlight>
+                </View>
             </View>            
-            
+                
+
             <Modal
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
-                <NestDetails closeModal={closeModal} hormiguero={hormigueros[actual]}/>
+                <NestDetailsModal closeModal={closeModal} hormiguero={hormigueros[actual]}/>
             </Modal>
         </View>
     )

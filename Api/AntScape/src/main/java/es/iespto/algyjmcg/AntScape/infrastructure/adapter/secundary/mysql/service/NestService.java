@@ -7,20 +7,24 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.iespto.algyjmcg.AntScape.domain.model.Ant;
-import es.iespto.algyjmcg.AntScape.domain.model.Boss;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
+import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.INestRepository;
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AntEntity;
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.BossEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestLevelEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AntMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestLevelMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.NestMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.NestJPARepository;
 
 @Service
 public class NestService implements INestRepository{
 	@Autowired private NestJPARepository nestRepo;
 	private NestMapper nm = new NestMapper();
+	private AntMapper am = new AntMapper();
+	private NestLevelMapper nlm = new NestLevelMapper();
+	private UsuarioMapper um = new UsuarioMapper();
 
 	@Override
 	public Nest findById(Integer id) {
@@ -31,6 +35,24 @@ public class NestService implements INestRepository{
 			
 			if(findById.isPresent()) {
 				out = nm.toDomain(findById.get());
+				
+				if (findById.get().getAnt() != null) {
+					out.setAnt(am.toDomain(findById.get().getAnt()));
+				}
+				
+				if (findById.get().getNestLevels() != null) {
+					List<NestLevel> list = new ArrayList<>();
+					
+					for (NestLevelEntity entity : findById.get().getNestLevels()) {
+						list.add(nlm.toDomain(entity));
+					}
+					
+					out.setNestLevels(list);
+				}
+				
+				if (findById.get().getUsuario() != null) {
+					out.setUsuario(um.toDomain(findById.get().getUsuario()));
+				}
 			}
 		}
 		
@@ -42,10 +64,51 @@ public class NestService implements INestRepository{
 		Nest out = null;
 		
 		if(in != null) {
-			NestEntity save = nestRepo.save(nm.toPersistance(in));
+			//Casteo A Persistence
+			NestEntity persistance = nm.toPersistance(in);
 			
+			if (in.getAnt() != null) {
+				persistance.setAnt(am.toPersistance(in.getAnt()));
+				System.out.println("Holaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			}
+			
+			if (in.getNestLevels() != null) {
+				List<NestLevelEntity> list = new ArrayList<>();
+				
+				for (NestLevel entity : in.getNestLevels()) {
+					list.add(nlm.toPersistance(entity));
+				}
+				
+				persistance.setNestLevels(list);
+			}
+			
+			if (in.getUsuario() != null) {
+				persistance.setUsuario(um.toPersistance(in.getUsuario()));
+			}
+			
+			NestEntity save = nestRepo.save(persistance);
+			
+			//Casteo a Domain
 			if(save != null) {
 				out = nm.toDomain(save);
+				
+				if (save.getAnt() != null) {
+					out.setAnt(am.toDomain(save.getAnt()));
+				}
+				
+				if (save.getNestLevels() != null) {
+					List<NestLevel> list = new ArrayList<>();
+					
+					for (NestLevelEntity entity : save.getNestLevels()) {
+						list.add(nlm.toDomain(entity));
+					}
+					
+					out.setNestLevels(list);
+				}
+				
+				if (save.getUsuario() != null) {
+					out.setUsuario(um.toDomain(save.getUsuario()));
+				}
 			}
 		}
 		
@@ -61,7 +124,27 @@ public class NestService implements INestRepository{
 		if(findAll != null) {
 			List<Nest> aux = new ArrayList<>();
 			for (NestEntity nestEntity : findAll) {
-				aux.add(nm.toDomain(nestEntity));
+				Nest out = nm.toDomain(nestEntity);
+				
+				if (nestEntity.getAnt() != null) {
+					out.setAnt(am.toDomain(nestEntity.getAnt()));
+				}
+				
+				if (nestEntity.getNestLevels() != null) {
+					List<NestLevel> NestLevellist = new ArrayList<>();
+					
+					for (NestLevelEntity entity : nestEntity.getNestLevels()) {
+						NestLevellist.add(nlm.toDomain(entity));
+					}
+					
+					out.setNestLevels(NestLevellist);
+				}
+				
+				if (nestEntity.getUsuario() != null) {
+					out.setUsuario(um.toDomain(nestEntity.getUsuario()));
+				}
+				
+				aux.add(out);
 			}
 			list = aux;
 		}
@@ -89,9 +172,16 @@ public class NestService implements INestRepository{
 			if(findByName.isPresent()) {
 				NestEntity persistance = nm.toPersistance(in);
 				
-				findByName.get().setAntNests(persistance.getAntNests());
-				findByName.get().setAntType(persistance.getAntType());
-				findByName.get().setMap(persistance.getMap());
+				findByName.get().setDeleted(in.getDeleted());
+				findByName.get().setNestLevels(persistance.getNestLevels());
+				
+				if(in.getAnt() != null) {
+					findByName.get().setAnt(am.toPersistance(in.getAnt()));
+				}
+				
+				if(in.getUsuario() != null) {
+					findByName.get().setUsuario(um.toPersistance(in.getUsuario()));
+				}
 				
 				ok = true;
 			}
@@ -102,21 +192,41 @@ public class NestService implements INestRepository{
 	
 	@Override
 	public List<Nest> findAllById(Integer id) {
-		List<Nest> out = null;
+		List<Nest> list = null;
 
 		if (id != null) {
 			Iterable<NestEntity> findAllOwn = nestRepo.findAllOwn(id);
 
 			if (findAllOwn != null) {
-				out = new ArrayList<Nest>();
+				list = new ArrayList<Nest>();
 				
-				for (NestEntity e : findAllOwn) {
-					out.add(nm.toDomain(e));
+				for (NestEntity entity : findAllOwn) {
+					Nest out = nm.toDomain(entity);
+					
+					if (entity.getAnt() != null) {
+						out.setAnt(am.toDomain(entity.getAnt()));
+					}
+					
+					if (entity.getNestLevels() != null) {
+						List<NestLevel> NestLevellist = new ArrayList<>();
+						
+						for (NestLevelEntity NestLevelentity : entity.getNestLevels()) {
+							NestLevellist.add(nlm.toDomain(NestLevelentity));
+						}
+						
+						out.setNestLevels(NestLevellist);
+					}
+					
+					if (entity.getUsuario() != null) {
+						out.setUsuario(um.toDomain(entity.getUsuario()));
+					}
+					
+					list.add(out);
 				}
 			}
 		}
 
-		return out;
+		return list;
 	}
 
 }

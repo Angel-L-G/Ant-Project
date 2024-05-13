@@ -9,7 +9,7 @@ const Outside = (props: Props) => {
         <View style={styles.container}>
             <Image
                 style={styles.BackgorundImage}
-                source={require('../img/mapa_outside.jpg')}
+                source={require('../assets/imgs/mapa_outside.jpg')}
             />
         </View>
     )

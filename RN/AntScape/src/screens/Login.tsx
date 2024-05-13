@@ -1,77 +1,80 @@
-import { View, Text, Image, TouchableHighlight, TouchableOpacity,TextInput } from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableOpacity, TextInput, ScrollView, ImageBackground, Dimensions } from 'react-native';
 import React, { useState } from 'react'
 import styles from '../themes/styles'
-import UseUser from '../hooks/UseUser';
+import UseSesion from '../hooks/UseSesion';
+import LinearGradient from 'react-native-linear-gradient';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 type Props = {
     navigation: any
 }
 
-const Login = ({navigation}: Props) => {
-    const {findByName} = UseUser();
+const Login = ({ navigation }: Props) => {
+    //const {findByName} = UseUser();
+    const { login, loading } = UseSesion();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    function searchUser(){
-        const user: User = {
-            id: 0,
-            name: username
-        }
-
-        let aux = findByName(user.name);
-        //console.log(aux);
-
-        if(aux != null){
-            console.log("a");
-            console.log(user);
-            navigation.navigate("Main");
-        } else {
-            console.log("Usuario Erroneo");
-        }
-
+    function searchUser() {
+        login(username, password, navigation);
     }
 
     return (
-        <View style={styles.container}>
-            <Image
-                style={styles.BackgorundImage}
-                source={require('../img/sesion.jpg')}
-            />
-
-            <View style={styles.formContainer}>
+        <ImageBackground source={require('../assets/imgs/Portada.png')} style={{ position: "absolute", width: Dimensions.get('window').width, height: Dimensions.get('window').height }}>
+            <View style={styles.container}>
                 <View style={styles.formTitle}>
-                    <Text style={{fontSize: 20,fontWeight: 'bold'}}>Iniciar Sesión</Text>
+                    <Text style={{ fontSize: 50, color: 'rgba(20, 40, 140, 1)', fontFamily: "MadimiOneRegular" }}>Inicia Sesión</Text>
                 </View>
+                <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}
+                    extraScrollHeight={175}
+                    enableOnAndroid={true}
+                    scrollEnabled={false}>
+                    <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1 }}
+                        style={styles.formContainer}>
+                        <View style={{}}>
 
-                <Text></Text>
+                            <View style={styles.innerFormContainer}>
+                                <Text style={styles.formText}>Nick:</Text>
+                                <TextInput placeholder='Nick' onChangeText={setUsername} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white", }} placeholderTextColor={"white"} />
+                            </View>
 
-                <View style={styles.innerFormContainer}>
-                    <Text style={styles.formText}>Nick</Text>
-                    <TextInput placeholder='nick' onChangeText={setUsername}/>
-                </View>
+                            <View style={styles.innerFormContainer}>
+                                <Text style={styles.formText}>Password:</Text>
+                                <TextInput placeholder='Password' onChangeText={setPassword} secureTextEntry={true} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white" }} placeholderTextColor={"white"} />
+                            </View>
 
-                <Text></Text>
-                
-                <View style={styles.innerFormContainer}>
-                    <Text style={styles.formText}>Password</Text>
-                    <TextInput placeholder='********' onChangeText={setPassword}/>
-                </View>
+                            <Text></Text>
 
-                <Text></Text>
-                
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                    <TouchableOpacity onPress={searchUser} style={styles.button}>
-                        <Text>Log In</Text>
-                    </TouchableOpacity>
+                            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                                <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                                    start={{ x: 0.5, y: 0 }}
+                                    end={{ x: 0.5, y: 1 }}
+                                    style={{}}>
+                                    {(loading) ? 
+                                        <View style={styles.button}>
+                                            <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Cargando...</Text>
+                                        </View>
+                                    :
+                                        <TouchableOpacity onPress={searchUser} style={styles.button}>
+                                            <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Log In</Text>
+                                        </TouchableOpacity>
+                                    }
+                                </LinearGradient>
 
-                    <Text></Text>
 
-                    <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-                        <Text style={styles.enlaceText}>Register</Text>
-                    </TouchableOpacity>
-                </View>
+                                <Text></Text>
+
+                                <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                                    <Text style={styles.enlaceText}>Register</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </LinearGradient>
+                </KeyboardAwareScrollView>
             </View>
-        </View>
+        </ImageBackground>
     )
 }
 

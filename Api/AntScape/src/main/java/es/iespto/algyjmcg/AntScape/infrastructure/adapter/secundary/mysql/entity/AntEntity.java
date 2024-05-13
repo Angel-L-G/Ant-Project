@@ -5,13 +5,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -30,40 +28,28 @@ public class AntEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false)
 	private Integer id;
 
+	@Column(length=20)
 	private String biome;
 
-	private Integer cost;
+	@Column(length=100)
+	private String description;
 
-	private Integer damage;
-
-	private Integer life;
-
+	@Column(length=40)
 	private String name;
 
+	@Column(length=30)
 	private String type;
 
-	private boolean working;
-
-	//bi-directional many-to-many association to Usuario
-	@JsonIgnore
-	@ManyToMany(fetch= FetchType.LAZY)
-	@JoinTable(
-		name="ant_user"
-		, joinColumns={
-			@JoinColumn(name="id_ant")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="id_user")
-			}
-		)
-	private List<UsuarioEntity> usuarios;
-
-	//bi-directional many-to-one association to AntNest
 	@JsonIgnore
 	@OneToMany(mappedBy="ant")
-	private List<AntNestEntity> antNests;
+	private List<NestEntity> nests;
+
+	@JsonIgnore
+	@ManyToMany(mappedBy="ants")
+	private List<UsuarioEntity> usuarios;
 
 	public AntEntity() {
 	}
@@ -84,28 +70,12 @@ public class AntEntity implements Serializable {
 		this.biome = biome;
 	}
 
-	public int getCost() {
-		return this.cost;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setCost(Integer cost) {
-		this.cost = cost;
-	}
-
-	public Integer getDamage() {
-		return this.damage;
-	}
-
-	public void setDamage(Integer damage) {
-		this.damage = damage;
-	}
-
-	public Integer getLife() {
-		return this.life;
-	}
-
-	public void setLife(Integer life) {
-		this.life = life;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getName() {
@@ -124,12 +94,26 @@ public class AntEntity implements Serializable {
 		this.type = type;
 	}
 
-	public boolean getWorking() {
-		return this.working;
+	public List<NestEntity> getNests() {
+		return this.nests;
 	}
 
-	public void setWorking(boolean working) {
-		this.working = working;
+	public void setNests(List<NestEntity> nests) {
+		this.nests = nests;
+	}
+
+	public NestEntity addNest(NestEntity nest) {
+		getNests().add(nest);
+		nest.setAnt(this);
+
+		return nest;
+	}
+
+	public NestEntity removeNest(NestEntity nest) {
+		getNests().remove(nest);
+		nest.setAnt(null);
+
+		return nest;
 	}
 
 	public List<UsuarioEntity> getUsuarios() {
@@ -140,11 +124,4 @@ public class AntEntity implements Serializable {
 		this.usuarios = usuarios;
 	}
 
-	public List<AntNestEntity> getAntNests() {
-		return antNests;
-	}
-
-	public void setAntNests(List<AntNestEntity> antNests) {
-		this.antNests = antNests;
-	}
 }

@@ -3,37 +3,27 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mappe
 import java.util.ArrayList;
 import java.util.List;
 
-import es.iespto.algyjmcg.AntScape.domain.model.Ant;
-import es.iespto.algyjmcg.AntScape.domain.model.AntNest;
-import es.iespto.algyjmcg.AntScape.domain.model.Boss;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AntNestEntity;
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.BossEntity;
+import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestEntity;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.NestLevelEntity;
 
 public class NestMapper {
+	private NestLevelMapper nlm = new NestLevelMapper();
 	
 	public NestEntity toPersistance(Nest in) {
 		NestEntity out = new NestEntity();
 
-		out.setId(in.getId());	
-		out.setAntType(in.getAntType());
+		out.setId(in.getId());
 		out.setDeleted(in.getDeleted());
-		out.setMap(in.getMap());
 		
-		/*if(in.getUsuario() != null) {
-			um = new UsuarioMapper();
-			out.setUsuario(um.toPersistance(in.getUsuario()));
-		}
-		
-		if(in.getAntNests() != null) {
-			anm = new AntNestMapper();
-			List<AntNestEntity> lista = new ArrayList<AntNestEntity>();
-			for (AntNest an : in.getAntNests()) {
-				lista.add(anm.toPersistance(an));
+		if (in.getNestLevels() != null && in.getNestLevels().size() != 0) {
+			List<NestLevelEntity> list = new ArrayList<NestLevelEntity>();
+			for (NestLevel domain : in.getNestLevels()) {
+				list.add(nlm.toPersistance(domain));
 			}
-			out.setAntNests(lista);
-		}*/
+			out.setNestLevels(list);
+		}
 		
 		return out;
 	}
@@ -41,24 +31,17 @@ public class NestMapper {
 	public Nest toDomain(NestEntity in) {
 		Nest out = new Nest();
 		
-		out.setId(in.getId());	
-		out.setAntType(in.getAntType());
+		out.setId(in.getId());
 		out.setDeleted(in.getDeleted());
-		out.setMap(in.getMap());
 		
-		/*if(in.getUsuario() != null) {
-			um = new UsuarioMapper();
-			out.setUsuario(um.toDomain(in.getUsuario()));
-		}
-		
-		if(in.getAntNests() != null) {
-			anm = new AntNestMapper();
-			List<AntNest> lista = new ArrayList<AntNest>();
-			for (AntNestEntity an : in.getAntNests()) {
-				lista.add(anm.toDomain(an));
+		if (in.getNestLevels() != null && in.getNestLevels().size() != 0) {
+			if (out.getNestLevels() == null) {
+				out.setNestLevels(new ArrayList<NestLevel>());
 			}
-			out.setAntNests(lista);
-		}*/
+			for (NestLevelEntity entity : in.getNestLevels()) {
+				out.getNestLevels().add(nlm.toDomain(entity));
+			}
+		}
 		
 		return out;
 	}

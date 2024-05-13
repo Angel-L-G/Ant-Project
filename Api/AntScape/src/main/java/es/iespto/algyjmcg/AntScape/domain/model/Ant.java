@@ -1,29 +1,20 @@
 package es.iespto.algyjmcg.AntScape.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ant {
 	private Integer id;
-
 	private String biome;
-
-	private Integer cost;
-
-	private Integer damage;
-
-	private Integer life;
-
+	private String description;
 	private String name;
-
 	private String type;
-
-	private boolean working;
-
+	private List<Nest> nests;
 	private List<Usuario> usuarios;
 
-	private List<AntNest> antNests;
-
 	public Ant() {
+		nests = new ArrayList<Nest>();
+		usuarios = new ArrayList<Usuario>();
 	}
 
 	public Integer getId() {
@@ -42,28 +33,12 @@ public class Ant {
 		this.biome = biome;
 	}
 
-	public int getCost() {
-		return this.cost;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setCost(Integer cost) {
-		this.cost = cost;
-	}
-
-	public Integer getDamage() {
-		return this.damage;
-	}
-
-	public void setDamage(Integer damage) {
-		this.damage = damage;
-	}
-
-	public Integer getLife() {
-		return this.life;
-	}
-
-	public void setLife(Integer life) {
-		this.life = life;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getName() {
@@ -82,12 +57,26 @@ public class Ant {
 		this.type = type;
 	}
 
-	public boolean getWorking() {
-		return this.working;
+	public List<Nest> getNests() {
+		return this.nests;
 	}
 
-	public void setWorking(boolean working) {
-		this.working = working;
+	public void setNests(List<Nest> nests) {
+		this.nests = nests;
+	}
+
+	public Nest addNest(Nest nest) {
+		getNests().add(nest);
+		nest.setAnt(this);
+
+		return nest;
+	}
+
+	public Nest removeNest(Nest nest) {
+		getNests().remove(nest);
+		nest.setAnt(null);
+
+		return nest;
 	}
 
 	public List<Usuario> getUsuarios() {
@@ -96,13 +85,5 @@ public class Ant {
 
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
-	}
-
-	public List<AntNest> getAntNests() {
-		return this.antNests;
-	}
-
-	public void setAntNests(List<AntNest> nests) {
-		this.antNests = nests;
 	}
 }

@@ -19,11 +19,9 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
-import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.service.UsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.UserDetailsLogin;
-
-
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -32,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	
 	@Autowired JwtService jwtService;
-	@Autowired private IUsuarioService usuarioservice;
+	@Autowired private UsuarioService usuarioservice;
 	
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -43,7 +41,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/salas","/cola"); // aquí a lo que nos suscribimos. Para temas libres: /salas/chatroom etc. Para particulares /users/queue/messages
+        registry.enableSimpleBroker("/salas", "/cola", "/topic/chatroom"); // aquí a lo que nos suscribimos. Para temas libres: /salas/chatroom etc. Para particulares /users/queue/messages
         registry.setApplicationDestinationPrefixes("/app"); //para enviar mensajes generales desde el cliente debe empezar por: /app
         registry.setUserDestinationPrefix("/usuarios"); //para recibir mensajes particulares en el cliente la suscripción debe empezar por: /users
     }

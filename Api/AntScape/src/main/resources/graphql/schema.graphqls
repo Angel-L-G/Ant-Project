@@ -1,0 +1,127 @@
+type Ant {
+    id: Int
+    biome: String
+    description: String
+    name: String
+    type: String
+    nests: [Nest]
+    usuarios: [Usuario]
+}
+
+type Nest {
+    id: Int!
+    deleted: Boolean
+    nestLevels: [NestLevel]
+    ant: Ant
+    usuario: Usuario
+}
+
+type NestLevel {
+    id: Int!
+    cost: Float!
+    level: Int!
+    multiplier: Float!
+    name: String!
+    production: Float!
+    nest: Nest
+}
+
+type Usuario {
+    id: Int!
+    active: Boolean
+    banned: Boolean
+    eggs: String
+    email: String
+    goldenEggs: String
+    hash: String
+    img: String
+    name: String
+    password: String
+    rol: String
+    nests: [Nest]
+    guild: Guild
+    ants: [Ant]
+}
+
+type Guild {
+    id: Int!
+    defenseNumber: Int
+    defenseRange: Int
+    name: String
+    quantity: Int
+    trophys: Int
+    guildLevels: [GuildLevel]
+    usuarios: [Usuario]
+}
+
+type GuildLevel {
+    id: Int!
+    cost: Float!
+    efect: String
+    level: Int!
+    name: String!
+    guild: Guild
+}
+
+type AdministrativeInfo {
+    id: ID!
+    createdAt: String
+    informacion: String
+    lastLogin: String
+    updatedAt: String
+    usuario: Usuario
+}
+
+type UserRegistrations {
+    date: String
+    count: Int
+}
+
+
+
+
+
+type Query {
+    findAdministrativeInfoByUserId(userId: Int!): AdministrativeInfo
+    findLastLogins(aux: String!): [UserRegistrations]
+    findRegisterAlongTime(ok: Boolean!): [UserRegistrations]
+    findAllUsers: [Usuario]
+}
+
+
+
+
+
+type Mutation {
+	saveUser(user: UsuarioSaveInputDTO!): GraphqlResponse!
+	updatearUser(user: UsuarioInputGraphqlUpdateDTO!): GraphqlResponse!
+	deleteUser(id: Int!): GraphqlResponse!
+}
+
+type GraphqlResponse {
+	status: Int!
+	name: String
+	msg: String
+}
+
+input UsuarioSaveInputDTO {
+	active: Boolean
+	eggs: Int
+	goldenEggs: Int
+	email: String
+	img: String
+	name: String
+	password: String
+	rol: String
+}
+
+input UsuarioInputGraphqlUpdateDTO {
+	id: Int
+	email: String
+	name: String
+	password: String
+	img: String
+	active: Boolean
+	eggs: Int
+	goldenEggs: Int
+}

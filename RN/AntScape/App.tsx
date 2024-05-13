@@ -8,7 +8,6 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 import type { PropsWithChildren } from 'react';
-
 import {
     SafeAreaView,
     ScrollView,
@@ -29,56 +28,72 @@ import {
 import Login from './src/screens/Login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Register from './src/screens/Register';
 import Main from './src/screens/Main';
-import AntNest from './src/components/AntNest';
 import Social from './src/screens/Social';
-import Settings from './src/screens/Settings';
 import Outside from './src/screens/Outside';
 import NewHormiguero from './src/screens/NewHormiguero';
 import Profile from './src/screens/Profile';
 import Game from './src/screens/Game';
+import AppContextProvider from './src/context/AppContextProvider';
+import Personal from './src/screens/Personal';
+import ProfileOther from './src/screens/ProfileOther';
+import { ClanType, User } from './src/types/types';
+import Clan from './src/screens/Clan';
+import Ajustes from './src/screens/Ajustes';
+import ClanProfile from './src/screens/ClanProfile';
+import CrearClan from './src/screens/CrearClan';
+import NuevoChat from './src/screens/NuevoChat';
+import ClanProfileOther from './src/screens/ClanProfileOther';
+import Atacar from './src/screens/Atacar';
+import AnimatedGif from './src/components/AnimatedGif';
+import ChatScreen from './src/screens/ChatScreen';
+import TestChatGrupal from './src/screens/TestChatGrupal';
 
 type SectionProps = PropsWithChildren<{
     title: string;
 }>;
 
-type RootStackParamList = {
+export type RootStackParamList = {
     Register: undefined,
     Login: undefined,
-    Main: undefined,
-    Social: undefined,
-    Settings: undefined,
-    Outside: undefined,
-    NewHormiguero: undefined,
+    Social: {tab: number},
+    NuevoChat: {idOtherUser: number, nameOtherUser: string},
     Profile: undefined,
-    Game: undefined,
+    Personal: undefined,
+    ProfileOther: {usu: User},
+    Clan: undefined,
+    Ajustes: undefined,
+    ClanProfile: {clan: ClanType},
+    CrearClan: undefined,
+    ClanProfileOther: {clan: ClanType},
+    Atacar: {clan: ClanType}
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): JSX.Element {
-    const isDarkMode = useColorScheme() === 'dark';
-
-    const backgroundStyle = {
-        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    };
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Login" component={Login}/>
-                <Stack.Screen name="Game" component={Game}/>
-                <Stack.Screen name="NewHormiguero" component={NewHormiguero}/>
-                <Stack.Screen name="Outside" component={Outside}/>
-                <Stack.Screen name="Profile" component={Profile}/>
-                <Stack.Screen name="Main" component={Main}/>
-                <Stack.Screen name="Settings" component={Settings}/>
-                <Stack.Screen name="Social" component={Social}/>
-                <Stack.Screen name="Register" component={Register}/>
-            </Stack.Navigator>
-        </NavigationContainer>
+        <AppContextProvider>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{headerShown: false, animation: 'fade'}}>
+                    <Stack.Screen name="Login" component={Login}/>
+                    <Stack.Screen name="Personal" component={Personal}/>
+                    <Stack.Screen name="Profile" component={Profile}/>
+                    <Stack.Screen name="ProfileOther" component={ProfileOther}/>
+                    <Stack.Screen name="Social" component={Social}/>
+                    <Stack.Screen name="Register" component={Register}/>
+                    <Stack.Screen name="Clan" component={Clan}/>
+                    <Stack.Screen name="ClanProfile" component={ClanProfile}/>
+                    <Stack.Screen name="ClanProfileOther" component={ClanProfileOther}/>
+                    <Stack.Screen name="Ajustes" component={Ajustes}/>
+                    <Stack.Screen name="CrearClan" component={CrearClan}/>
+                    <Stack.Screen name="NuevoChat" component={NuevoChat}/>
+                    <Stack.Screen name="Atacar" component={Atacar}/>
+                </Stack.Navigator>
+            </NavigationContainer>
+        </AppContextProvider>
     )
 }
 

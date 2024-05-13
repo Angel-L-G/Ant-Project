@@ -1,14 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import { Hormiguero, NestDetails, NestSaveDTO } from '../types/types';
+import { useAppContext } from '../context/AppContextProvider';
+import Globals from '../components/Globals';
 
 type Props = {
     navigation: any
 }
 
 const UseHormiguero = ({navigation}: Props) => {
-    const ruta = "http://192.168.0.12:3000/hormigueros"
-    const [hormigueros, setHormigueros] = useState<Array<Hormiguero>>([] as Array<Hormiguero>);
+    const {ruta} = Globals();
+    
+    const {user,token} = useAppContext();
+    const [hormigueros, setHormigueros] = useState<Array<NestDetails>>([] as Array<NestDetails>);
 
     useEffect(() => {
         async function getAll(){
@@ -20,33 +25,43 @@ const UseHormiguero = ({navigation}: Props) => {
     
     async function findAll(){
         try{
-            const response = await axios.get(ruta);
+            
+            const response = await axios.get(ruta+"/own/"+user.nombre, {headers: { "Authorization": "Bearer " + token }});
+
             setHormigueros(response.data);
         } catch (error){
             console.log(error);
         }
     }
 
+    async function findFriends(){}
+
     async function findByid(id: number){
         hormigueros.map((hormiguero)=>{
-            if(hormiguero.id == id){
+            /*if(hormiguero.id == id){
                 return hormiguero;
-            }
+            }*/
         })
         return null;
     }
 
-    async function save(newHormiguero: Hormiguero){
+    async function save(antType: string){
         const axiospost = async (ruta: string) => {
+            let newHormiguero: NestSaveDTO = {
+                antType: antType,
+                deleted: false,
+                map: "---",
+                nameUser: user.nombre
+            }
+
             try{
-                const response = await axios.post(ruta, newHormiguero);
-                console.log(response.data);
+                const response = await axios.post(ruta, newHormiguero, { headers: { "Authorization": "Bearer " + token }});
             } catch (error){
                 console.log(error);
             }
         }
 
-        axiospost(ruta);
+        axiospost(ruta);    
     }
 
     async function drop(){}

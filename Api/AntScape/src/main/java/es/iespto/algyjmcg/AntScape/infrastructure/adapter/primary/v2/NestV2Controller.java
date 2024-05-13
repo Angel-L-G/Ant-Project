@@ -3,6 +3,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary.v2;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,34 +11,48 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
+import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
+import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
+import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v2/nests")
 public class NestV2Controller {
-	@Autowired
-	private INestService nestService;
-	@Autowired
-	private IUsuarioService userService;
+	@Autowired private INestService nestService;
+	@Autowired private IUsuarioService userService;
+	@Autowired private IAntService antService;
+	@Autowired private JwtService jwtService;
 	
-	@GetMapping(path = "/own/{id}")
-	public ResponseEntity<?> findByAllOwn(@PathVariable Integer id) {
-		if(id != null) {
-			List<Nest> find = nestService.findAllById(id);
+	@GetMapping(path = "/own/{name}")
+	public ResponseEntity<?> findAllOwn(@RequestHeader HttpHeaders headers, @PathVariable String name) {
+		if(name != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			if(!name.equals(username)) {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("False name");
+			}
+			
+			Usuario findByName = userService.findByName(name);
+			
+			List<Nest> find = nestService.findAllById(findByName.getId());
 			if(find != null) {
 				return ResponseEntity.ok(find);
 			}else {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content Found");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Content Found");
 			}
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content On Request Body");
 		}
 	}
 
@@ -56,16 +71,22 @@ public class NestV2Controller {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody NestInputDTO in) {
-		if(in != null) {
+	public ResponseEntity<?> save(@RequestParam String name, @RequestHeader HttpHeaders headers) {
+		if(name != null) {
+			String token = headers.getFirst("Authorization");
+			String resultado = token.substring(7);
+			String username = jwtService.extractUsername(resultado);
+			
+			Usuario findByName = userService.findByName(username);
+			
 			Nest nest = new Nest();
 			
-			nest.setDeleted(in.isDeleted());
-			nest.setAntType(in.getAntType());
-			nest.setMap(in.getMap());
-			nest.setUsuario(userService.findById(in.getIdUser()));
+			nest.setDeleted(false);
+			nest.setUsuario(findByName);
+			nest.setAnt(antService.findByName(name));
 			
 			Nest save = nestService.save(nest);
+			
 			if(save != null) {
 				return ResponseEntity.ok(save);
 			}else {
@@ -85,44 +106,5 @@ public class NestV2Controller {
 		}else {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
 		}
-	}
-}
-
-class NestInputDTO {
-	private String antType;
-	private boolean deleted;
-	private String map;
-	private Integer idUser;
-
-	public String getAntType() {
-		return antType;
-	}
-
-	public void setAntType(String antType) {
-		this.antType = antType;
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getMap() {
-		return map;
-	}
-
-	public void setMap(String map) {
-		this.map = map;
-	}
-
-	public Integer getIdUser() {
-		return idUser;
-	}
-
-	public void setIdUser(Integer idUser) {
-		this.idUser = idUser;
 	}
 }
