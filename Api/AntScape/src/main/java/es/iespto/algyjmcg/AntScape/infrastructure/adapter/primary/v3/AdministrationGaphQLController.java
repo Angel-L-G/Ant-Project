@@ -11,39 +11,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import es.iespto.algyjmcg.AntScape.domain.model.AdministrativeInfo;
-import es.iespto.algyjmcg.AntScape.domain.model.Guild;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAdministrativeInfoService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IAntService;
-import es.iespto.algyjmcg.AntScape.domain.port.primary.IGuildService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestLevelService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
-import es.iespto.algyjmcg.AntScape.infrastructure.security.JwtService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.MailService;
 
 @Controller
 public class AdministrationGaphQLController {
-	@Autowired private IGuildService guildService;
 	@Autowired private IAdministrativeInfoService adminInfoService;
 	@Autowired private IUsuarioService usuarioservice;
 	@Autowired private INestService nestService;
 	@Autowired private INestLevelService nestLevelService;
 	@Autowired private IAntService antService;
 	@Autowired private PasswordEncoder passwordEncoder;
-	@Autowired private JwtService jwtService;
 	@Autowired private MailService mailService;
 	private static final int BASE_ANT_ID = 3;
 
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @QueryMapping
+    public List<Usuario> findAllUsers(@Argument Integer userId) {
+        return (List<Usuario>) usuarioservice.findAll();
+    }
+	
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping
     public AdministrativeInfo findAdministrativeInfoByUserId(@Argument Integer userId) {
@@ -92,32 +91,6 @@ public class AdministrationGaphQLController {
     	}
 
     	return result;
-    }
-    
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @QueryMapping
-    public Double calcularMediaDePersonas(@Argument String aux) {
-    	Iterable<Guild> guilds = guildService.findAll();
-    	int totalPersonas = 0;
-        int cantidadDeGremios = 0;
-
-        for (Guild guild : guilds) {
-            totalPersonas += guild.getQuantity();
-            cantidadDeGremios++;
-        }
-
-        if (cantidadDeGremios == 0) {
-            return 0.0;
-        }
-
-        double media = (double) totalPersonas / cantidadDeGremios;
-
-        return Math.round(media * 100.0) / 100.0;
-        /*
-         {
-		   "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4iLCJzdWIiOiJhIiwiZXhwIjoxNzE1MzQwNDA5fQ.ge6tJa4zzw1mXdckOWqYz72Pmp6_uDkDG7XaNdR2WVM"
-		 }
-         */
     }
     
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -196,6 +169,12 @@ public class AdministrationGaphQLController {
 
         return response;
     }
+    
+    /*
+    {
+	   "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4iLCJzdWIiOiJhIiwiZXhwIjoxNzE1MzQwNDA5fQ.ge6tJa4zzw1mXdckOWqYz72Pmp6_uDkDG7XaNdR2WVM"
+	 }
+    */
     
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SchemaMapping(typeName = "Mutation", field = "updatearUser")

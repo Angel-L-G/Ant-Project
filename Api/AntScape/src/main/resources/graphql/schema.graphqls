@@ -83,9 +83,9 @@ type UserRegistrations {
 
 type Query {
     findAdministrativeInfoByUserId(userId: Int!): AdministrativeInfo
-    findLastLogins: [UserRegistrations]
+    findLastLogins(aux: String!): [UserRegistrations]
     findRegisterAlongTime(ok: Boolean!): [UserRegistrations]
-    calcularMediaDePersonas(aux: String!): Float
+    findAllUsers: [Usuario]
 }
 
 

@@ -3,6 +3,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entit
 import java.io.Serializable;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -63,14 +64,14 @@ public class UsuarioEntity implements Serializable {
 	@Column(name="total_money_generated", length=255)
 	private String totalMoneyGenerated;
 
-	@OneToMany(mappedBy="usuario")
+	@OneToMany(mappedBy="usuario", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<NestEntity> nests;
 
 	@ManyToOne
 	@JoinColumn(name="id_guild")
 	private GuildEntity guild;
 
-	@OneToMany(mappedBy="usuario")
+	@OneToMany(mappedBy="usuario", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<AdministrativeInfoEntity> administrativeInfos;
 	
 	@ManyToMany(fetch= FetchType.LAZY)

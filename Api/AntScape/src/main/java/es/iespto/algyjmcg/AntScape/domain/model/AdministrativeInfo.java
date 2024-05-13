@@ -2,8 +2,6 @@ package es.iespto.algyjmcg.AntScape.domain.model;
 
 import java.sql.Timestamp;
 
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
-
 public class AdministrativeInfo {
 	private Integer id;
 	private Timestamp createdAt;
