@@ -22,7 +22,7 @@ const Login = (props: Props) => {
             <div className='loginContent'>
                 <Form className='loginForm' method='POST' onSubmit={() => login()}>
                     <Form.Group className="div" controlId="formBasicEmail">
-                        <Form.Label style={{ width: 80, color: "#198653", fontWeight: 'bold' }}>Nick: </Form.Label>
+                        <Form.Label style={{ width: 80, color: "#198653", fontWeight: 'bold' }}>Name: </Form.Label>
                         <Form.Control type="text" placeholder="Nick" style={{ width: 200 }} />
                     </Form.Group>
 
@@ -30,8 +30,8 @@ const Login = (props: Props) => {
                         <Form.Label style={{ width: 80, color: "#198653", fontWeight: 'bold' }}>Password: </Form.Label>
                         <Form.Control type="password" placeholder="Password" style={{ width: 200 }} />
                     </Form.Group>
+                    
                     <Button variant="success" type="submit" style={{ marginTop: 30, marginBottom: 30 }}>Login</Button>
-                    <a href='/register'>Register</a>
                 </Form>
             </div>
         </div>

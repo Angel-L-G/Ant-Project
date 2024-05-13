@@ -1,7 +1,7 @@
 export type GraphqlResponse = {
-	status: number
-	name: String
-	msg: String
+    status: number
+    name: String
+    msg: String
 }
 
 export type GraphqlSaveInputDTO = {
