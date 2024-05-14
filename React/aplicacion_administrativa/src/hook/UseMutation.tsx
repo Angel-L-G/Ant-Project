@@ -40,11 +40,11 @@ const UseMutation = () => {
             'user: { ' +
                 'active: ' + u.active + ',' + 
                 'eggs: ' + u.eggs + ',' +  
-                'email: ' + u.email + ',' 
-                'goldenEggs: ' + u.goldenEggs + ',' 
+                'email: ' + u.email + ',' +
+                'goldenEggs: ' + u.goldenEggs + ',' +
                 'id: ' + u.id + ',' +  
-                'img: ' + u.img + ',' 
-                'password: ' + u.password + ','  
+                'img: ' + u.img + ',' +
+                'password: ' + u.password + ',' +
                 'name: ' + u.name + 
             '}' +
           ') {' +

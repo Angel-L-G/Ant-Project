@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import Query from '../assets/Query';
 import Globals from '../assets/Globals';
@@ -8,10 +8,17 @@ const UseInformation = () => {
     const {findAllUsers, findLastLogins, findRegisterAlongTime} = Query();
     const {token} = useContext(AppContext);
     const {ruta} = Globals();
+    const [users, setUsers] = useState([]);
+    const [loginInfo, setLoginInfo] = useState();
+    const [registerInfo, setRegisterInfo] = useState();
 
+    useEffect(() => {
+        findAllUser();
+    }, [])
+    
 
     async function finduserInfoById(id: number) {
-        const query = 'findAdministrativeInfoByUserId(userId: ' + id + ') {' 
+        const query = 'findAdministrativeInfoByUserId(userId: ' + id + ') {' +
             'createdAt' +
             'id' +
             'lastLogin' +
@@ -31,6 +38,8 @@ const UseInformation = () => {
         try {
             const response = await axios.post(ruta, {query:  findAllUsers}, {headers: { "Authorization": "Bearer " + token }});
 
+            setUsers(response.data);
+
             return response.data;
         } catch (error) {
             console.log(error);
@@ -41,6 +50,8 @@ const UseInformation = () => {
         try {
             const response = await axios.post(ruta, {query:  findLastLogins}, {headers: { "Authorization": "Bearer " + token }});
 
+            setLoginInfo(response.data);
+
             return response.data;
         } catch (error) {
             console.log(error);
@@ -50,6 +61,8 @@ const UseInformation = () => {
     async function findRegisterDates() {
         try {
             const response = await axios.post(ruta, {query:  findRegisterAlongTime}, {headers: { "Authorization": "Bearer " + token }});
+
+            setRegisterInfo(response.data);
 
             return response.data;
         } catch (error) {
@@ -62,6 +75,7 @@ const UseInformation = () => {
         findAllUser,
         findLoginDates,
         findRegisterDates,
+        users
     }
 }
 

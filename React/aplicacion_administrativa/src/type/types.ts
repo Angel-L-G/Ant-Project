@@ -8,7 +8,7 @@ export type ContextUser = {
 
 export type UserLogin = {
     nombre: string,
-    password: string,
+    password: string
 }
 
 export type User = {
@@ -22,9 +22,24 @@ export type User = {
     totalMoneyGenerated: string
 }
 
+export type Usuario = {
+    id: number,
+    active: boolean,
+    banned: boolean,
+    eggs: string,
+    email: string,
+    goldenEggs: string,
+    hash: string,
+    img: string,
+    name: string,
+    password: string,
+    rol: string,
+    totalMoneyGenerated: string
+}
+
 export type Nest = {
     id: number,
-    deleted: false,
+    deleted: boolean,
     nestLevels: Array<NestLevel>,
     ant: Ant,
     user: User
