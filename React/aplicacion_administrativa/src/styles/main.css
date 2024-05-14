@@ -1,0 +1,233 @@
+/* Establece la paleta de colores centrada en el azul */
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+  
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* 100% de la altura de la pantalla */
+    background-color: rgba(40, 60, 160, 1);
+}
+  
+.header, .footer, .container, .nav, .main {
+    width: 100%;
+}
+  
+.header, .footer {
+    background-color: #333;
+    color: white;
+    height: 5%;
+}
+
+.header {
+    background: linear-gradient(135deg, #333, rgb(241, 211, 41)); /* Fondo degradado */
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+    text-align: center;
+    font-style: italic;
+}
+  
+.container {
+    display: flex;
+    height: 90%;
+    width: 100%;
+}
+  
+.nav {
+    flex: 1;
+    background-color: #444;
+    color: white;
+    width: 20%;
+}
+  
+.main {
+    flex: 5;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+}
+  
+.container .content {
+    background-color: #eee;
+    height: 100%;
+    width: 100%;
+
+}
+  
+.footer {
+    background-color: #333;
+    color: white;
+}
+  
+.nav form {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .nav form label {
+    display: block;
+    margin-bottom: 5px;
+    flex: 0 0 100%; /* Ocupa el 100% del ancho en una nueva línea */
+  }
+  
+  .nav form label.checkbox {
+    flex: 0 0 auto; /* Ocupa el ancho necesario */
+  }
+  
+  .nav form input[type="checkbox"] {
+    margin-right: 5px; /* Espacio entre el checkbox y el texto */
+  }
+  
+  .nav form input[type="number"],
+  .nav form input[type="email"],
+  .nav form input[type="text"],
+  .nav form input[type="password"] {
+    width: calc(100% - 10px); /* Ancho del campo de entrada */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .nav form button {
+    background-color: rgba(40, 60, 160, 1);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .nav form button:hover {
+    background-color: #555;
+  }
+  
+  .switch-container {
+    padding: 20px 0; /* Agrega 20px de padding arriba y abajo */
+  }
+  
+  /* Estilos para el switch */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center; /* Alinea los elementos verticalmente */
+  }
+  .checkbox-container label {
+    margin-right: 10px; /* Espacio entre la etiqueta y el checkbox */
+  }
+  
+  .form-container {
+    padding: 20px; /* Añade 20px de espacio alrededor del formulario */
+  }
+  
+  .form-title {
+    color: #ffffff; /* Color del texto */
+    font-size: 24px; /* Tamaño del texto */
+    margin-bottom: 20px; /* Margen inferior para separarlo del resto del formulario */
+  }
+  
+  .loginForm {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+    margin: 0 auto;
+  }
+  
+  .div {
+    margin-bottom: 20px;
+  }
+  
+  .label {
+    display: inline-block;
+  }
+  
+  .input {
+    width: 200px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .button {
+    background-color: #198653;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #14793c;
+  }
