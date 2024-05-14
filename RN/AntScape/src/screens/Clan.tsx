@@ -15,14 +15,15 @@ import UseChatHistory from '../hooks/UseChatHistory';
 import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
 import { formatDistanceToNow } from 'date-fns';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-type Props = {
-    navigation: any,
-}
+type Props = NativeStackScreenProps<RootStackParamList, "Clan">;
 
-const Clan = ({ navigation }: Props) => {
+const Clan = ({ navigation, route }: Props) => {
     const { ruta } = Globals();
     const { token, user, goldenEggsContext, setGoldenEggsContext } = useContext(AppContext);
+    const numero = route.params.numero;
     const [clan, setClan] = useState<ClanType>({} as ClanType);
     const [tieneClan, setTieneClan] = useState(false);
     const [clanId, setClanId] = useState(0);
@@ -73,13 +74,15 @@ const Clan = ({ navigation }: Props) => {
 
         const obtenerEstadoAsyncStorage = async () => {
             try {
-                const estadoPuedeAtacar = await AsyncStorage.getItem('puedeAtacar');
+                const estadoPuedeAtacar = await AsyncStorage.getItem(`puedeAtacar${user.id}`);
+                console.log(estadoPuedeAtacar + "Aaaaaaaaaaaa");
 
                 if (estadoPuedeAtacar !== null) {
                     setPuedeAtacar(false);
                 }
 
-                const tiempoDeAtaque = await AsyncStorage.getItem('momentoDeAtaque');
+                const tiempoDeAtaque = await AsyncStorage.getItem(`momentoDeAtaque${user.id}`);
+                console.log(tiempoDeAtaque + "Aaaaaaaaaaaa");
 
                 if (tiempoDeAtaque !== null) {
                     setMomentoDeAtaque(tiempoDeAtaque);
@@ -126,7 +129,7 @@ const Clan = ({ navigation }: Props) => {
         }
 
         carga();
-    }, [])
+    }, [numero])
 
     async function getClan(id: Number) {
         try {
@@ -213,25 +216,36 @@ const Clan = ({ navigation }: Props) => {
     }
 
     async function irAAtacar() {
+        const currentTime = new Date().getTime();
+        const disabledTime = parseInt(momentoDeAtaque);
+        const remainingTime = 3600000 - (currentTime - disabledTime);
+        let puede = false;
+        console.log(currentTime);
+        console.log(disabledTime);
+        
 
-        if (puedeAtacar) {
+        if (remainingTime <= 0 || isNaN(disabledTime)) {
+            console.log("Hola");
+            
+            setPuedeAtacar(true);
+            puede = true;
+
+            await AsyncStorage.setItem(`puedeAtacar${user.id}`, "true");
+            await AsyncStorage.removeItem(`momentoDeAtaque${user.id}`);
+        }
+
+        if (remainingTime <= 0 && puede || isNaN(disabledTime) && puede) {
             setPuedeAtacar(false);
-            await AsyncStorage.setItem('puedeAtacar', 'false');
-            await AsyncStorage.setItem('momentoDeAtaque', String(new Date().getTime()));
-
-            setTimeout(async () => {
-                setPuedeAtacar(true);
-                await AsyncStorage.removeItem('puedeAtacar');
-                await AsyncStorage.removeItem('momentoDeAtaque');
-            }, 3600000);
+            await AsyncStorage.setItem(`puedeAtacar${user.id}`, 'false');
+            await AsyncStorage.setItem(`momentoDeAtaque${user.id}`, String(new Date().getTime()));
+            setMomentoDeAtaque(String(new Date().getTime()));
 
             navigation.navigate("Atacar", { clan: clan });
         } else {
-            const currentTime = new Date().getTime();
-            const disabledTime = parseInt(momentoDeAtaque, 10);
-            const remainingTime = 3600000 - (currentTime - disabledTime);
+            const minutos = Math.floor((remainingTime / (1000 * 60)) % 60);
+            const segundos = Math.floor((remainingTime / 1000) % 60);
 
-            ToastAndroid.show("Debes esperar " + remainingTime + " para volver a atacar", ToastAndroid.LONG)
+            ToastAndroid.show("Debes esperar " + minutos + " minutos y " + segundos + " segundos para volver a atacar", ToastAndroid.LONG)
         }
     }
 
@@ -518,7 +532,7 @@ const Clan = ({ navigation }: Props) => {
                             </View>
                             <View style={{ height: "8%", width: "100%", marginTop: "2%" }}>
                                 <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
-                                    <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", fontSize: 16, backgroundColor: "white", height: 30, alignSelf: "center", marginLeft: "2%" }} />
+                                    <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", fontSize: 14, backgroundColor: "white", height: 30, alignSelf: "center", marginLeft: "2%", paddingVertical: 0 }} />
                                     <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: 30, borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
                                         <Icon name="send" size={20} color={"yellow"}></Icon>
                                     </TouchableHighlight>
@@ -528,7 +542,7 @@ const Clan = ({ navigation }: Props) => {
                     </LinearGradient>
                     <View style={{ position: 'absolute', height: "8%", width: "9%", backgroundColor: "rgba(40, 60, 160, 1)", left: "12%", top: "46%" }}>
                         <TouchableHighlight underlayColor={"rgba(60, 80, 180, 1)"} onPress={() => setModalChatVisible(false)} style={{ width: "100%", height: "100%", alignItems: "flex-start", justifyContent: "center" }}>
-                            <Icon name="chevron-forward" size={50} color={"yellow"} style={{ right: 8 }}></Icon>
+                            <Icon name="chevron-forward" size={45} color={"yellow"} style={{ right: 8 }}></Icon>
                         </TouchableHighlight>
                     </View>
                 </View>

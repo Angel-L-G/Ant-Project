@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableHighlight, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
@@ -39,15 +39,23 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
         getClanUsers();
     }, [])
 
-
     const handleChangeInput = (text: string) => {
         setValorInput(text);
         console.log(valorInput);
     };
 
-    async function buscarUsuarios(texto: string) {
-
-    };
+    async function buscarUsuarios(inputValue: string) {
+        try {
+            const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/users", { headers: { "Authorization": "Bearer " + token } });
+            const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
+                usuario.name.includes(inputValue)
+            );
+            setUsers(usuariosFiltrados);
+            console.log(usuariosFiltrados);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     async function unirse() {
         try {
@@ -56,8 +64,12 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
             setUsers([...users, user]);
             setUser({ ...user, id_guild: clan.id });
             setPertenece(true);
-        } catch (error) {
+            
+        } catch (error: any) {
             console.log(error);
+            if (error.response.status == 406) {
+                ToastAndroid.show("Ya estas en un gremio", ToastAndroid.LONG)
+            }
         }
     }
 
@@ -88,7 +100,7 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
                     </View>
                     <View style={{ height: "8%", flexDirection: 'row', alignItems: 'center', width: "100%" }}>
                         <View style={{ width: "57%", marginHorizontal: "5%", marginTop: -10, flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <TextInput style={{ backgroundColor: "white", height: 35, width: "75%", borderRadius: 100 }} onChangeText={handleChangeInput} />
+                            <TextInput style={{ backgroundColor: "white", height: 35, width: "75%", borderRadius: 100, paddingVertical: 0 }} onChangeText={handleChangeInput} />
                             <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                                 start={{ x: 0.5, y: 0 }}
                                 end={{ x: 0.5, y: 1 }}

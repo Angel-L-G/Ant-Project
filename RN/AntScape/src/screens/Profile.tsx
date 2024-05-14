@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { launchImageLibrary } from 'react-native-image-picker';
 import Globals from '../components/Globals';
 import axios from 'axios';
+import { ClanType } from '../types/types';
 
 type Props = {
     navigation: any
@@ -18,14 +19,14 @@ const Profile = ({navigation}: Props) => {
     const {setUser, user, eggsContext, token} = useContext(AppContext);
     const [selectedImage, setSelectedImage] = useState<string>(ruta + "v1/files/" + user.img);
     const [selectedImage64, setSelectedImage64] = useState<string>("");
+    const [clan, setClan] = useState<ClanType>({} as ClanType);
 
     useEffect(() => {
         async function getClan() {
             try {
-                console.log(user);
-                
                 const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, {headers: { "Authorization": "Bearer " + token }});
                 console.log(response.data);
+                setClan(response.data);
             } catch (error) {
                 console.log(error);
             }
@@ -33,7 +34,6 @@ const Profile = ({navigation}: Props) => {
 
         getClan();
     }, [])
-    
     
     const openImagePicker = () => {
         const options: any = {
@@ -97,7 +97,7 @@ const Profile = ({navigation}: Props) => {
                     </View>
                     <View style={{flex: 1, marginTop: 50}}>
                         <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Nombre: {user.name}</Text>
-                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: -----</Text>
+                        <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {clan.name}</Text>
                         <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Eggs: {eggsContext}</Text>
                     </View>
                     <View>
