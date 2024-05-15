@@ -130,7 +130,7 @@ public class UserV2Controller {
 		out.setEggs(u.getEggs());
 		out.setGoldenEggs(u.getGoldenEggs());
 		out.setId(u.getId());
-		out.setImg(out.getImg());
+		out.setImg(u.getImg());
 		out.setName(u.getName());
 		out.setNests(u.getNests());
 		
