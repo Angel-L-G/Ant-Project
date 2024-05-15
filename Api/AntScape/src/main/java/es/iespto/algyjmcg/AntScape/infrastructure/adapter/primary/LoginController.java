@@ -61,6 +61,8 @@ public class LoginController {
 		userDetails.setPassword(user.getPassword());
 		
 		Usuario u = userService.findByName(userDetails.getUsername());
+		
+		System.err.println("aaaaaaaaaaaaa" + u.getName());
 
 		if(!u.getBanned()) {
 			if(u.getActive()) {

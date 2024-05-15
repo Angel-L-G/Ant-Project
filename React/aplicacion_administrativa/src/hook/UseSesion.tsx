@@ -10,7 +10,7 @@ type Props = {}
 const UseSesion = () => {
     const { setUser, setToken, token } = useContext(AppContext);
     const [loading, setLoading] = useState(false);
-    const {ruta} = Globals();
+    const { ruta } = Globals();
 
     async function login(nick: string, password: string) {
         setLoading(true);
@@ -21,16 +21,16 @@ const UseSesion = () => {
         }
 
         console.log("111 " + user.nombre + " 222 " + user.password);
-        
+
 
         const axiospost = async (ruta: string) => {
-            console.log(ruta+"v1/login");
-            
+            console.log(ruta + "v1/login");
+
             try {
                 console.log("nick: " + nick);
                 console.log("password: " + password);
                 const aux = ruta + "v1/login";
-                
+
                 const response = await axios.post(aux, user);
 
                 if (response.status > 199 && response.status < 300) {
@@ -53,7 +53,7 @@ const UseSesion = () => {
             } catch (error: any) {
                 console.log("Status: " + error.status);
                 console.log(error);
-                
+
 
                 if (error.response.status == 428) {
                     alert('Verifique su usuario primero')
