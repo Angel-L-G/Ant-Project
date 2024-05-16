@@ -1,5 +1,6 @@
 package es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +12,14 @@ import es.iespto.algyjmcg.AntScape.domain.model.AdministrativeInfo;
 import es.iespto.algyjmcg.AntScape.domain.port.secundary.IAdministrativeInfoRepository;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.AdministrativeInfoEntity;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.AdministrativeInfoMapper;
+import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.mapper.UsuarioMapper;
 import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.repository.AdministrativeInfoJPARepository;
 
 @Service
 public class AdministrativeInfoService implements IAdministrativeInfoRepository{
 	@Autowired private AdministrativeInfoJPARepository repository;
 	private AdministrativeInfoMapper am = new AdministrativeInfoMapper();
-	//private UsuarioMapper um = new UsuarioMapper();
+	private UsuarioMapper um = new UsuarioMapper();
 
 	@Override
 	public AdministrativeInfo findById(Integer id) {
@@ -39,7 +41,10 @@ public class AdministrativeInfoService implements IAdministrativeInfoRepository{
 		AdministrativeInfo out = null;
 
 		if (in != null) {
-			AdministrativeInfoEntity save = repository.save(am.toPersistance(in));
+			AdministrativeInfoEntity persistance = am.toPersistance(in);
+			persistance.setUsuario(um.toPersistance(in.getUsuario()));
+			
+			AdministrativeInfoEntity save = repository.save(persistance);
 
 			if (save != null) {
 				out = am.toDomain(save);
@@ -102,9 +107,31 @@ public class AdministrativeInfoService implements IAdministrativeInfoRepository{
 		AdministrativeInfo out = null;
 		
 		if(user_id != null) {
-			
+			repository.findByUserId(user_id);
 		}
 		
 		return out;
+	}
+
+	@Override
+	public void updateTimeStamp(Integer userId, Integer option) {
+		if(userId != null && option != null) {
+			AdministrativeInfoEntity info = repository.findByUserId(userId);
+			
+			long currentTimeMillis = System.currentTimeMillis();
+			 
+			switch (option) {
+			case 1:
+				info.setLastLogin(new Timestamp(currentTimeMillis));
+				break;
+			case 2:
+				info.setUpdatedAt(new Timestamp(currentTimeMillis));
+				break;
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + option);
+			}
+			
+			repository.save(info);
+		}
 	}
 }

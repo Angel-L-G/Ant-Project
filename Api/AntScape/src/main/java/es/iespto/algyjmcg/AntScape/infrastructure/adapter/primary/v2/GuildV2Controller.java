@@ -195,8 +195,12 @@ public class GuildV2Controller {
 			boolean giveOwnership = false;
 			
 			if(guild.getLeader() == user.getId()) {
-				if(guild.getUsuarios().contains(user) && guild.getUsuarios().contains(newLeader)) {
-					giveOwnership = mainService.giveOwnership(id, newLeaderId);
+				List<Usuario> users = mainService.findGuildUsersByGuildId(guild.getId());
+				
+				for (Usuario u : users) {
+					if(u.getId() == newLeaderId) {
+						giveOwnership = mainService.giveOwnership(id, newLeaderId);
+					}
 				}
 			}
 			

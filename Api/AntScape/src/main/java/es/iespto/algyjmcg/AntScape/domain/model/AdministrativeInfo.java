@@ -2,15 +2,13 @@ package es.iespto.algyjmcg.AntScape.domain.model;
 
 import java.sql.Timestamp;
 
-import es.iespto.algyjmcg.AntScape.infrastructure.adapter.secundary.mysql.entity.UsuarioEntity;
-
 public class AdministrativeInfo {
 	private Integer id;
 	private Timestamp createdAt;
 	private String informacion;
 	private Timestamp lastLogin;
 	private Timestamp updatedAt;
-	private UsuarioEntity usuario;
+	private Usuario usuario;
 
 	public AdministrativeInfo() {
 	}
@@ -55,11 +53,11 @@ public class AdministrativeInfo {
 		this.updatedAt = updatedAt;
 	}
 
-	public UsuarioEntity getUsuario() {
+	public Usuario getUsuario() {
 		return this.usuario;
 	}
 
-	public void setUsuario(UsuarioEntity usuario) {
+	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
 }

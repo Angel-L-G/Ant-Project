@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ public class NestEntity implements Serializable {
 	private Boolean deleted;
 
 	//bi-directional many-to-one association to NestLevel
-	@OneToMany(mappedBy="nest")
+	@OneToMany(mappedBy="nest", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<NestLevelEntity> nestLevels;
 
 	//bi-directional many-to-one association to Ant

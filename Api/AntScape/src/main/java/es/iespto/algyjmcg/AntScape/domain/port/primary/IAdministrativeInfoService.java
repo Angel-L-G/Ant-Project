@@ -10,4 +10,6 @@ public interface IAdministrativeInfoService {
 	boolean update(AdministrativeInfo in);
 	
 	AdministrativeInfo findByUserId(Integer user_id);
+	
+	void updateTimeStamp(Integer userId, Integer option);
 }
