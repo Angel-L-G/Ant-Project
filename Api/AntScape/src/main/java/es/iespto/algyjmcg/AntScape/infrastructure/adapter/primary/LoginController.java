@@ -121,16 +121,6 @@ public class LoginController {
 			return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Data Found");
 		}
 	}
-	
-	/*@GetMapping("/{token}")
-	public ResponseEntity<?> getRol(@PathVariable String token){
-		if(token != null) {
-			String rol = service.getRol(token);
-			return ResponseEntity.ok(rol);
-		}else {
-			return (ResponseEntity<?>) ResponseEntity.noContent();
-		}
-	}*/
 }
 
 class UserInputRegisterDTO{

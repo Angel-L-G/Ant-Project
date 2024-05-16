@@ -10,6 +10,7 @@ import { Image } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import VictoryAnimation from '../components/VictoryAnimaion';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Atacar">;
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -280,6 +281,7 @@ const Atacar = ({ navigation, route }: Props) => {
                         }
                         {(conclusion == "Victoria") &&
                             <View style={{ position: "absolute", flexDirection: "row", justifyContent: "center" }}>
+                                <VictoryAnimation />
                                 <View style={{ bottom: "35%", left: "0%", justifyContent: 'center', alignItems: "center", flex: 1 }}>
                                     <Image source={require('../assets/imgs/TrofeoVictoria.png')} style={{ width: 120, height: 200 }} />
                                 </View>
