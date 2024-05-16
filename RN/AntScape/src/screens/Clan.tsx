@@ -222,11 +222,11 @@ const Clan = ({ navigation, route }: Props) => {
         let puede = false;
         console.log(currentTime);
         console.log(disabledTime);
-        
+
 
         if (remainingTime <= 0 || isNaN(disabledTime)) {
             console.log("Hola");
-            
+
             setPuedeAtacar(true);
             puede = true;
 
@@ -263,6 +263,11 @@ const Clan = ({ navigation, route }: Props) => {
                                 <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalUno()} style={{ width: "40%", height: "70%", justifyContent: "center", alignItems: "center" }}>
                                     <View style={{ width: "100%", height: "100%" }}>
                                         <Image source={require('../assets/imgs/Entrance.png')} style={{ width: "100%", height: "100%" }} />
+                                        <View style={{ position: "absolute", width: "100%", height: "100%", justifyContent: "flex-end", alignItems: "flex-end" }}>
+                                            <View style={{ backgroundColor: "yellow", justifyContent: "flex-end", alignItems: "center", borderRadius: 100, bottom: 10, right: 10 }}>
+                                                <Icon name="chevron-up" size={40} color={"black"} />
+                                            </View>
+                                        </View>
                                     </View>
                                 </TouchableHighlight>
                             </View>
@@ -270,6 +275,11 @@ const Clan = ({ navigation, route }: Props) => {
                                 <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalDos()} style={{ width: "40%", height: "70%", justifyContent: "center", alignItems: "center" }}>
                                     <View style={{ width: "100%", height: "100%" }}>
                                         <Image source={require('../assets/imgs/Attack.png')} style={{ width: "100%", height: "100%" }} />
+                                        <View style={{ position: "absolute", width: "100%", height: "100%", justifyContent: "flex-end", alignItems: "flex-end" }}>
+                                            <View style={{ backgroundColor: "yellow", justifyContent: "flex-end", alignItems: "center", borderRadius: 100, bottom: 10, right: 10 }}>
+                                                <Icon name="chevron-up" size={40} color={"black"} />
+                                            </View>
+                                        </View>
                                     </View>
                                 </TouchableHighlight>
                             </View>
@@ -277,6 +287,11 @@ const Clan = ({ navigation, route }: Props) => {
                                 <TouchableHighlight underlayColor={"transparent"} onPress={() => abrirModalTres()} style={{ width: "40%", height: "70%", justifyContent: "center", alignItems: "center" }}>
                                     <View style={{ width: "100%", height: "100%" }}>
                                         <Image source={require('../assets/imgs/FoodStorage.png')} style={{ width: "100%", height: "100%" }} />
+                                        <View style={{ position: "absolute", width: "100%", height: "100%", justifyContent: "flex-end", alignItems: "flex-end" }}>
+                                            <View style={{ backgroundColor: "yellow", justifyContent: "flex-end", alignItems: "center", borderRadius: 100, bottom: 10, right: 10 }}>
+                                                <Icon name="chevron-up" size={40} color={"black"} />
+                                            </View>
+                                        </View>
                                     </View>
                                 </TouchableHighlight>
                             </View>
@@ -288,11 +303,29 @@ const Clan = ({ navigation, route }: Props) => {
                             </TouchableHighlight>
                         </View>
 
-                        <View style={{ position: "absolute", top: 10, left: 10 }}>
-                            <TouchableHighlight underlayColor={"rgb(24, 50, 150)"} onPress={() => navigation.navigate("ClanProfile", { clan: clan })} style={{ width: 100, height: 30, backgroundColor: "rgba(20, 40, 140, 1)", borderRadius: 20, justifyContent: "center", alignContent: 'center', elevation: 10 }}>
-                                <Text style={{ textAlign: 'center', fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow" }}>Clan</Text>
-                            </TouchableHighlight>
+                        <View style={{ width: "100%", position: 'absolute', flexDirection: "row", justifyContent: "space-around" }}>
+                            <View style={{ top: 10 }}>
+                                <TouchableHighlight underlayColor={"rgb(24, 50, 150)"} onPress={() => navigation.navigate("ClanProfile", { clan: clan })} style={{ width: 100, height: 30, backgroundColor: "rgba(20, 40, 140, 1)", borderRadius: 20, justifyContent: "center", alignContent: 'center' }}>
+                                    <Text style={{ textAlign: 'center', fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow" }}>Ver Clan</Text>
+                                </TouchableHighlight>
+                            </View>
+
+                            <View style={{ top: 10 }}>
+                                <View style={{ width: 140, height: 30, backgroundColor: "rgba(0, 0, 0, 0.8)", borderRadius: 20, justifyContent: "center", alignContent: 'center' }}>
+                                    <Text style={{ textAlign: 'center', fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow" }} numberOfLines={1} ellipsizeMode='tail'>{clan.name}</Text>
+                                </View>
+                            </View>
+
+                            <View style={{ top: 10 }}>
+                                <View style={{ width: 80, height: 30, backgroundColor: "rgba(0, 0, 0, 0.8)", borderRadius: 20, justifyContent: "center", alignContent: 'center', flexDirection: "row" }}>
+                                    <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>{clan.trophys}</Text>
+                                    <View style={{ width: "18%", height: "60%", marginLeft: 5, alignSelf: 'center' }}>
+                                        <Image source={require('../assets/imgs/Trophy.png')} style={{ width: "100%", height: "100%" }} />
+                                    </View>
+                                </View>
+                            </View>
                         </View>
+
                         {(modalChatVisible) ?
                             <></>
                             :
