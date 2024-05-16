@@ -49,7 +49,7 @@ import Atacar from './src/screens/Atacar';
 import AnimatedGif from './src/components/AnimatedGif';
 import ChatScreen from './src/screens/ChatScreen';
 import TestChatGrupal from './src/screens/TestChatGrupal';
-import VictoryAnimation from './src/components/VictoryAnimaion';
+import VictoryAnimation from './src/components/ResultAnimation';
 
 type SectionProps = PropsWithChildren<{
     title: string;
