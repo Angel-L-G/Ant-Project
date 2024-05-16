@@ -79,10 +79,49 @@ type UserRegistrations {
 
 
 
+
+
 type Query {
-	findAllNests: [Nest]
     findAdministrativeInfoByUserId(userId: Int!): AdministrativeInfo
-    findLastLogins: [UserRegistrations]
+    findLastLogins(aux: String!): [UserRegistrations]
     findRegisterAlongTime(ok: Boolean!): [UserRegistrations]
-    calcularMediaDePersonas(aux: String!): Float
+    findAllUsers: [Usuario]
+}
+
+
+
+
+
+type Mutation {
+	saveUser(user: UsuarioSaveInputDTO!): GraphqlResponse!
+	updatearUser(user: UsuarioInputGraphqlUpdateDTO!): GraphqlResponse!
+	deleteUser(id: Int!): GraphqlResponse!
+}
+
+type GraphqlResponse {
+	status: Int!
+	name: String
+	msg: String
+}
+
+input UsuarioSaveInputDTO {
+	active: Boolean
+	eggs: Int
+	goldenEggs: Int
+	email: String
+	img: String
+	name: String
+	password: String
+	rol: String
+}
+
+input UsuarioInputGraphqlUpdateDTO {
+	id: Int
+	email: String
+	name: String
+	password: String
+	img: String
+	active: Boolean
+	eggs: Int
+	goldenEggs: Int
 }

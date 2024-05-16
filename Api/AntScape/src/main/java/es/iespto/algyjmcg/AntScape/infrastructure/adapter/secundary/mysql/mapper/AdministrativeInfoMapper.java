@@ -8,7 +8,10 @@ public class AdministrativeInfoMapper {
 		AdministrativeInfoEntity out = new AdministrativeInfoEntity();
 		
 		if(in != null) {
-			out.setId(in.getId());
+			if(in.getId() != null) {
+				out.setId(in.getId());
+			}
+			
 			out.setCreatedAt(in.getCreatedAt());
 			out.setInformacion(in.getInformacion());
 			out.setLastLogin(in.getLastLogin());

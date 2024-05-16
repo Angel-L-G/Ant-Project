@@ -40,7 +40,12 @@ public class AdministrativeInfoDomainService implements IAdministrativeInfoServi
 
 	@Override
 	public AdministrativeInfo findByUserId(Integer user_id) {
-		// TODO Auto-generated method stub
-		return null;
+		return service.findByUserId(user_id);
+	}
+
+	@Override
+	public void updateTimeStamp(Integer userId, Integer option) {
+		service.updateTimeStamp(userId, option);
+		
 	}
 }
