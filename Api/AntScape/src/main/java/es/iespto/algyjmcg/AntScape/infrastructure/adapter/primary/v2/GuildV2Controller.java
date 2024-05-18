@@ -198,7 +198,7 @@ public class GuildV2Controller {
 				List<Usuario> users = mainService.findGuildUsersByGuildId(guild.getId());
 				
 				for (Usuario u : users) {
-					if(u.getId() == newLeaderId) {
+					if(u.getId() == newLeader.getId()) {
 						giveOwnership = mainService.giveOwnership(id, newLeaderId);
 					}
 				}

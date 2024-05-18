@@ -31,16 +31,20 @@ public class NestLevelV2Controller {
 		
 		findById.setLevel(findById.getLevel()+1);
 		
-		BigDecimal res = findById.getMultiplier().multiply(BigDecimal.valueOf(findById.getProduction()));
+		Double aux = (double) Math.round(findById.getMultiplier().doubleValue() * findById.getProduction() + 0.3);
 
-		findById.setProduction(res.doubleValue());
+		findById.setProduction(aux+1);
 
-		Float aditionToCost = (float) ((findById.getNest().getNestLevels().size()/10.0)+1.0);
+		Float aditionToCost = (float) Math.round((findById.getNest().getNestLevels().size()/10.0)+1.0);
 		Float newCost = (float) (Math.round(findById.getCost()*findById.getMultiplier().floatValue()*aditionToCost));
 		
-		findById.setCost(newCost);
+		if(newCost <= findById.getCost()) {
+			newCost+=10;
+		}else {
+			newCost+=7;
+		}
 		
-		System.err.println(findById.getCost());
+		findById.setCost(newCost);
 		
 		boolean update = mainService.update(findById);
 		
@@ -75,10 +79,6 @@ public class NestLevelV2Controller {
 			nestlvl.setMultiplier(in.getMultiplier());
 			nestlvl.setName(in.getName());
 			nestlvl.setProduction(in.getProduction());
-			
-			System.out.println(in.getId_nest());
-			
-			System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + secundaryService.findById(in.getId_nest()).toString());
 			
 			nestlvl.setNest(secundaryService.findById(in.getId_nest()));
 			

@@ -10,6 +10,8 @@ import { Image } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import VictoryAnimation from '../components/ResultAnimation';
+import ResultAnimation from '../components/ResultAnimation';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Atacar">;
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -149,7 +151,7 @@ const Atacar = ({ navigation, route }: Props) => {
         setModalVisible(false);
         setSumaTotal(0);
         setUltimasTiradas([]);
-        navigation.navigate("Clan");
+        navigation.navigate("Clan", {numero: 15});
     }
 
     async function cancelarAtaque() {
@@ -267,6 +269,7 @@ const Atacar = ({ navigation, route }: Props) => {
                         }
                         {(conclusion == "Pirrica") &&
                             <View style={{ position: "absolute", flexDirection: "row", justifyContent: "center" }}>
+                                <ResultAnimation option={1} />
                                 <View style={{ bottom: "35%", left: "0%", justifyContent: 'center', alignItems: "center", flex: 1 }}>
                                     <Image source={require('../assets/imgs/TrofeoVictoria.png')} style={{ width: 120, height: 200 }} />
                                 </View>
@@ -300,6 +303,7 @@ const Atacar = ({ navigation, route }: Props) => {
                                     <View style={{ width: "100%", height: "100%" }}>
                                         {(conclusion == "Derrota") &&
                                             <View style={{ width: "100%", height: "100%" }}>
+                                                <ResultAnimation option={0} />
                                                 <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: "center" }}>
                                                     <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", width: 40, textAlign: 'center' }}>{resultado.eggs}</Text>
                                                     <Image source={require('../assets/imgs/FireAntEgg.webp')} style={{ width: 20, height: 30 }} />
@@ -332,6 +336,7 @@ const Atacar = ({ navigation, route }: Props) => {
                                         }
                                         {(conclusion == "Victoria") &&
                                             <View style={{ width: "100%", height: "100%" }}>
+                                                <ResultAnimation option={2} />
                                                 <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: "center" }}>
                                                     <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular", width: 40, textAlign: 'center' }}>{resultado.eggs}</Text>
                                                     <Image source={require('../assets/imgs/FireAntEgg.webp')} style={{ width: 20, height: 30 }} />
@@ -394,7 +399,7 @@ const Atacar = ({ navigation, route }: Props) => {
                                             <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Cancelar ataque</Text>
                                         </TouchableHighlight>
                                         :
-                                        <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("Clan")} style={{ width: 160, padding: 5, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
+                                        <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("Clan", {numero: 10})} style={{ width: 160, padding: 5, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
                                             <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Cancelar ataque</Text>
                                         </TouchableHighlight>
                                     }

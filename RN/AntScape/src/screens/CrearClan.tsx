@@ -27,6 +27,7 @@ const CrearClan = ({ navigation }: Props) => {
             const params = {
                 guildName: nombre,
                 guildDescription: descripcion,
+                guildImage: icono + colorIcono + colorFondo
             }
             const response = await axios.post(ruta + "v2/guilds", null, { params: params, headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);

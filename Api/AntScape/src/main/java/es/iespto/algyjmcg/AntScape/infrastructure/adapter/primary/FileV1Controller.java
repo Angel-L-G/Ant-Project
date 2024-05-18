@@ -42,10 +42,12 @@ public class FileV1Controller {
 	
 	@GetMapping("/{filename}")
 	 public ResponseEntity<?> getFiles(@PathVariable String filename) {
+		 System.err.println("1: " + filename);
 		 Resource resource = storageService.get(filename);
 	
 		 // Try to determine file's content type
 		 String contentType = null;
+		 System.err.println("2");
 		 try {
 			 contentType = URLConnection.guessContentTypeFromStream(resource.getInputStream());
 	

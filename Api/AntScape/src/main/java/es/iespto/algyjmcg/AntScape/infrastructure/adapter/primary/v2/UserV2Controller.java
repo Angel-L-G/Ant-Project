@@ -80,15 +80,32 @@ public class UserV2Controller {
 		}
 	}
 	
-	@PutMapping(path="/updatemoney")
-	public ResponseEntity<?> updateMoney(@RequestHeader HttpHeaders headers, @RequestBody updateMoneyDTO money) {
+	@PutMapping(path="/update/eggs")
+	public ResponseEntity<?> updateEggs(@RequestHeader HttpHeaders headers, @RequestBody String eggs) {
 		String token = headers.getFirst("Authorization");
 		String resultado = token.substring(7);
 		String username = jwtService.extractUsername(resultado);
 		
 		Usuario findByName = userService.findByName(username);
-		findByName.setEggs(money.getEggs());
-		findByName.setGoldenEggs(money.getGoldenEggs());
+		findByName.setEggs(eggs);
+		
+		boolean update = userService.update(findByName);
+		
+		if(update) {
+			return ResponseEntity.ok(findByName);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+		}
+	}
+	
+	@PutMapping(path="/update/goldeneggs")
+	public ResponseEntity<?> updateGoldenEggs(@RequestHeader HttpHeaders headers, @RequestBody String goldenEggs) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		findByName.setGoldenEggs(goldenEggs);
 		
 		boolean update = userService.update(findByName);
 		
@@ -135,7 +152,7 @@ public class UserV2Controller {
 		out.setEggs(u.getEggs());
 		out.setGoldenEggs(u.getGoldenEggs());
 		out.setId(u.getId());
-		out.setImg(out.getImg());
+		out.setImg(u.getImg());
 		out.setName(u.getName());
 		out.setNests(u.getNests());
 		
@@ -277,26 +294,6 @@ class updateProfilePictureDTO {
 	}
 	public void setBase64(String base64) {
 		this.base64 = base64;
-	}
-}
-
-class updateMoneyDTO{
-	private String eggs;
-	private String goldenEggs;
-	
-	public updateMoneyDTO() {}
-	
-	public String getEggs() {
-		return eggs;
-	}
-	public void setEggs(String eggs) {
-		this.eggs = eggs;
-	}
-	public String getGoldenEggs() {
-		return goldenEggs;
-	}
-	public void setGoldenEggs(String goldenEggs) {
-		this.goldenEggs = goldenEggs;
 	}
 }
 

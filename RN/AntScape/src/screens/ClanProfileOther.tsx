@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableHighlight, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
@@ -9,6 +9,7 @@ import Globals from '../components/Globals';
 import axios from 'axios';
 import { User } from '../types/types';
 import UsuarioCardClan from '../components/UsuarioCardClan';
+import images from '../assets/imgs';
 
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfileOther">;
 
@@ -19,6 +20,9 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
     const [valorInput, setValorInput] = useState('');
     const [users, setUsers] = useState<Array<User>>([]);
     const [pertenece, setPertenece] = useState(false);
+
+    const imageName = clan.guildImage;
+    const imageSource = images[imageName as keyof typeof images];
 
     useEffect(() => {
         async function getClanUsers() {
@@ -35,15 +39,23 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
         getClanUsers();
     }, [])
 
-
     const handleChangeInput = (text: string) => {
         setValorInput(text);
         console.log(valorInput);
     };
 
-    async function buscarUsuarios(texto: string) {
-
-    };
+    async function buscarUsuarios(inputValue: string) {
+        try {
+            const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/users", { headers: { "Authorization": "Bearer " + token } });
+            const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
+                usuario.name.includes(inputValue)
+            );
+            setUsers(usuariosFiltrados);
+            console.log(usuariosFiltrados);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     async function unirse() {
         try {
@@ -52,8 +64,12 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
             setUsers([...users, user]);
             setUser({ ...user, id_guild: clan.id });
             setPertenece(true);
-        } catch (error) {
+            
+        } catch (error: any) {
             console.log(error);
+            if (error.response.status == 406) {
+                ToastAndroid.show("Ya estas en un gremio", ToastAndroid.LONG)
+            }
         }
     }
 
@@ -75,7 +91,7 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
                 <View style={{ height: "100%", width: "100%" }}>
                     <View style={{ height: "14%", flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', width: "100%" }}>
                         <View style={{ width: "19%", height: "100%", marginHorizontal: "5%", justifyContent: 'center' }}>
-                            <Image source={require('../assets/imgs/clan/baseballgreenyellow.png')} style={{ width: "100%", height: "65%", borderRadius: 100 }} />
+                            <Image source={imageSource} style={{ width: "100%", height: "65%", borderRadius: 100 }} />
                         </View>
                         <View style={{ width: "66%", height: "75%", marginRight: "5%", flexDirection: 'column' }}>
                             <Text style={{ color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center' }}>{clan.name}</Text>
@@ -84,7 +100,7 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
                     </View>
                     <View style={{ height: "8%", flexDirection: 'row', alignItems: 'center', width: "100%" }}>
                         <View style={{ width: "57%", marginHorizontal: "5%", marginTop: -10, flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <TextInput style={{ backgroundColor: "white", height: 35, width: "75%", borderRadius: 100 }} onChangeText={handleChangeInput} />
+                            <TextInput style={{ backgroundColor: "white", height: 35, width: "75%", borderRadius: 100, paddingVertical: 0 }} onChangeText={handleChangeInput} />
                             <LinearGradient colors={['rgba(20, 40, 140, 1)', 'rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
                                 start={{ x: 0.5, y: 0 }}
                                 end={{ x: 0.5, y: 1 }}

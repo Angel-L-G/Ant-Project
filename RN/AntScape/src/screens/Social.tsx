@@ -92,10 +92,6 @@ const Social = ({ navigation, route }: Props) => {
         console.log("UseEffect");
     }, [tabNumber])
 
-    function passToChildren() {
-
-    }
-
     const handleTabPress = (tabIndex: number) => {
         setActiveTab(tabIndex);
         setValorInput('');

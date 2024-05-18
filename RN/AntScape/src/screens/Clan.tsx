@@ -14,14 +14,16 @@ import UseChat from '../hooks/UseChat';
 import UseChatHistory from '../hooks/UseChatHistory';
 import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
 import { formatDistanceToNow } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-type Props = {
-    navigation: any,
-}
+type Props = NativeStackScreenProps<RootStackParamList, "Clan">;
 
-const Clan = ({ navigation }: Props) => {
+const Clan = ({ navigation, route }: Props) => {
     const { ruta } = Globals();
     const { token, user, goldenEggsContext, setGoldenEggsContext } = useContext(AppContext);
+    const numero = route.params.numero;
     const [clan, setClan] = useState<ClanType>({} as ClanType);
     const [tieneClan, setTieneClan] = useState(false);
     const [clanId, setClanId] = useState(0);
@@ -31,8 +33,10 @@ const Clan = ({ navigation }: Props) => {
     const [guildLevelDos, setGuildLevelDos] = useState<GuildLevel>({} as GuildLevel);
     const [modalConstruccionTres, setModalConstruccionTres] = useState(false);
     const [guildLevelTres, setGuildLevelTres] = useState<GuildLevel>({} as GuildLevel);
+    const [puedeAtacar, setPuedeAtacar] = useState(true);
+    const [momentoDeAtaque, setMomentoDeAtaque] = useState("");
 
-    const { sendGroupMessage, conectado, conectar, chatActual, historico, setHistorico} = UseChat();
+    const { sendGroupMessage, conectado, conectar, chatActual, historico, setHistorico } = UseChat();
     const { chats, save, saveMessages, findGuildChat } = UseChatHistory();
     const [modalChatVisible, setModalChatVisible] = useState(false);
     const [mensaje, setMensaje] = useState("");
@@ -58,7 +62,7 @@ const Clan = ({ navigation }: Props) => {
 
                 setLoading(false);
             }
-            
+
             fetchData();
         } else {
             console.log("Fallo de conexion");
@@ -67,6 +71,28 @@ const Clan = ({ navigation }: Props) => {
 
     useEffect(() => {
         console.log(user);
+
+        const obtenerEstadoAsyncStorage = async () => {
+            try {
+                const estadoPuedeAtacar = await AsyncStorage.getItem(`puedeAtacar${user.id}`);
+                console.log(estadoPuedeAtacar + "Aaaaaaaaaaaa");
+
+                if (estadoPuedeAtacar !== null) {
+                    setPuedeAtacar(false);
+                }
+
+                const tiempoDeAtaque = await AsyncStorage.getItem(`momentoDeAtaque${user.id}`);
+                console.log(tiempoDeAtaque + "Aaaaaaaaaaaa");
+
+                if (tiempoDeAtaque !== null) {
+                    setMomentoDeAtaque(tiempoDeAtaque);
+                }
+            } catch (error) {
+                console.log('Error al obtener el estado desde AsyncStorage:', error);
+            }
+        };
+
+        obtenerEstadoAsyncStorage();
 
         async function carga() {
             console.log("UseEffect");
@@ -103,7 +129,7 @@ const Clan = ({ navigation }: Props) => {
         }
 
         carga();
-    }, [])
+    }, [numero])
 
     async function getClan(id: Number) {
         try {
@@ -185,7 +211,42 @@ const Clan = ({ navigation }: Props) => {
                 }
             }
         } else {
-            ToastAndroid.show("No tienes suficientes huevos dorados", ToastAndroid.LONG)
+            ToastAndroid.show("No tienes suficientes huevos dorados", ToastAndroid.LONG);
+        }
+    }
+
+    async function irAAtacar() {
+        const currentTime = new Date().getTime();
+        const disabledTime = parseInt(momentoDeAtaque);
+        //const remainingTime = 3600000 - (currentTime - disabledTime);
+        const remainingTime = 1 - (currentTime - disabledTime);
+        let puede = false;
+        console.log(currentTime);
+        console.log(disabledTime);
+        
+
+        if (remainingTime <= 0 || isNaN(disabledTime)) {
+            console.log("Hola");
+            
+            setPuedeAtacar(true);
+            puede = true;
+
+            await AsyncStorage.setItem(`puedeAtacar${user.id}`, "true");
+            await AsyncStorage.removeItem(`momentoDeAtaque${user.id}`);
+        }
+
+        if (remainingTime <= 0 && puede || isNaN(disabledTime) && puede) {
+            setPuedeAtacar(false);
+            await AsyncStorage.setItem(`puedeAtacar${user.id}`, 'false');
+            await AsyncStorage.setItem(`momentoDeAtaque${user.id}`, String(new Date().getTime()));
+            setMomentoDeAtaque(String(new Date().getTime()));
+
+            navigation.navigate("Atacar", { clan: clan });
+        } else {
+            const minutos = Math.floor((remainingTime / (1000 * 60)) % 60);
+            const segundos = Math.floor((remainingTime / 1000) % 60);
+
+            ToastAndroid.show("Debes esperar " + minutos + " minutos y " + segundos + " segundos para volver a atacar", ToastAndroid.LONG)
         }
     }
 
@@ -223,7 +284,7 @@ const Clan = ({ navigation }: Props) => {
                         </ImageBackground>
 
                         <View style={{ position: "absolute", width: "20%", height: "15%", bottom: 0, right: 10, justifyContent: 'center', alignItems: 'center' }}>
-                            <TouchableHighlight underlayColor={"orange"} onPress={() => navigation.navigate("Atacar", { clan: clan })} style={{ width: 70, height: 70, backgroundColor: "yellow", borderRadius: 100, elevation: 10, justifyContent: 'center' }}>
+                            <TouchableHighlight underlayColor={"orange"} onPress={() => irAAtacar()} style={{ width: 70, height: 70, backgroundColor: "yellow", borderRadius: 100, elevation: 10, justifyContent: 'center' }}>
                                 <Image source={require('../assets/imgs/sword.png')} style={{ width: "70%", height: "80%", marginLeft: 10, marginTop: 5 }} />
                             </TouchableHighlight>
                         </View>
@@ -441,38 +502,38 @@ const Clan = ({ navigation }: Props) => {
                         end={{ x: 0.5, y: 1.25 }}
                         style={stylesModal.modalChatView}>
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                            <View style={{height: "92%", width: "100%" }}>
-                            {(loading) ?
-                                <View>
-                                    <Text>Loading...</Text>
-                                </View>
-                                :
-                                <FlatList
-                                    data={historico}
-                                    renderItem={({ item }) =>
-                                        (item.senderId === user.id) ?
-                                            <View style={{ alignSelf: 'flex-end' }}>
-                                                <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                                <View style={styles.myMessage}>
-                                                    <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                            <View style={{ height: "92%", width: "100%" }}>
+                                {(loading) ?
+                                    <View>
+                                        <Text>Loading...</Text>
+                                    </View>
+                                    :
+                                    <FlatList
+                                        data={historico}
+                                        renderItem={({ item }) =>
+                                            (item.senderId === user.id) ?
+                                                <View style={{ alignSelf: 'flex-end' }}>
+                                                    <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                                    <View style={styles.myMessage}>
+                                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                            :
-                                            <View style={{ alignSelf: 'flex-start' }}>
-                                                <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                                <View style={styles.otherMessage}>
-                                                    <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                :
+                                                <View style={{ alignSelf: 'flex-start' }}>
+                                                    <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
+                                                    <View style={styles.otherMessage}>
+                                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                    }
-                                    keyExtractor={(item, index) => index.toString()}
-                                    inverted
-                                />
-                            }
+                                        }
+                                        keyExtractor={(item, index) => index.toString()}
+                                        inverted
+                                    />
+                                }
                             </View>
                             <View style={{ height: "8%", width: "100%", marginTop: "2%" }}>
                                 <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
-                                    <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", fontSize: 16, backgroundColor: "white", height: 30, alignSelf: "center", marginLeft: "2%" }} />
+                                    <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", fontSize: 14, backgroundColor: "white", height: 30, alignSelf: "center", marginLeft: "2%", paddingVertical: 0 }} />
                                     <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: 30, borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
                                         <Icon name="send" size={20} color={"yellow"}></Icon>
                                     </TouchableHighlight>
@@ -482,7 +543,7 @@ const Clan = ({ navigation }: Props) => {
                     </LinearGradient>
                     <View style={{ position: 'absolute', height: "8%", width: "9%", backgroundColor: "rgba(40, 60, 160, 1)", left: "12%", top: "46%" }}>
                         <TouchableHighlight underlayColor={"rgba(60, 80, 180, 1)"} onPress={() => setModalChatVisible(false)} style={{ width: "100%", height: "100%", alignItems: "flex-start", justifyContent: "center" }}>
-                            <Icon name="chevron-forward" size={50} color={"yellow"} style={{ right: 8 }}></Icon>
+                            <Icon name="chevron-forward" size={45} color={"yellow"} style={{ right: 8 }}></Icon>
                         </TouchableHighlight>
                     </View>
                 </View>
