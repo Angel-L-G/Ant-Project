@@ -20,7 +20,7 @@ const UsuarioCard = ({ usu, navigation }: Props) => {
     useEffect(() => {
         async function getClan() {
             try {
-                const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
+                const response = await axios.get(ruta + "v2/users/" + usu.id + "/guild", { headers: { "Authorization": "Bearer " + token } });
                 console.log(response.data);
                 setClan(response.data);
             } catch (error) {

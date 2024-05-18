@@ -16,7 +16,7 @@ type Props = {
 
 const Personal = ({ navigation }: Props) => {
     const { ruta } = Globals();
-    const { token, user, totalEggsContext, setEggsContext, setTotalEggsContext, setGoldenEggsContext } = useContext(AppContext);
+    const { token, user, totalEggsContext, goldenEggsContext, setEggsContext, setTotalEggsContext, setGoldenEggsContext } = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
@@ -30,6 +30,8 @@ const Personal = ({ navigation }: Props) => {
         setEggsContext(user.eggs);
         totalEggs.current = Number(user.totalMoneyGenerated);
         setTotalEggsContext(user.totalMoneyGenerated);
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaa" + user.goldenEggs);
+        
         setGoldenEggsContext(user.goldenEggs);
 
         async function getOwnNests() {
@@ -119,9 +121,11 @@ const Personal = ({ navigation }: Props) => {
     useEffect(() => {
         const intervalo = setInterval(() => {
             async function updateMoney() {
+                console.log(goldenEggsContext);
+                
                 const body = {
                     eggs: eg.current,
-                    goldenEggs: user.goldenEggs
+                    goldenEggs: goldenEggsContext
                 }
 
                 try {

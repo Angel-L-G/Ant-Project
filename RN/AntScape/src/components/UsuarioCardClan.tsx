@@ -12,22 +12,26 @@ import LinearGradient from 'react-native-linear-gradient';
 type Props = {
     usu: User,
     clan: ClanType,
-    navigation: any
+    navigation: any,
+    recargar?: Function
 }
 
-const UsuarioCardClan = ({ usu, navigation, clan }: Props) => {
+const UsuarioCardClan = ({ usu, navigation, clan, recargar }: Props) => {
     const { ruta } = Globals();
     const { user, token, setUser } = useContext(AppContext);
     const [bloqueado, setBloqueado] = useState(false);
     const [modalAscenderVisible, setModalAscenderVisible] = useState(false);
+    const [usuario, setUsuario] = useState<User>({} as User);
 
     useEffect(() => {
+        setUsuario(usu);
+        
         async function verificarBloqueo() {
             try {
                 const response = await axios.get(ruta + "v2/users/" + user.id + "/bloqued", { headers: { "Authorization": "Bearer " + token } });
                 console.log(response.data);
                 for (let i = 0; i < response.data.length; i++) {
-                    if (response.data[i].id == usu.id) {
+                    if (response.data[i].id == usuario.id) {
                         setBloqueado(true);
                     }
                 }
@@ -41,9 +45,12 @@ const UsuarioCardClan = ({ usu, navigation, clan }: Props) => {
 
     async function ascender() {
         try {
-            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/giveOwnership/" + usu.id, {}, { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/giveOwnership/" + usuario.id, {}, { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
-            setUser({ ...user, id_guild: 0});
+            if (recargar) {
+                recargar();
+            }
+            setModalAscenderVisible(false);
         } catch (error) {
             console.log(error);
         }
@@ -51,18 +58,18 @@ const UsuarioCardClan = ({ usu, navigation, clan }: Props) => {
 
     return (
         <View style={{ height: 80, padding: 5, margin: 15, flexDirection: 'row' }}>
-            <Image source={{ uri: ruta + "v1/files/" + usu.img }} style={{ height: "100%", width: 70, borderRadius: 100 }} />
+            <Image source={{ uri: ruta + "v1/files/" + usuario.img }} style={{ height: "100%", width: 70, borderRadius: 100 }} />
             <View style={{ width: "31%", marginLeft: "15%" }}>
-                <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center', marginBottom: 10 }}>{usu.name}</Text>
-                {(usu.id != clan.leader) ?
+                <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center', marginBottom: 10 }}>{usuario.name}</Text>
+                {(usuario.id != clan.leader) ?
                     <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center' }}>Miembro</Text>
                     :
-                    <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center' }}>Lider</Text>
+                    <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 22, color: "yellow", textAlign: 'center' }}>Líder</Text>
                 }
             </View>
             {(user.id_guild == clan.id && user.id == clan.leader) ?
                 <View style={{ width: "15%", justifyContent: 'center' }}>
-                    {(usu.id != clan.leader) &&
+                    {(usuario.id != clan.leader) &&
                         <TouchableHighlight underlayColor={"transparent"} onPress={() => setModalAscenderVisible(true)}>
                             <Icon name="arrow-up-circle-outline" size={40} color={"yellow"}></Icon>
                         </TouchableHighlight>
@@ -74,13 +81,13 @@ const UsuarioCardClan = ({ usu, navigation, clan }: Props) => {
                 </View>
             }
             <View style={{ width: "20%", justifyContent: "center" }}>
-                {(user.id == usu.id) ?
+                {(user.id == usuario.id) ?
                     <></>
                     :
                     (bloqueado) ?
                         <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 14, color: "yellow", textAlign: 'center' }}>Usuario Bloqueado</Text>
                         :
-                        <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("NuevoChat", { name: usu.name })} style={{ justifyContent: 'center', alignItems: 'center', height: "100%", borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3" }}>
+                        <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("NuevoChat", { name: usuario.name })} style={{ justifyContent: 'center', alignItems: 'center', height: "100%", borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3" }}>
                             <Text style={{ color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18 }}>Chat</Text>
                         </TouchableHighlight>
                 }
@@ -101,7 +108,7 @@ const UsuarioCardClan = ({ usu, navigation, clan }: Props) => {
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <View style={{ height: "75%", width: "100%" }}>
                                 <View>
-                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Estás seguro que quieres que el nuevo lider sea {usu.name}</Text>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Estás seguro que quieres que el nuevo líder sea {usuario.name}</Text>
                                 </View>
                             </View>
                             <View style={{ flexDirection: "row", justifyContent: 'space-around', alignItems: 'center', height: "20%", width: "100%", marginBottom: "5%" }}>

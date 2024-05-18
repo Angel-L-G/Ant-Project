@@ -1,6 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, ToastAndroid } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
-import { User } from '../types/types'
+import { ClanType, User } from '../types/types'
 import LinearGradient from 'react-native-linear-gradient'
 import { Image } from 'react-native-elements'
 import styles from '../themes/styles'
@@ -20,6 +20,7 @@ const ProfileOther = ({route, navigation}: Props) => {
     const [amigo, setAmigo] = useState(false);
     const [bloqueado, setBloqueado] = useState(false);
 	const [modalVisible, setModalVisible] = useState(false);
+    const [clan, setClan] = useState<ClanType>({} as ClanType);
 
     function volver() {
         navigation.goBack();
@@ -69,6 +70,18 @@ const ProfileOther = ({route, navigation}: Props) => {
         }
 
         buscarClanes();
+
+        async function getClan() {
+            try {
+                const response = await axios.get(ruta + "v2/users/" + usu.id + "/guild", {headers: { "Authorization": "Bearer " + token }});
+                console.log(response.data);
+                setClan(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getClan();
     }, [])
 
     async function aniadirAmigo() {
@@ -158,11 +171,7 @@ const ProfileOther = ({route, navigation}: Props) => {
                     </View>
                     <View style={{flex: 1, marginTop: 50}}>
                         <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Nombre: {usu.name}</Text>
-                        {(usu.id_guild == null) ?
-                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: -----</Text>
-                        :
-                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {String(usu.id_guild)}</Text>
-                        }
+                            <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Guild: {clan.name}</Text>
                         <Text style={{fontFamily: "MadimiOneRegular", fontSize: 20, margin: 10, color: "rgba(20, 40, 140, 1)"}}>Eggs: {usu.eggs}</Text>
                     </View>
                     <View style={{flexDirection: "row"}}>

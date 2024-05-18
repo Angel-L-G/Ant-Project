@@ -106,7 +106,7 @@ const CrearClan = ({ navigation }: Props) => {
                             numberOfLines={3}
                             onChangeText={setDescripcion}
                             value={descripcion}
-                            style={{ padding: 8, fontSize: 16, marginTop: "3%", color: "yellow", backgroundColor: "rgba(20, 40, 140, 1)", width: 250, borderRadius: 15, textAlignVertical: 'top', }}
+                            style={{ padding: 8, fontSize: 16, marginTop: "3%", color: "yellow", backgroundColor: "rgba(20, 40, 140, 1)", width: 250, borderRadius: 15, textAlignVertical: 'top', maxHeight: 76}}
                             placeholder="Descripción del Clan..."
                             placeholderTextColor={"white"}
                             maxLength={80}

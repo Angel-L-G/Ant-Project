@@ -69,7 +69,6 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 				setActualLvl(responseGet.data);
 				console.log("Upgrade: " + actualLvl.production);
 
-
 				const responseGetLevels = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
 				updateLevels(responseGetLevels.data[0].nestLevels);
 
@@ -98,7 +97,7 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 							source={gifPath}
 							style={{ width: "100%", height: "100%" }}
 							containerStyle={{ width: "100%", height: "100%" }}
-							
+
 						/>
 				}
 
@@ -108,7 +107,7 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 			</View>
 
 			<View style={{ position: 'absolute', top: 12, right: 30 }}>
-				<Text style={{ color: "white", fontFamily: "MadimiOneRegular", fontSize: 18, textAlign: 'center' }}>Produc.: {actualLvl.production.toFixed(2)}</Text>
+				<Text style={{ color: "white", fontFamily: "MadimiOneRegular", fontSize: 18, textAlign: 'center' }}>Produc.: {actualLvl.production.toFixed(0)}</Text>
 			</View>
 
 			<Modal
@@ -147,16 +146,18 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 								end={{ x: 0.5, y: 1 }}
 								style={{ marginBottom: 20, width: 109 }}>
 								<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>
-									Produc.: {actualLvl.production.toFixed(2)}
+									Produc.: {Math.round(actualLvl.production)}
 								</Text>
 							</LinearGradient>
 							<LinearGradient colors={['rgba(0, 136, 185, 1)', 'rgba(0, 100, 100, 1)', 'rgba(0, 136, 185, 1)']}
 								start={{ x: 0.5, y: 0 }}
 								end={{ x: 0.5, y: 1 }}
 								style={{ marginBottom: 20, width: 109 }}>
-								<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>
-									Produc.: {(actualLvl.production * actualLvl.multiplier).toFixed(2)}
-								</Text>
+								{(actualLvl.production * actualLvl.multiplier <= actualLvl.production + 1) ?
+									<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>Produc.: {Math.round(actualLvl.production + 1)}</Text>
+									:
+									<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>{Math.round(actualLvl.production * actualLvl.multiplier)}</Text>
+								}
 							</LinearGradient>
 						</View>
 						<View style={{}}>

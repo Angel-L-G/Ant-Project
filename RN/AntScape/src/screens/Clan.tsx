@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, ImageBackground, TextInput, FlatList } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import NavBarTop from '../components/NavBarTop'
 import NavBarBotton from '../components/NavBarBotton'
 import Globals from '../components/Globals'
@@ -17,6 +17,7 @@ import { formatDistanceToNow } from 'date-fns';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Clan">;
 
@@ -69,76 +70,65 @@ const Clan = ({ navigation, route }: Props) => {
         }
     }, [conectado]);
 
-    useEffect(() => {
-        console.log(user);
+    useFocusEffect(
+        useCallback(() => {
+            console.log("Pantalla activa");
 
-        const obtenerEstadoAsyncStorage = async () => {
-            try {
-                const estadoPuedeAtacar = await AsyncStorage.getItem(`puedeAtacar${user.id}`);
-                console.log(estadoPuedeAtacar + "Aaaaaaaaaaaa");
+            console.log(user);
 
-                if (estadoPuedeAtacar !== null) {
-                    setPuedeAtacar(false);
+            const obtenerEstadoAsyncStorage = async () => {
+                try {
+                    const estadoPuedeAtacar = await AsyncStorage.getItem(`puedeAtacar${user.id}`);
+                    console.log(estadoPuedeAtacar + "Aaaaaaaaaaaa");
+
+                    if (estadoPuedeAtacar !== null) {
+                        setPuedeAtacar(false);
+                    }
+
+                    const tiempoDeAtaque = await AsyncStorage.getItem(`momentoDeAtaque${user.id}`);
+                    console.log(tiempoDeAtaque + "Aaaaaaaaaaaa");
+
+                    if (tiempoDeAtaque !== null) {
+                        setMomentoDeAtaque(tiempoDeAtaque);
+                    }
+                } catch (error) {
+                    console.log('Error al obtener el estado desde AsyncStorage:', error);
                 }
+            };
 
-                const tiempoDeAtaque = await AsyncStorage.getItem(`momentoDeAtaque${user.id}`);
-                console.log(tiempoDeAtaque + "Aaaaaaaaaaaa");
+            obtenerEstadoAsyncStorage();
 
-                if (tiempoDeAtaque !== null) {
-                    setMomentoDeAtaque(tiempoDeAtaque);
-                }
-            } catch (error) {
-                console.log('Error al obtener el estado desde AsyncStorage:', error);
-            }
-        };
-
-        obtenerEstadoAsyncStorage();
-
-        async function carga() {
-            console.log("UseEffect");
-
-            if (user.id_guild != null) {
-                console.log("Tiene Clan");
-                getClan(user.id_guild);
-                setClanId(user.id_guild);
-                setTieneClan(true);
-            } else {
-                console.log("No tiene Clan o es lider");
+            async function carga() {
+                console.log("UseEffect");
 
                 try {
-                    const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
-                    for (let i = 0; i < response.data.length; i++) {
-                        if (response.data[i].leader == user.id) {
-                            setTieneClan(true);
-                            setClanId(response.data[i].id);
-
-                            console.log("Es lider");
-
-                            try {
-                                const response2 = await axios.get(ruta + "v2/guilds/" + response.data[i].id, { headers: { "Authorization": "Bearer " + token } });
-                                setClan(response2.data);
-                            } catch (error) {
-                                console.log(error);
-                            }
-                        }
+                    const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
+                    console.log(response.data);
+                    
+                    if (response.data != "") {
+                        console.log("ASASDASDASDASDAS");
+                        console.log(response.data);
+        
+                        setClan(response.data);
+                        setClanId(response.data.id);
+                        setTieneClan(true);
+                    } else {
+                        setTieneClan(false);
                     }
+        
                 } catch (error) {
                     console.log(error);
                 }
             }
-        }
 
-        carga();
-    }, [numero])
+            carga();
 
-    async function getClan(id: Number) {
-        try {
-            const response = await axios.get(ruta + "v2/guilds/" + id, { headers: { "Authorization": "Bearer " + token } });
-            setClan(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+            return () => {
+
+                console.log("Pantalla perdiendo foco");
+            };
+        }, [])
+    );
 
     function sendMessage() {
         saveMessages(chatActual.current?.id as number, mensaje);
@@ -218,7 +208,7 @@ const Clan = ({ navigation, route }: Props) => {
     async function irAAtacar() {
         const currentTime = new Date().getTime();
         const disabledTime = parseInt(momentoDeAtaque);
-        const remainingTime = 3600000 - (currentTime - disabledTime);
+        const remainingTime =  10000 - (currentTime - disabledTime); //3600000
         let puede = false;
         console.log(currentTime);
         console.log(disabledTime);

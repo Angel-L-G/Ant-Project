@@ -95,7 +95,8 @@ export type ClanType = {
     trophys: number,
     defenseRange: string,
     guildImage: string,
-    defenseNumber: number
+    defenseNumber: number,
+    guildLevels: Array<GuildLevel>
 }
 
 export type GuildLevel = {

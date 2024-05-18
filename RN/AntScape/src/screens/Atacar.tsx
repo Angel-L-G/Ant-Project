@@ -17,15 +17,16 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 const Atacar = ({ navigation, route }: Props) => {
     const clan = route.params.clan;
     const { ruta } = Globals();
-    const { token, user, setGoldenEggsContext, goldenEggsContext } = useContext(AppContext);
+    const { token, user, setGoldenEggsContext, goldenEggsContext, eggsContext } = useContext(AppContext);
     const [enemigo, setEnemigo] = useState<ClanType>({} as ClanType);
+    const [clanUsuario, setClanUsuario] = useState<ClanType>({} as ClanType);
     const [ultimasTiradas, setUltimasTiradas] = useState<Array<number>>([]);
+    const [tiradasRestantes, setTiradasRestantes] = useState(4);
     const [sumaTotal, setSumaTotal] = useState<number>(0);
     const [rangoInferior, setRangoInferior] = useState<number>(0);
     const [rangoSuperior, setRangoSuperior] = useState<number>(0);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalSalirVisible, setModalSalirVisible] = useState(false);
-    const [victoria, setVictoria] = useState(false);
     const [resultado, setResultado] = useState<ResultAttack>({} as ResultAttack)
     const [conclusion, setConclusion] = useState("");
 
@@ -93,9 +94,14 @@ const Atacar = ({ navigation, route }: Props) => {
     }, [animationRunning, repetitions]);
 
     const startAnimationOnPress = () => {
-        setAnimationRunning(true);
-        setCurrentNumber(0);
-        setRepetitions(0);
+        if (tiradasRestantes > 0) {
+            setAnimationRunning(true);
+            setCurrentNumber(0);
+            setRepetitions(0);
+            setTiradasRestantes(tiradasRestantes - 1);
+        } else {
+            ToastAndroid.show("Tiradas Agotadas", ToastAndroid.SHORT)
+        }
     };
 
     const animatedStyles = {
@@ -120,6 +126,19 @@ const Atacar = ({ navigation, route }: Props) => {
         }
 
         buscarOponente();
+
+        async function getClan() {
+            try {
+                const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
+                console.log(response.data);
+                setClanUsuario(response.data);
+                setTiradasRestantes(response.data.guildLevels[0].level + 4);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        
+        getClan();
     }, [])
 
     async function comprobarResultados() {
@@ -130,7 +149,17 @@ const Atacar = ({ navigation, route }: Props) => {
             const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/attack/" + enemigo.id, null, { params: params, headers: { Authorization: "Bearer " + token } });
             console.log(response.data);
             setResultado(response.data);
-            setGoldenEggsContext(goldenEggsContext + response.data.goldenEggs)
+            setGoldenEggsContext(Number(goldenEggsContext) + Number(response.data.goldenEggs))
+            const body = {
+                eggs: eggsContext,
+                goldenEggs: Number(goldenEggsContext) + Number(response.data.goldenEggs)
+            }
+            try {
+                const response = await axios.put(ruta + "v2/users/updatemoney", body, { headers: { "Authorization": "Bearer " + token } });
+                console.log(response.data);
+            } catch (error: any) {
+                console.log(error);                
+            }
             if (response.data.trophys > 10) {
                 setConclusion("Victoria");
             } else if (response.data.trophys > 0) {
@@ -240,6 +269,20 @@ const Atacar = ({ navigation, route }: Props) => {
                             <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular" }}>{rangoInferior} </Text>
                             <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular" }}>- {rangoSuperior}</Text>
                         </View>
+                    </View>
+                </View>
+
+                <View style={{position: "absolute", backgroundColor: "rgba(20, 40, 140, 0.9)", width: "31%", alignSelf: 'flex-end', top: "40%", borderTopLeftRadius: 15, borderBottomLeftRadius: 15, borderWidth: 2, borderColor: "yellow", borderRightWidth: 0}}>
+                    <View style={{padding: 10}}>
+                        <Text style={{ color: "yellow", fontSize: 14, fontFamily: "MadimiOneRegular"}}>Dados restantes:</Text>
+                        <View style={{flexDirection: "row"}}>
+                            <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular", marginRight: 5}}>{tiradasRestantes}</Text>
+                            <Icon name="dice" size={20} color={"yellow"}></Icon>
+                        </View>
+                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}></Text>
+                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}>Jol</Text>
+                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}>Jol</Text>
+                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}>Jol</Text>
                     </View>
                 </View>
 
@@ -437,7 +480,7 @@ const Atacar = ({ navigation, route }: Props) => {
                         </View>
                     </View>
                     <View style={{ width: "25%", height: "100%", alignItems: 'center', justifyContent: "center" }}>
-                        <TouchableHighlight underlayColor={"orange"} onPress={startAnimationOnPress} style={{ height: "80%", width: "74%", backgroundColor: "yellow", borderRadius: 100, alignItems: 'center', justifyContent: "center", borderWidth: 2 }}>
+                        <TouchableHighlight underlayColor={"orange"} onPress={startAnimationOnPress} style={{ height: "80%", width: "72%", backgroundColor: "yellow", borderRadius: 100, alignItems: 'center', justifyContent: "center", borderWidth: 2 }}>
                             <Icon name="dice" size={40} color={"black"}></Icon>
                         </TouchableHighlight>
                     </View>

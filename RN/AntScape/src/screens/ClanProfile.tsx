@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 import axios from 'axios';
-import { User } from '../types/types';
+import { ClanType, User } from '../types/types';
 import UsuarioCardClan from '../components/UsuarioCardClan';
 import images from '../assets/imgs';
 import { Modal } from 'react-native';
@@ -21,6 +21,8 @@ const ClanProfile = ({ navigation, route }: Props) => {
     const [valorInput, setValorInput] = useState('');
     const [users, setUsers] = useState<Array<User>>([]);
     const [modalLiderVisible, setModalLiderVisible] = useState(false);
+    const [modalAbandonarVisible, setModalAbandonarVisible] = useState(false);
+    const [clanUser, setClanUser] = useState<ClanType>(clan);
 
     const imageName = clan.guildImage;
     const imageSource = images[imageName as keyof typeof images];
@@ -45,7 +47,7 @@ const ClanProfile = ({ navigation, route }: Props) => {
 
     async function buscarUsuarios(inputValue: string) {
         try {
-            const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/users", { headers: { "Authorization": "Bearer " + token } });
+            const response = await axios.get(ruta + "v2/guilds/" + clanUser.id + "/users", { headers: { "Authorization": "Bearer " + token } });
             console.log(response.data);
 
             const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
@@ -59,17 +61,50 @@ const ClanProfile = ({ navigation, route }: Props) => {
     }
 
     async function abandonar() {
-        if (clan.leader == user.id_guild) {
+        if (users.length <= 1) {
+            setModalAbandonarVisible(true);
+        } else if (clanUser.leader == user.id) { 
             setModalLiderVisible(true);
         } else {
             try {
-                const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {}, { params: { newLeader: -1 }, headers: { "Authorization": "Bearer " + token } });
+                const response = await axios.put(ruta + "v2/guilds/" + clanUser.id + "/leaveguild", {}, { params: { newLeader: -1 }, headers: { "Authorization": "Bearer " + token } });
                 console.log(response.data);
                 setUser({ ...user, id_guild: undefined });
                 navigation.navigate("Social", { tab: 2 });
             } catch (error) {
                 console.log(error);
             }
+        }
+    }
+
+    async function abandonarOk() {
+        try {
+            const response = await axios.put(ruta + "v2/guilds/" + clanUser.id + "/leaveguild", {}, { params: { newLeader: -1 }, headers: { "Authorization": "Bearer " + token } });
+            console.log(response.data);
+            setUser({ ...user, id_guild: undefined });
+            navigation.navigate("Social", { tab: 2 });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    async function recargar() {
+        try {
+            const response = await axios.get(ruta + "v2/guilds/" + clanUser.id + "/users", { headers: { "Authorization": "Bearer " + token } });
+            setUsers(response.data);
+
+            try {
+                const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
+                if (response.data != null) {
+                    setClanUser(response.data);
+                }
+                
+            } catch (error) {
+                console.log(error);
+            }
+            
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -82,8 +117,8 @@ const ClanProfile = ({ navigation, route }: Props) => {
                             <Image source={imageSource} style={{ width: "100%", height: "65%", borderRadius: 100 }} />
                         </View>
                         <View style={{ width: "66%", height: "75%", marginRight: "5%", flexDirection: 'column' }}>
-                            <Text style={{ color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center' }}>{clan.name}</Text>
-                            <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular", textAlign: "center" }} numberOfLines={3} ellipsizeMode='tail'>{clan.description}</Text>
+                            <Text style={{ color: "yellow", fontSize: 24, fontFamily: "MadimiOneRegular", textDecorationLine: 'underline', textAlign: 'center' }}>{clanUser.name}</Text>
+                            <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular", textAlign: "center" }} numberOfLines={3} ellipsizeMode='tail'>{clanUser.description}</Text>
                         </View>
                     </View>
                     <View style={{ height: "8%", flexDirection: 'row', alignItems: 'center', width: "100%" }}>
@@ -110,12 +145,12 @@ const ClanProfile = ({ navigation, route }: Props) => {
                             renderItem={({ item }) =>
                                 (item.id == user.id) ?
                                     <View>
-                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("Profile")}><UsuarioCardClan usu={item} navigation={navigation} clan={clan} /></TouchableHighlight>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("Profile")}><UsuarioCardClan usu={item} navigation={navigation} clan={clanUser} recargar={recargar}/></TouchableHighlight>
                                         <View style={{ height: 1, backgroundColor: "black" }}></View>
                                     </View>
                                     :
                                     <View>
-                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", { usu: item })}><UsuarioCardClan usu={item} navigation={navigation} clan={clan} /></TouchableHighlight>
+                                        <TouchableHighlight underlayColor={"rgba(10, 40, 140, 1)"} onPress={() => navigation.navigate("ProfileOther", { usu: item })}><UsuarioCardClan usu={item} navigation={navigation} clan={clanUser} recargar={recargar}/></TouchableHighlight>
                                         <View style={{ height: 1, backgroundColor: "black" }}></View>
                                     </View>
                             }
@@ -138,12 +173,43 @@ const ClanProfile = ({ navigation, route }: Props) => {
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <View style={{ height: "80%", width: "100%" }}>
                                 <View>
-                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>No puedes salir del gremio siendo el lider, relega tu puesto.</Text>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>No puedes salir del gremio siendo el líder, relega tu puesto.</Text>
                                 </View>
                             </View>
                             <View style={{ justifyContent: 'center', alignItems: 'center', height: "20%", width: "100%" }}>
                                 <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => setModalLiderVisible(false)} style={{ width: 40, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
                                     <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 26 }}>X</Text>
+                                </TouchableHighlight>
+                            </View>
+                        </View>
+                    </LinearGradient>
+                </View>
+            </Modal>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalAbandonarVisible}
+                onRequestClose={() => {
+                    setModalAbandonarVisible(!modalAbandonarVisible);
+                }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1.25 }}
+                        style={styles.modalAbandonarView}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <View style={{ height: "80%", width: "100%" }}>
+                                <View>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Al abandonar el gremio siendo el único integrante este dejará de existir</Text>
+                                </View>
+                            </View>
+                            <View style={{ justifyContent: 'space-around', alignItems: 'center', height: "20%", width: "100%", flexDirection: "row" }}>
+                                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => setModalAbandonarVisible(false)} style={{ width: 80, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Cancelar</Text>
+                                </TouchableHighlight>
+                                <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => abandonarOk()} style={{ width: 80, height: 40, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(50, 180, 120, 1)" }}>
+                                    <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Aceptar</Text>
                                 </TouchableHighlight>
                             </View>
                         </View>
@@ -168,6 +234,14 @@ const styles = StyleSheet.create({
         elevation: 15,
         width: "60%",
         height: "20%",
+        borderWidth: 2,
+    },
+    modalAbandonarView: {
+        borderRadius: 20,
+        padding: 20,
+        elevation: 15,
+        width: "60%",
+        height: "25%",
         borderWidth: 2,
     },
 });

@@ -74,14 +74,18 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
     }
 
     async function abandonar() {
-        try {
-            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {}, { params: { newLeader: -1 }, headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
-            setUser({ ...user, id_guild: undefined });
-            navigation.navigate("Social", { tab: 2 });
-            setPertenece(false);
-        } catch (error) {
-            console.log(error);
+        if (users.length <= 1) {
+            
+        } else {
+            try {
+                const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/leaveguild", {}, { params: { newLeader: -1 }, headers: { "Authorization": "Bearer " + token } });
+                console.log(response.data);
+                setUser({ ...user, id_guild: undefined });
+                setPertenece(false);
+                navigation.navigate("Social", { tab: 2 });
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
