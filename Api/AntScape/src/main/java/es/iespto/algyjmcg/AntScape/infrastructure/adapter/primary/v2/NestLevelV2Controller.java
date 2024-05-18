@@ -80,10 +80,6 @@ public class NestLevelV2Controller {
 			nestlvl.setName(in.getName());
 			nestlvl.setProduction(in.getProduction());
 			
-			System.out.println(in.getId_nest());
-			
-			System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + secundaryService.findById(in.getId_nest()).toString());
-			
 			nestlvl.setNest(secundaryService.findById(in.getId_nest()));
 			
 			NestLevel save = mainService.save(nestlvl);
