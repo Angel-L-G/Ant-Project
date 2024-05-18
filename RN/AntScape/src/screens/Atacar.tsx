@@ -149,7 +149,7 @@ const Atacar = ({ navigation, route }: Props) => {
         setModalVisible(false);
         setSumaTotal(0);
         setUltimasTiradas([]);
-        navigation.navigate("Clan");
+        navigation.navigate("Clan", {numero: 15});
     }
 
     async function cancelarAtaque() {
@@ -394,7 +394,7 @@ const Atacar = ({ navigation, route }: Props) => {
                                             <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Cancelar ataque</Text>
                                         </TouchableHighlight>
                                         :
-                                        <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("Clan")} style={{ width: 160, padding: 5, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
+                                        <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("Clan", {numero: 10})} style={{ width: 160, padding: 5, borderRadius: 100, justifyContent: "center", borderWidth: 3, borderColor: "rgba(200, 50, 50, 1)" }}>
                                             <Text style={{ fontFamily: "MadimiOneRegular", textAlign: 'center', color: "yellow", fontSize: 18 }}>Cancelar ataque</Text>
                                         </TouchableHighlight>
                                     }

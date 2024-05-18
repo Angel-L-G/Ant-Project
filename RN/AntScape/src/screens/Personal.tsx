@@ -177,7 +177,7 @@ const Personal = ({ navigation }: Props) => {
                     <View style={{ height: "30%", width: "100%" }}>
                         <Image source={require('../assets/imgs/Background.png')} style={{ height: "100%", width: "100%" }} />
                     </View>
-
+                    
                     <View style={{ height: "63%", width: "100%" }}>
                         <ScrollView>
                             <View>

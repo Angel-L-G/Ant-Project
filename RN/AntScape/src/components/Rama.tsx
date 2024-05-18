@@ -25,36 +25,36 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 	const [internalState, setInternalState] = useState<NestLevel>(actualLvl);
 
 	const [key, setKey] = useState(0);
-    const rnd = useRef(0);
+	const rnd = useRef(0);
 	const [loading, setLoading] = useState(true);
-    const [gifPath, setGifPath] = useState();
-    
-    const aux = [
-        require('../assets/gifs/Cortadoras_Dia_1.gif'), 
-        require('../assets/gifs/Cortadoras_Dia_2.gif'), 
-        require('../assets/gifs/Cortadoras_Noche_1.gif'), 
-        require('../assets/gifs/Cortadoras_Noche_2.gif'),
-        require('../assets/gifs/Negras_Dia_1.gif'), 
-        require('../assets/gifs/Negras_Dia_2.gif'), 
-        require('../assets/gifs/Negras_Dia_3.gif'), 
-        require('../assets/gifs/Negras_Dia_4.gif'), 
-    ];
+	const [gifPath, setGifPath] = useState();
+
+	const aux = [
+		require('../assets/gifs/Cortadoras_Dia_1.gif'),
+		require('../assets/gifs/Cortadoras_Dia_2.gif'),
+		require('../assets/gifs/Cortadoras_Noche_1.gif'),
+		require('../assets/gifs/Cortadoras_Noche_2.gif'),
+		require('../assets/gifs/Negras_Dia_1.gif'),
+		require('../assets/gifs/Negras_Dia_2.gif'),
+		require('../assets/gifs/Negras_Dia_3.gif'),
+		require('../assets/gifs/Negras_Dia_4.gif'),
+	];
 
 	useEffect(() => {
-        async function generateGifNumber() {
-            rnd.current = Math.floor(Math.random() * 8);
-            setGifPath(aux[rnd.current]);
-            setLoading(false);
-        }
+		async function generateGifNumber() {
+			rnd.current = Math.floor(Math.random() * 8);
+			setGifPath(aux[rnd.current]);
+			setLoading(false);
+		}
 
-        const interval = setInterval(() => {
-            setKey(prevKey => prevKey + 1);
-        }, 10000);
+		const interval = setInterval(() => {
+			setKey(prevKey => prevKey + 1);
+		}, 10000);
 
-        generateGifNumber();
-        return () => clearInterval(interval);
+		generateGifNumber();
+		return () => clearInterval(interval);
 	}, [])
-	
+
 	useEffect(() => {
 		setInternalState(actualLvl);
 	}, [actualLvl]);
@@ -89,31 +89,25 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 					<Text style={{ color: "yellow", fontWeight: "bold" }}>Mejorar</Text>
 				</TouchableHighlight>
 			</View>
-			<View style={{ margin: 10, height: 120, width: 270}}>
+			<View style={{ margin: 10, height: 120, width: 270 }}>
 				{
-					(loading)
-					?<Text style={{ width: "100%", height: "100%"}}>Loading...</Text>
-					:<WebView
-						source={gifPath}
-						style={{ width: "100%", height: "100%"}}
-						scrollEnabled={false}
-						scalesPageToFit={true}
-						resizeMode="cover"
-						overScrollMode="never"
-						nestedScrollEnabled={false}
-						automaticallyAdjustContentInsets={true}
-						automaticallyAdjustsScrollIndicatorInsets={true}
-						bounces={false}
-						showsVerticalScrollIndicator={false}
-					/>
+					(loading) ?
+						<Text style={{ width: "100%", height: "100%" }}>Loading...</Text>
+						:
+						<WebView
+							source={gifPath}
+							style={{ width: "100%", height: "100%" }}
+							containerStyle={{ width: "100%", height: "100%" }}
+							
+						/>
 				}
-				
-				<View style={{alignItems: 'center', justifyContent: 'flex-end', marginBottom: 4, marginTop: 4 }}>
+
+				<View style={{ alignItems: 'center', justifyContent: 'flex-end', marginBottom: 4, marginTop: 4 }}>
 					<ProgressBar duration={1000 * actualLvl.multiplier} lastLevel={internalState} updateEggs={updateEggs} ganarDinero={ganarDinero} />
 				</View>
 			</View>
 
-			<View style={{position: 'absolute', top: 12, right: 30}}>
+			<View style={{ position: 'absolute', top: 12, right: 30 }}>
 				<Text style={{ color: "white", fontFamily: "MadimiOneRegular", fontSize: 18, textAlign: 'center' }}>Produc.: {actualLvl.production.toFixed(2)}</Text>
 			</View>
 

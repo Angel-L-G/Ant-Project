@@ -137,7 +137,7 @@ const NuevoChat = ({ navigation, route }: Props) => {
                 </View>
                 <View style={{ height: "8%" }}>
                     <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
-                        <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", paddingHorizontal: 20, fontSize: 16, backgroundColor: "white", height: "80%", alignSelf: "center", marginLeft: "2%" }} />
+                        <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", paddingHorizontal: 20, fontSize: 16, backgroundColor: "white", height: "80%", alignSelf: "center", marginLeft: "2%", paddingVertical: 0 }} />
                         <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: "80%", borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
                             <Icon name="send" size={30} color={"yellow"}></Icon>
                         </TouchableHighlight>
