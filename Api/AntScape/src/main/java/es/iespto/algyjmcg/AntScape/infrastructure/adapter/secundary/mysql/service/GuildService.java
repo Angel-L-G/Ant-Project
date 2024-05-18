@@ -66,7 +66,7 @@ public class GuildService implements IGuildRepository{
 	private GuildEntity generateGuildLevels(GuildEntity in) {
 		GuildLevelEntity barracks = new GuildLevelEntity();
 		
-		barracks.setCost(10.0);
+		barracks.setCost(65.0);
 		barracks.setEfect("Higher chances of wining");
 		barracks.setLevel(0);
 		barracks.setName("Barracks");
@@ -76,7 +76,7 @@ public class GuildService implements IGuildRepository{
 		
 		GuildLevelEntity defenses = new GuildLevelEntity();
 		
-		defenses.setCost(25.0);
+		defenses.setCost(10.0);
 		defenses.setEfect("Higher chances of defending");
 		defenses.setLevel(0);
 		defenses.setName("Defenses");
@@ -86,7 +86,7 @@ public class GuildService implements IGuildRepository{
 		
 		GuildLevelEntity foodChamerbs = new GuildLevelEntity();
 		
-		foodChamerbs.setCost(65.0);
+		foodChamerbs.setCost(25.0);
 		foodChamerbs.setEfect("More Resources Robbed");
 		foodChamerbs.setLevel(0);
 		foodChamerbs.setName("Food Chamerbs");
