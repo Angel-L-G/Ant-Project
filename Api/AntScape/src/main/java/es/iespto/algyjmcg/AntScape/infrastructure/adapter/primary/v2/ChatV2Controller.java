@@ -105,11 +105,13 @@ public class ChatV2Controller {
 				ChatOutPutDTO output = new ChatOutPutDTO();
 				
 				output.setId(c.getId());
-				output.setIdGuild(c.getIdGuild());
 				output.setLastMessage(c.getLastMessage());
-				output.setNameUser1(c.getUsuario1().getName());
-				output.setIdGuild(idGuild);
 				output.setMessages(c.getMessages());
+				output.setIdGuild(idGuild);
+				
+				if(c.getUsuario1() != null) {
+					output.setNameUser1(c.getUsuario1().getName());
+				}
 				
 				return ResponseEntity.ok(output);
 			}else {

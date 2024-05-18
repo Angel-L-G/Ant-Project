@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import es.iespto.algyjmcg.AntScape.domain.model.AdministrativeInfo;
+import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
@@ -35,7 +36,6 @@ public class AdministrationGaphQLController {
 	@Autowired private IAntService antService;
 	@Autowired private PasswordEncoder passwordEncoder;
 	@Autowired private MailService mailService;
-	private static final int BASE_ANT_ID = 3;
 
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping
@@ -121,7 +121,9 @@ public class AdministrationGaphQLController {
             if (save != null) {
                 // Crear y guardar el nido solo si el usuario se guardó correctamente
                 Nest baseNest = new Nest();
-                baseNest.setAnt(antService.findById(BASE_ANT_ID));
+                
+                List<Ant> all = (List<Ant>) antService.findAll();
+                baseNest.setAnt(all.get(0));
                 baseNest.setUsuario(save); // Usar el usuario guardado en lugar del que se creó
                 baseNest.setDeleted(false);
 
@@ -130,7 +132,7 @@ public class AdministrationGaphQLController {
                 NestLevel nl = new NestLevel();
                 nl.setCost(10.0F);
                 nl.setLevel(1);
-                nl.setName(user.getName() + "-" + antService.findById(BASE_ANT_ID).getName() + "-0");
+                nl.setName(user.getName() + "-" + all.get(0).getName() + "-0");
                 nl.setMultiplier(BigDecimal.valueOf(1.05));
                 nl.setProduction(2.0);
                 nl.setNest(nestSave);
@@ -169,12 +171,6 @@ public class AdministrationGaphQLController {
 
         return response;
     }
-    
-    /*
-    {
-	   "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4iLCJzdWIiOiJhIiwiZXhwIjoxNzE1MzQwNDA5fQ.ge6tJa4zzw1mXdckOWqYz72Pmp6_uDkDG7XaNdR2WVM"
-	 }
-    */
     
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SchemaMapping(typeName = "Mutation", field = "updatearUser")

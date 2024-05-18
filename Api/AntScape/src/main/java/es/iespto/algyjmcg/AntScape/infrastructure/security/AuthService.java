@@ -39,7 +39,7 @@ public class AuthService {
 		userdetails.setRole(userentity.getRol());
 		String generateToken = jwtService.generateToken(userdetails.username, userdetails.password);
 		
-		String message = "http://localhost:8080/api/v1/registerVerify"
+		String message = "http://192.168.1.15:8080/api/v1/registerVerify"
 				+ "?email="+save.getEmail()
 				+ "&hash="+save.getHash();
 		
