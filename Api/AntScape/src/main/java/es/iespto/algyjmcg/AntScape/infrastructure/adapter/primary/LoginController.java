@@ -2,6 +2,7 @@ package es.iespto.algyjmcg.AntScape.infrastructure.adapter.primary;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.iespto.algyjmcg.AntScape.domain.model.AdministrativeInfo;
+import es.iespto.algyjmcg.AntScape.domain.model.Ant;
 import es.iespto.algyjmcg.AntScape.domain.model.Nest;
 import es.iespto.algyjmcg.AntScape.domain.model.NestLevel;
 import es.iespto.algyjmcg.AntScape.domain.model.Usuario;
@@ -36,7 +38,6 @@ public class LoginController {
 	@Autowired private INestLevelService nestLevelService;
 	@Autowired private IAntService antService;
 	@Autowired private IAdministrativeInfoService adminInfoService;
-	private static final int BASE_ANT_ID = 3;
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody UserInputRegisterDTO request) {
@@ -90,7 +91,9 @@ public class LoginController {
 				if(verify) {
 					Nest baseNest = new Nest();
 					
-					baseNest.setAnt(antService.findById(BASE_ANT_ID));
+					List<Ant> ants = (List<Ant>) (antService.findAll());
+					
+					baseNest.setAnt(ants.get(0));
 					baseNest.setUsuario(user);
 					baseNest.setDeleted(false);
 					
@@ -100,7 +103,7 @@ public class LoginController {
 					
 					nl.setCost(10.0F);
 					nl.setLevel(1);
-					nl.setName(user.getName() + "-" + antService.findById(BASE_ANT_ID).getName() + "-0");
+					nl.setName(user.getName() + "-" + ants.get(0).getName() + "-0");
 					nl.setMultiplier(BigDecimal.valueOf(1.05));
 					nl.setProduction(2.0);
 					nl.setNest(save);

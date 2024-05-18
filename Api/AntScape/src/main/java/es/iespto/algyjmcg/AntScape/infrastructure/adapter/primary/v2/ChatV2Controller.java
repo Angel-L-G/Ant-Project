@@ -105,11 +105,13 @@ public class ChatV2Controller {
 				ChatOutPutDTO output = new ChatOutPutDTO();
 				
 				output.setId(c.getId());
-				output.setIdGuild(c.getIdGuild());
 				output.setLastMessage(c.getLastMessage());
-				output.setNameUser1(c.getUsuario1().getName());
-				output.setIdGuild(idGuild);
 				output.setMessages(c.getMessages());
+				output.setIdGuild(idGuild);
+				
+				if(c.getUsuario1() != null) {
+					output.setNameUser1(c.getUsuario1().getName());
+				}
 				
 				return ResponseEntity.ok(output);
 			}else {
@@ -127,7 +129,6 @@ public class ChatV2Controller {
 		String username = jwtService.extractUsername(resultado);
 		
 		if(in != null) {
-			System.err.println(in.getNameUser2() + " -------------------------------------------------------------");
 			Chat c = new Chat();
 			
 			if(in.getIdGuild() != null) {
@@ -136,8 +137,6 @@ public class ChatV2Controller {
 			} else {
 				c.setUsuario2(userService.findByName(in.getNameUser2()));
 				c.setIdGuild(null);
-				
-				System.err.println(c.getUsuario2().getName());
 			}
 			
 			c.setUsuario1(userService.findByName(username));

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, Dimensions, ImageBackground } from 'react-native'
+import { View, Text, TouchableOpacity, Image, TextInput, Dimensions, ImageBackground, ToastAndroid } from 'react-native'
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import UseUser from '../hooks/UseUser'
@@ -21,7 +21,8 @@ const Register = ({navigation}: Props) => {
     function createUser(){
         register(username, password, email, navigation);
         
-        //ToastAndroid.show('text',ToastAndroid.SHORT);
+        ToastAndroid.show('Check your email before login in',ToastAndroid.SHORT);
+        navigation.navigate("Login");
     }
 
     return (

@@ -218,7 +218,8 @@ const Clan = ({ navigation, route }: Props) => {
     async function irAAtacar() {
         const currentTime = new Date().getTime();
         const disabledTime = parseInt(momentoDeAtaque);
-        const remainingTime = 3600000 - (currentTime - disabledTime);
+        //const remainingTime = 3600000 - (currentTime - disabledTime);
+        const remainingTime = 1 - (currentTime - disabledTime);
         let puede = false;
         console.log(currentTime);
         console.log(disabledTime);
