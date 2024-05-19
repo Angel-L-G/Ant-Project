@@ -17,17 +17,13 @@ const UseSesion = () => {
     const [loading, setLoading] = useState(false);
 
     async function register(nick: string, password: string, email: string, navigation: any) {
-        console.log("register");
         let user: UserRegister = {
             email: email,
             nombre: nick,
             password: password
         }
 
-        console.log("hola");
-
         const axiospost = async (ruta: string) => {
-            console.log("hola");
 
             let response;
             try {
@@ -55,11 +51,9 @@ const UseSesion = () => {
         }
 
         const axiospost = async (ruta: string) => {
-            console.log("a");
 
             try {
                 const response = await axios.post(ruta + "v1/login", user);
-                console.log("q");
 
                 if (response.status > 199 && response.status < 300) {
 
@@ -85,7 +79,6 @@ const UseSesion = () => {
                     }
                 }
             } catch (error: any) {
-                console.log("ho");
                 console.log(error);
 
                 if (error.response.status == 428) {

@@ -107,7 +107,7 @@ public class AdministrativeInfoService implements IAdministrativeInfoRepository{
 		AdministrativeInfo out = null;
 		
 		if(user_id != null) {
-			repository.findByUserId(user_id);
+			out = am.toDomain(repository.findByUserId(user_id));
 		}
 		
 		return out;

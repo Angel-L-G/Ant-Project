@@ -516,6 +516,25 @@ public class GuildV2Controller {
 		}
 	}
 	
+	@PutMapping(path="/{id}/defenserange")
+	public ResponseEntity<?> updatedefenseRange(@RequestHeader HttpHeaders headers, @PathVariable Integer id, @RequestParam String newDefenseRange){
+		if(id != null && newDefenseRange != null) {
+			Guild guild = mainService.findById(id);
+			
+			guild.setDefenseRange(newDefenseRange);
+			
+			boolean update = mainService.update(guild);
+			
+			if(update) {
+				return ResponseEntity.status(HttpStatus.OK).body("Defense Number Updated");
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Something Went Wrong");
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Content");
+		}
+	}
+	
 	private Guild nearestGuild(Guild seeker) {
 		Iterable<Guild> allGuilds = mainService.findAll();
 		Guild out = null;

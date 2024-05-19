@@ -56,8 +56,10 @@ public class AdministrationGaphQLController {
     	Map<String, Integer> usersRegisteredPerDay = new HashMap<>();
 
     	for (AdministrativeInfo info : all) {
-    	    String date = info.getCreatedAt().toLocalDateTime().toLocalDate().toString();
-    	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		if(info.getCreatedAt() != null) {
+    			String date = info.getCreatedAt().toLocalDateTime().toLocalDate().toString();
+        	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		}
     	}
 
     	List<UserRegistration> result = new ArrayList<>();
@@ -78,8 +80,10 @@ public class AdministrationGaphQLController {
     	Map<String, Integer> usersRegisteredPerDay = new HashMap<>();
 
     	for (AdministrativeInfo info : all) {
-    	    String date = info.getLastLogin().toLocalDateTime().toLocalDate().toString();
-    	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		if(info.getLastLogin() != null) {
+    			String date = info.getLastLogin().toLocalDateTime().toLocalDate().toString();
+        	    usersRegisteredPerDay.put(date, usersRegisteredPerDay.getOrDefault(date, 0) + 1);
+    		}
     	}
 
     	List<UserRegistration> result = new ArrayList<>();
@@ -111,15 +115,13 @@ public class AdministrationGaphQLController {
             userentity.setImg(user.getImg());
             userentity.setTotalMoneyGenerated((user.getGoldenEggs()+user.getEggs()) + "");
 
-            int randInt = (int)(Math.random() * 10000); // Corregido el cálculo de randInt
+            int randInt = (int)(Math.random() * 10000);
             String randStrHashed = passwordEncoder.encode(String.valueOf(randInt));
             userentity.setHash(randStrHashed);
 
             Usuario save = usuarioservice.save(userentity);
 
-            // Verificar si el usuario se guardó correctamente antes de continuar
             if (save != null) {
-                // Crear y guardar el nido solo si el usuario se guardó correctamente
                 Nest baseNest = new Nest();
                 
                 List<Ant> all = (List<Ant>) antService.findAll();
@@ -158,7 +160,6 @@ public class AdministrationGaphQLController {
                 response.setName("Ok");
                 response.setMsg("All went good");
             } else {
-                // Si hubo un error al guardar el usuario, devolver un error
                 response.setStatus(500); // HttpStatus.INTERNAL_SERVER_ERROR
                 response.setName("Error");
                 response.setMsg("Failed to save user");
