@@ -94,7 +94,7 @@ public class UserV2Controller {
 		if(update) {
 			return ResponseEntity.ok(findByName);
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Money Not Updated");
 		}
 	}
 	
@@ -112,7 +112,25 @@ public class UserV2Controller {
 		if(update) {
 			return ResponseEntity.ok(findByName);
 		}else {
-			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("User Not Updated");
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Money Not Updated");
+		}
+	}
+	
+	@PutMapping(path="/update/totalmoney")
+	public ResponseEntity<?> updateTotalMoney(@RequestHeader HttpHeaders headers, @RequestBody String totalMoney) {
+		String token = headers.getFirst("Authorization");
+		String resultado = token.substring(7);
+		String username = jwtService.extractUsername(resultado);
+		
+		Usuario findByName = userService.findByName(username);
+		findByName.setTotalMoneyGenerated(totalMoney);
+		
+		boolean update = userService.update(findByName);
+		
+		if(update) {
+			return ResponseEntity.ok(findByName);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Money Not Updated");
 		}
 	}
 	
