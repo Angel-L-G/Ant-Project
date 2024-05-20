@@ -28,10 +28,9 @@ const Login = (props: Props) => {
         }
 
         try {
-            console.log(user);
-
             const response = await axios.post("http://localhost:8080/api/v1/login", user);
-            console.log(response.data);
+            console.log("TOKEN: " + response.data);
+            console.log("STATUS: " + response.status);
 
             if (response.status > 199 && response.status < 300) {
                 const responseGet = await axios.get(ruta + "v2/users/me", { headers: { "Authorization": "Bearer " + response.data } });
@@ -52,12 +51,10 @@ const Login = (props: Props) => {
     }
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("a");
         setUsername(event.target.value);
     };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("b");
         setPassword(event.target.value);
     };
 

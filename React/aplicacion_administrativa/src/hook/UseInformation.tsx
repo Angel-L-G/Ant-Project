@@ -34,48 +34,117 @@ const UseInformation = () => {
         }
     }
 
-    async function findAllUser() {
+    const findAllUser = async () => {
+        const query = `
+            query {
+                findAllUsers {
+                    active
+                    banned
+                    eggs
+                    email
+                    hash
+                    id 
+                    img 
+                    name
+                    rol 
+                    goldenEggs 
+                }
+            }
+        `;
+    
         try {
-            const response = await axios.post(ruta, {query:  findAllUsers}, {headers: { "Authorization": "Bearer " + token }});
+            const response = await axios.post('http://localhost:8080/graphql', {
+                query,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+    
+            console.log("Users: ");
+            console.log(response.data.data.findAllUsers);
+            setUsers(response.data.data.findAllUsers)
+        } catch (error) {
+            console.error('GraphQL request error:', error);
+            throw error;
+        }
+    };
 
-            setUsers(response.data);
-
+    const findLoginDates = async () => {
+        const query = `
+            query($aux: String!) {
+                findLastLogins(aux: $aux) {
+                    date
+                    count
+                }
+            }
+        `;
+    
+        const variables = {
+            aux: 'a',  // Valor estático para 'aux'
+        };
+    
+        try {
+            const response = await axios.post('http://localhost:8080/graphql', {
+                query,
+                variables,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+    
             return response.data;
         } catch (error) {
-            console.log(error);
+            console.error('GraphQL request error:', error);
+            throw error;
         }
-    }
+    };
 
-    async function findLoginDates() {
+    const findRegisterDates = async () => {
+        const query = `
+            query($ok: Boolean!) {
+                findRegisterAlongTime(ok: $ok) {
+                    date
+                    count
+                }
+            }
+        `;
+    
+        const variables = {
+            ok: true,  // Valor booleano para 'ok'
+        };
+    
         try {
-            const response = await axios.post(ruta, {query:  findLastLogins}, {headers: { "Authorization": "Bearer " + token }});
-
-            setLoginInfo(response.data);
-
+            const response = await axios.post('http://localhost:8080/graphql', {
+                query,
+                variables,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+    
             return response.data;
         } catch (error) {
-            console.log(error);
+            console.error('GraphQL request error:', error);
+            throw error;
         }
-    }
-
-    async function findRegisterDates() {
-        try {
-            const response = await axios.post(ruta, {query:  findRegisterAlongTime}, {headers: { "Authorization": "Bearer " + token }});
-
-            setRegisterInfo(response.data);
-
-            return response.data;
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    };
 
     return {
         finduserInfoById,
         findAllUser,
         findLoginDates,
         findRegisterDates,
-        users
+        setLoginInfo,
+        setRegisterInfo,
+        loginInfo,
+        registerInfo,
+        users,
     }
 }
 

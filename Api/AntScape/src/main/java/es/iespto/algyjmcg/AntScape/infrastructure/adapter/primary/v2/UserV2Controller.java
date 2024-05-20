@@ -183,6 +183,33 @@ public class UserV2Controller {
 		return ResponseEntity.ok(out);
 	}
 	
+	@GetMapping(path = "/{id}")
+	public ResponseEntity<?> findById(@PathVariable Integer id) {
+		if(id != null) {
+			Usuario u = userService.findById(id);
+			Guild guild = userService.findUserGuild(u.getId());
+			
+			UsuarioOutput out = new UsuarioOutput();
+			
+			out.setEggs(u.getEggs());
+			out.setGoldenEggs(u.getGoldenEggs());
+			out.setId(u.getId());
+			out.setImg(u.getImg());
+			out.setName(u.getName());
+			out.setNests(u.getNests());
+			
+			if(guild != null) {
+				out.setId_guild(guild.getId());
+			}else {
+				out.setId_guild(null);
+			}
+			
+			return ResponseEntity.ok(out);
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No Content On Request Body");
+		}
+	}
+	
 	@GetMapping(path="/me/guild")
 	public ResponseEntity<?> findMyGuild(@RequestHeader HttpHeaders headers) {
 		String token = headers.getFirst("Authorization");

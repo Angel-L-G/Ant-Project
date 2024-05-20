@@ -1,53 +1,65 @@
-import React, { useEffect, useState } from 'react'
-import { Accordion } from 'react-bootstrap'
 import "../styles/main.css"
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
+import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import UseInformation from '../hook/UseInformation'
 import UseMutation from '../hook/UseMutation'
 import FormSaveUser from '../components/FormSaveUser'
 import FormUpdateuser from '../components/FormUpdateuser'
 import UserCard from '../components/UserCard'
 import { Usuario } from '../type/types'
+import axios from 'axios'
+import Globals from '../assets/Globals'
+import Query from '../assets/Query'
+import { AppContext } from '../context/AppContextProvider'
+import { useContext, useEffect, useState } from "react"
+import UserModal from "../components/Modal"
+import styles from '../../../../RN/AntScape/src/themes/styles';
 
 const Main = () => {
-    const { users, findAllUser, findLoginDates, finduserInfoById, findRegisterDates } = UseInformation();
+    const { users, loginInfo, registerInfo, setLoginInfo, setRegisterInfo, findAllUser, finduserInfoById, findLoginDates, findRegisterDates, } = UseInformation();
     const { UpdateUserMutation, deleteUserMutation, saveUserMutation } = UseMutation();
+    const {graphqlRuta} = Globals();
+    const {findLastLogins} = Query();
+    const { token } = useContext(AppContext);
 
     const [showForm, setShowForm] = useState(true);
-
-    const [loginInfo, setLoginInfo] = useState();
     const [loginLoading, setLoginLoading] = useState(true);
-
-    const [registerInfo, setRegisterInfo] = useState();
     const [registerLoading, setRegisterLoading] = useState(true);
 
+    const [selectedUser, setSelectedUser] = useState<any>();
+
     useEffect(() => {
-        fetchLoginInfo();
-        fetchRegisterInfo();
+        fetchLoginData();
+        fetchRegisterData();
     }, [])
 
     const toggleForm = () => {
         setShowForm(prevState => !prevState);
     };
 
-    async function fetchLoginInfo() {
-        const data = await findLoginDates();
+    const fetchLoginData = async () => {
+        try {
+            const result = await findLoginDates();
+            setLoginInfo(result.data.findLastLogins);
+            console.log("Logins: ");
+            console.log(result.data.findLastLogins);
+            
+                       
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
-        setLoginInfo(data);
-
-        setLoginLoading(false);
-    }
-
-    async function fetchRegisterInfo() {
-        const data = await findRegisterDates();
-
-        setRegisterInfo(data);
-
-        setRegisterLoading(false);
-    }
-
-    function openModal(pos: number) {
-        
+    async function fetchRegisterData() {
+        try {
+            const result = await findRegisterDates();
+            setRegisterInfo(result.data.findRegisterAlongTime);
+            console.log("Registers: ");
+            console.log(result.data.findRegisterAlongTime);
+            
+                       
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     }
 
     return (
@@ -55,7 +67,7 @@ const Main = () => {
             <header className="header">
                 <h1>AntScape</h1>
             </header>
-            <div className="container">
+            <div className="contenedor">
                 <nav className="nav">
                     <div className="switch-container">
                         <label className="switch">
@@ -71,28 +83,28 @@ const Main = () => {
                 </nav>
                 <main className="main">
                     <div className="content">
-                        <h2>Contenido Principal</h2>
-                        <div>
+                        <div className="chartContainer">
+                            <h2>Contenido Principal</h2>
                             <div>
                                 {(loginLoading)
-                                    ?<LineChart width={500} height={300} data={loginInfo}>
-                                        <XAxis dataKey="name"/>
-                                        <YAxis/>
+                                    ?<LineChart width={1000} height={450} data={loginInfo}>
+                                        <XAxis dataKey="date"/>
+                                        <YAxis dataKey="count"/>
+                                        <Tooltip />
                                         <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-                                        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                                        <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
+                                        <Line type="monotone" dataKey="count" stroke="#8884d8" />
                                     </LineChart>
                                     :<p>Loading...</p>
                                 }
                             </div>
                             <div>
-                                {(loginLoading)
-                                    ?<LineChart width={500} height={300} data={registerInfo}>
-                                        <XAxis dataKey="name"/>
-                                        <YAxis/>
+                                {(registerLoading)
+                                    ?<LineChart width={1000} height={450} data={registerInfo}>
+                                        <XAxis dataKey="date"/>
+                                        <YAxis dataKey="count"/>
+                                        <Tooltip />
                                         <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-                                        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                                        <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
+                                        <Line type="monotone" dataKey="count" stroke="#8884d8" />
                                     </LineChart>
                                     :<p>Loading...</p>
                                 }
@@ -101,10 +113,8 @@ const Main = () => {
 
                         <div className="sidebar">
                             <h3>Lista de Elementos</h3>
-                            {Array.isArray(users) && users.map((usuario: Usuario, index: number) => (
-                                <button key={index} onClick={() => openModal(index)}>
-                                    <UserCard usuario={usuario} />
-                                </button>
+                            {users.map((usuario, index) => (
+                                <UserCard usuario={usuario} />
                             ))}
                         </div>
                     </div>
@@ -112,99 +122,11 @@ const Main = () => {
 
             </div>
             <footer className="footer">
-                <p>&copy; 2024 Mi Empresa</p>
+                <p style={{alignItems: "center"}}>&copy; 2024 AntScape</p>
             </footer>
+
         </div>
     )
 }
 
-export default Main
-
-{/*
-<div style={{ width: "100%", height: "100%"}}>
-            <div className='header'>
-                <h1 className='titleText'>
-                    AntScape
-                </h1>
-                {
-                    //ICONO
-                }
-            </div>
-
-            <div className='container'>
-                <div className='nav'>
-                    <ul>
-                        <li className='listText'>Save User</li>
-                        <li className='listText'>Update User</li>
-                        <li className='listText'>Delete User</li>
-                    </ul>
-                </div>
-
-                <div className='chartsContainer'>
-                    <div>
-                        {(loginLoading)
-                            ?<LineChart width={500} height={300} data={loginInfo}>
-                                <XAxis dataKey="name"/>
-                                <YAxis/>
-                                <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-                                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                                <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                            </LineChart>
-                            :<LineChart width={500} height={300}>
-                                <XAxis dataKey="name"/>
-                                <YAxis/>
-                                <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-                                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                                <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                            </LineChart>
-                        }
-                    </div>
-                    <div>
-                        {(loginLoading)
-                            ?<LineChart width={500} height={300} data={registerInfo}>
-                                <XAxis dataKey="name"/>
-                                <YAxis/>
-                                <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-                                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                                <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                            </LineChart>
-                            :<LineChart width={500} height={300}>
-                                <XAxis dataKey="name"/>
-                                <YAxis/>
-                                <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
-                                <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                                <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                            </LineChart>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div className='footer'>
-                <h1>
-                    Foot
-                </h1>
-            </div>
-        </div>
-*/}
-
-{/*
-<Accordion>
-    <Accordion.Item eventKey="0" style={{ backgroundColor: "blue !important" }}>
-        <Accordion.Header style={{ backgroundColor: "blue !important" }}>Hola 1</Accordion.Header>
-        <Accordion.Body style={{ backgroundColor: "blue" }}>
-            <a href='/Hola 1-1' style={{ display: 'block' }}>Hola 1-1</a>
-            <a href='/Hola 1-2' style={{ display: 'block' }}>Hola 1-2</a>
-            <a href='/Hola 1-3' style={{ display: 'block' }}>Hola 1-3</a>
-        </Accordion.Body>
-    </Accordion.Item>
-    <Accordion.Item eventKey="1" style={{ backgroundColor: "blue !important" }}>
-        <Accordion.Header style={{ backgroundColor: "blue !important" }}>Hola 2</Accordion.Header>
-        <Accordion.Body style={{ backgroundColor: "blue" }}>
-            <a href='/Hola 2-1' style={{ display: 'block' }}>Hola 2-1</a>
-            <a href='/Hola 2-2' style={{ display: 'block' }}>Hola 2-2</a>
-            <a href='/Hola 2-3' style={{ display: 'block' }}>Hola 2-3</a>
-        </Accordion.Body>
-    </Accordion.Item>
-</Accordion>
-*/}
+export default Main;

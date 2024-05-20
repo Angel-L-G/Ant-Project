@@ -3,42 +3,35 @@ import { Usuario } from '../type/types';
 import UseInformation from '../hook/UseInformation';
 
 type Props = {
-    pos: number,
-    closeModal: any
+    user: Usuario,
+    isOpen: any,
+    onClose: any
 }
 
-const Modal = ({ pos, closeModal }: Props) => {
-    const [usuario, setUsuario] = useState<Usuario>({} as Usuario);
-    const { users } = UseInformation();
-
-    useEffect(() => {
-        if (users != undefined) {
-            setUsuario(users[pos]);
-        }
-    }, []);
+const UserModal = ({ user, isOpen, onClose }: Props) => {
+    if (!isOpen) return null;
 
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <span className="close" onClick={closeModal}>&times;</span>
-                <h2>Datos de Usuario</h2>
-                <p>ID: {usuario.id}</p>
-                <p>Activo: {usuario.active ? 'Sí' : 'No'}</p>
-                <p>Baneado: {usuario.banned ? 'Sí' : 'No'}</p>
-                <p>Eggs: {usuario.eggs}</p>
-                <p>Email: {usuario.email}</p>
-                <p>Golden Eggs: {usuario.goldenEggs}</p>
-                <p>Hash: {usuario.hash}</p>
-                <p>Imagen: {usuario.img}</p>
-                <p>Nombre: {usuario.name}</p>
-                <p>Contraseña: {usuario.password}</p>
-                <p>Rol: {usuario.rol}</p>
-                <p>Total Money Generated: {usuario.totalMoneyGenerated}</p>
+        <div className="notification">
+            <div className="notification-content">
+                <button className="close-button" onClick={onClose}>X</button>
+                <h2>Detalles del Usuario</h2>
+
+                <p><strong>ID:</strong> {user.id}</p>
+                <p><strong>Nombre:</strong> {user.name}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Rol:</strong> {user.rol}</p>
+                
+                <p><strong>Activo:</strong> {user.active ? 'Sí' : 'No'}</p>
+                <p><strong>Baneado:</strong> {user.banned ? 'Sí' : 'No'}</p>
+
+                <p><strong>Huevos:</strong> {user.eggs}</p>
+                <p><strong>Huevos Dorados:</strong> {user.goldenEggs}</p>
+                
+                <img src={user.img} alt={`${user.name}'s profile`} className="profile-img" />
             </div>
         </div>
     );
 };
 
-
-
-export default Modal
+export default UserModal;
