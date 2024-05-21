@@ -1,22 +1,22 @@
 import React from 'react'
 import { Usuario } from '../type/types';
+import UseMutation from '../hook/UseMutation';
 
 type Props = {
-    usuario: Usuario
+    usuario: Usuario,
+    deleteUser: (id: number) => void
 }
 
-const UserCard = ({usuario}: Props) => {
+const UserCard = ({usuario, deleteUser }: Props) => {
     return (
         <div className="user-card">
-            <img src={usuario.img} alt="User" className="user-avatar" />
             <div className="user-info">
                 <h3 className="user-name">{usuario.name}</h3>
-                <p className="user-email">{usuario.id}</p>
-                <p className="user-email">{usuario.email}</p>
-                
-                <p className="user-email">{usuario.totalMoneyGenerated}</p>
-                <p className="user-email">{usuario.eggs}</p>
-                <p className="user-email">{usuario.goldenEggs}</p>
+                <p className="user-id">ID: {usuario.id}</p>
+                <p className="user-email">Email: {usuario.email}</p>
+                <p className="user-eggs">Eggs: {usuario.eggs}</p>
+                <p className="user-goldenEggs">Golden Eggs: {usuario.goldenEggs}</p>
+                <button className="delete-button" onClick={() => deleteUser(usuario.id)}>Delete</button>
             </div>
         </div>
     );

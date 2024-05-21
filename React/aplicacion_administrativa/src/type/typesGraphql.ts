@@ -21,6 +21,7 @@ export type GraphqlUpdateInputDTO = {
     email: string,
     goldenEggs: number,
     id: number,
+    rol: string,
     img: string,
     name: string,
     password: string,
