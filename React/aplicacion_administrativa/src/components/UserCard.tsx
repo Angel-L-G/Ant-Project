@@ -11,7 +11,12 @@ const UserCard = ({usuario}: Props) => {
             <img src={usuario.img} alt="User" className="user-avatar" />
             <div className="user-info">
                 <h3 className="user-name">{usuario.name}</h3>
+                <p className="user-email">{usuario.id}</p>
                 <p className="user-email">{usuario.email}</p>
+                
+                <p className="user-email">{usuario.totalMoneyGenerated}</p>
+                <p className="user-email">{usuario.eggs}</p>
+                <p className="user-email">{usuario.goldenEggs}</p>
             </div>
         </div>
     );

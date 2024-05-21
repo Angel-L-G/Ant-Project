@@ -14,6 +14,7 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import es.iespto.algyjmcg.AntScape.domain.model.AdministrativeInfo;
 import es.iespto.algyjmcg.AntScape.domain.model.Ant;
@@ -27,6 +28,7 @@ import es.iespto.algyjmcg.AntScape.domain.port.primary.INestService;
 import es.iespto.algyjmcg.AntScape.domain.port.primary.IUsuarioService;
 import es.iespto.algyjmcg.AntScape.infrastructure.security.MailService;
 
+@CrossOrigin
 @Controller
 public class AdministrationGaphQLController {
 	@Autowired private IAdministrativeInfoService adminInfoService;
@@ -75,7 +77,7 @@ public class AdministrationGaphQLController {
     
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @QueryMapping
-    public List<UserRegistration> findLastLogins() {
+    public List<UserRegistration> findLastLogins(@Argument String aux) {
     	Iterable<AdministrativeInfo> all = adminInfoService.findAll();
     	Map<String, Integer> usersRegisteredPerDay = new HashMap<>();
 
