@@ -68,3 +68,51 @@ todos los clanes cuentan con tres estructuras. pulsando en ellas se desplegará 
 #### 3.2.2 esta estructura sirve para mejorar la cantidad de recursos que generas.
 
 #### 3.2.3 esta estructura sirve para mejorar el rango de defensa del clan.
+
+## 4. ataque a otros clanes
+
+pulsando el icono de la espada que estaba en la pantalla anterior irás a esta pantalla que es la de ataque.
+
+aquí podrás ver tanto la defensa enemiga como los dados restantes y el total abajo, para sacar un nuevo dado solo tendrás que pulsar abajo para tirar.
+
+el sistema de ataque consiste en ir tirando dados para intentar aproximarte lo máximo posible a un número secreto comprendido entre el rango que aparece en la parte superior de la pantalla, hay tres tipos de resultado posibles al atacar.
+
+los resultados posibles son:
+
+### 4.1 derrota
+
+![6.1](documentation/img/6.1.png)
+
+### 4.2 victoria pírrica
+
+![6.2](documentation/img/6.2.png)
+
+### 4.3 victoria heroica
+
+![6.3](documentation/img/6.3.png)
+
+cada una dará diferentes recursos.
+
+la derrota ocurre cuando el resultado de tus tiradas queda a más de 2 de distancia del número del clan rival.
+
+la victoria pírrica ocurre cuando el resultado de tus tiradas queda a 2 de distancia o uno del número del clan rival.
+
+la victoria heroica ocurre cuando el resultado de tus tiradas coincide exactamente con el número del clan rival.
+
+## 5. pantalla social
+
+![7](documentation/img/7.png)
+
+en esta pantalla se encuentra todo el apartado social, un listado de los usuarios, uno de los amigos y otro de los clanes.
+
+## 6. chat entre usuarios
+
+![8](documentation/img/8.png)
+
+desde la pantalla anterior también podrás entrar en el chat de usuario a usuario en el que se ve tanto el mensaje como cuando fue enviado, siempre y cuando ese usuario no te haya bloqueado o tú lo hayas bloqueado.
+
+## 7. perfil del usuario
+
+![9](documentation/img/9.png)
+
+este es el perfil de un usuario, en el puedes bloquear o agregar como amigo al usuario.
