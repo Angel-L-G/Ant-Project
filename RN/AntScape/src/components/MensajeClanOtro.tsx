@@ -15,30 +15,11 @@ type Props = {
 
 const MensajeClanOtro = ({ mensaje }: Props) => {
     const { ruta } = Globals();
-    const { token } = useContext(AppContext);
-    const [user, setUser] = useState<User>({} as User);
-
-    useEffect(() => {
-        async function getUser() {
-            try {
-                const response = await axios.get(ruta + "v2/users/" + mensaje.senderId, { headers: { "Authorization": "Bearer " + token } });
-                setUser(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        getUser();
-    }, [])
 
     return (
         <View style={{ alignSelf: 'flex-start' }}>
-            <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{mensaje.sentAt && formatDistanceToNow(new Date(mensaje.sentAt), { addSuffix: true, locale: es })}</Text>
+            <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16, textAlign: "left" }}>{mensaje.sentAt && formatDistanceToNow(new Date(mensaje.sentAt), { addSuffix: true, locale: es })}</Text>
             <View style={{flexDirection: "row"}}>
-                <View style={{justifyContent: "center", alignItems: "center"}}>
-                    <Image source={{ uri: ruta + "v1/files/" + user.img }} style={{ width: 30, height: 30, borderRadius: 100, borderColor: "black", borderWidth: 1 }} />
-                    <Text style={{color: "yellow"}}>{user.name}</Text>
-                </View>
                 <View style={styles.otherMessage}>
                     <Text style={{ ...styles.messageText, color: "black" }}>{mensaje.body}</Text>
                 </View>
@@ -59,7 +40,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         padding: 8,
         elevation: 5,
-        maxWidth: '60%',
     },
     messageText: {
         fontSize: 14,

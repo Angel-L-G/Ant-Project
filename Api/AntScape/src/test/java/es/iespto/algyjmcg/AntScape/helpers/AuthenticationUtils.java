@@ -22,7 +22,7 @@ public class AuthenticationUtils {
         String loginUrl = "/api/v1/login";
         String token = mockMvc.perform(post(loginUrl)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"nombre\": \"" + "a" + "\", \"password\": \"" + "a" + "\"}"))
+                .content("{\"nombre\": \"" + "Javier" + "\", \"password\": \"" + "a" + "\"}"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         

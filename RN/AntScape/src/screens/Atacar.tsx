@@ -40,8 +40,7 @@ const Atacar = ({ navigation, route }: Props) => {
     const delayBeforeClose = 1500; // 5 segundos antes de cerrar el modal
     const transitionDuration = 1; // Duración de la transición en milisegundos
 
-    const imageName = clan.guildImage;
-    const imageSource = images[imageName as keyof typeof images];
+    const [imageSource, setImageSource] = useState<any>();
 
     const handleBackPress = () => {
         setModalSalirVisible(true);
@@ -120,6 +119,8 @@ const Atacar = ({ navigation, route }: Props) => {
             try {
                 const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/seekChallenger", { headers: { "Authorization": "Bearer " + token } });
                 setEnemigo(response.data);
+                const imageName = response.data.guildImage;
+                setImageSource(images[imageName as keyof typeof images]);
                 let [inferior, superior] = response.data.defenseRange.split("-");
                 setRangoSuperior(superior);
                 setRangoInferior(inferior);

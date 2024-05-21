@@ -131,8 +131,9 @@ const Clan = ({ navigation, route }: Props) => {
     );
 
     function sendMessage() {
-        saveMessages(chatActual.current?.id as number, mensaje);
-        sendGroupMessage(mensaje);
+        setMensaje("");
+        saveMessages(chatActual.current?.id as number, user.name + ": " + mensaje);
+        sendGroupMessage(user.name + ": " + mensaje);
     }
 
     function abrirModalUno() {
@@ -206,7 +207,7 @@ const Clan = ({ navigation, route }: Props) => {
     async function irAAtacar() {
         const currentTime = new Date().getTime();
         const disabledTime = parseInt(momentoDeAtaque);
-        const remainingTime = 3600000 - (currentTime - disabledTime);
+        const remainingTime = 1 - (currentTime - disabledTime);
         let puede = false;
 
         if (remainingTime <= 0 || isNaN(disabledTime)) {

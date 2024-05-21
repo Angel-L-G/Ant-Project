@@ -29,7 +29,8 @@ const ClanProfileOther = ({ navigation, route }: Props) => {
         async function getClanUsers() {
             try {
                 const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/users", { headers: { "Authorization": "Bearer " + token } });
-
+                console.log(response.data);
+                
                 setUsers(response.data);
             } catch (error) {
                 console.log(error);
