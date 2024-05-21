@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import { StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import * as Progress from 'react-native-progress';
 import { NestLevel } from '../types/types';
-import Globals from './Globals';
-import { AppContext } from '../context/AppContextProvider';
 
 type Props = {
     duration: number,
@@ -13,8 +11,6 @@ type Props = {
 }
 
 const ProgressBar = ({duration, lastLevel, updateEggs, ganarDinero}: Props) => {
-    const {ruta} = Globals();
-    const {user, token} = useContext(AppContext);
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {

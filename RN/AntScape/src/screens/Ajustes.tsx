@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableHighlight, ToastAndroid } from 'react-native'
+import { View, Text, StyleSheet, TouchableHighlight, ToastAndroid, LogBox } from 'react-native'
 import React, { useContext, useState } from 'react'
 import NavBarTop from '../components/NavBarTop'
 import NavBarBotton from '../components/NavBarBotton'
@@ -13,6 +13,7 @@ type Props = {
 
 const Ajustes = ({ navigation }: Props) => {
     const { setToken, setUser } = useContext(AppContext);
+    LogBox.ignoreAllLogs();
 
     function logOut() {
         setToken("");
@@ -65,26 +66,3 @@ const styles = StyleSheet.create({
     },
 
 });
-
-
-/*
-<CheckBox
-                    title="Dark Mode"
-                    checked={isOn}
-                    onPress={() => setIsOn(!isOn)}
-                />
-
-                <SelectDropdown
-                    data={opciones}
-                    onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index)
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        return selectedItem
-                    }}
-                    rowTextForSelection={(listItem, index) => {
-                        return listItem
-                    }}
-                    defaultButtonText='Select an Option'
-                />
-*/

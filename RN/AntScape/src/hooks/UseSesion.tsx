@@ -1,18 +1,13 @@
-import { StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { ToastAndroid } from 'react-native'
+import { useContext, useState } from 'react'
 import axios from 'axios'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import EncryptedStorage from 'react-native-encrypted-storage'
-import { ContextUser, User, UserLogin, UserRegister } from '../types/types'
-import AppContextProvider, { AppContext } from '../context/AppContextProvider';
+import { UserLogin, UserRegister } from '../types/types'
+import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals'
 
-type Props = {
-    navigation: any
-}
-
 const UseSesion = () => {
-    const { setUser, setToken, setRol, token, setImgContext } = useContext(AppContext);
+    const { setUser, setToken, setImgContext } = useContext(AppContext);
     const { ruta } = Globals();
     const [loading, setLoading] = useState(false);
 
@@ -68,11 +63,6 @@ const UseSesion = () => {
                     setImgContext(ruta + "v1/files/" + responseGet.data.img)
                     await EncryptedStorage.setItem("token", response.data);
 
-                    //const rolFromBack = await axios.get(ruta+"/"+tk);
-                    //setRol(rolFromBack.data);
-                    //await AsyncStorage.setItem('rol', rolFromBack.data);
-
-                    
                     navigation.navigate("Personal", {numero: 5});
                 } else {
                     if (response.status == 428) {

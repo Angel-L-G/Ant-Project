@@ -1,16 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import UseChat from '../hooks/UseChat'
 import chatStyles from '../themes/chatStyles';
-import { View, Image, Text, FlatList, StyleSheet, TextInput, TouchableHighlight, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Image, Text, FlatList, StyleSheet, TextInput, TouchableHighlight, KeyboardAvoidingView, Platform, LogBox } from 'react-native';
 import { AppContext } from '../context/AppContextProvider';
 import UseChatHistory from '../hooks/UseChatHistory';
-import { Chat, ChatInputSaveDTO, Message } from '../types/chatTypes';
+import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
 import Globals from '../components/Globals';
-import axios from 'axios';
-import { Client } from '@stomp/stompjs';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import LinearGradient from 'react-native-linear-gradient';
 import { Icon } from 'react-native-elements';
@@ -18,11 +16,11 @@ import { Icon } from 'react-native-elements';
 type Props = NativeStackScreenProps<RootStackParamList, "NuevoChat">;
 
 const NuevoChat = ({ navigation, route }: Props) => {
+    LogBox.ignoreAllLogs();
     const usu = route.params.usu;
-
     const { conectar, conectado, historico, enviarPrivado, setHistorico, chatActual } = UseChat();
-    const { chats, save, saveMessages, findAllMessagesByChatId } = UseChatHistory();
-    const { token, user } = useContext(AppContext);
+    const { chats, save, saveMessages } = UseChatHistory();
+    const { user } = useContext(AppContext);
     const { ruta } = Globals();
     const [img, setImg] = useState(ruta + "v1/files/" + usu.img);
     const [loading, setLoading] = useState(true);

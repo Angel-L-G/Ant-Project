@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableHighlight, TouchableOpacity, TextInput, ScrollView, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, Image, TouchableHighlight, TouchableOpacity, TextInput, ScrollView, ImageBackground, Dimensions, LogBox } from 'react-native';
 import React, { useState } from 'react'
 import styles from '../themes/styles'
 import UseSesion from '../hooks/UseSesion';
@@ -10,7 +10,7 @@ type Props = {
 }
 
 const Login = ({ navigation }: Props) => {
-    //const {findByName} = UseUser();
+    LogBox.ignoreAllLogs();
     const { login, loading } = UseSesion();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");

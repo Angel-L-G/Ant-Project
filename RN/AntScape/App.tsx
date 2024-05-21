@@ -8,33 +8,12 @@ import 'react-native-gesture-handler';
 
 import React from 'react';
 import type { PropsWithChildren } from 'react';
-import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
-} from 'react-native';
-
-import {
-    Colors,
-    DebugInstructions,
-    Header,
-    LearnMoreLinks,
-    ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 import Login from './src/screens/Login';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Register from './src/screens/Register';
-import Main from './src/screens/Main';
 import Social from './src/screens/Social';
-import Outside from './src/screens/Outside';
-import NewHormiguero from './src/screens/NewHormiguero';
 import Profile from './src/screens/Profile';
-import Game from './src/screens/Game';
 import AppContextProvider from './src/context/AppContextProvider';
 import Personal from './src/screens/Personal';
 import ProfileOther from './src/screens/ProfileOther';
@@ -46,10 +25,6 @@ import CrearClan from './src/screens/CrearClan';
 import NuevoChat from './src/screens/NuevoChat';
 import ClanProfileOther from './src/screens/ClanProfileOther';
 import Atacar from './src/screens/Atacar';
-import AnimatedGif from './src/components/AnimatedGif';
-import ChatScreen from './src/screens/ChatScreen';
-import TestChatGrupal from './src/screens/TestChatGrupal';
-import VictoryAnimation from './src/components/ResultAnimation';
 import { Usuario } from '../../React/aplicacion_administrativa/src/type/types';
 
 type SectionProps = PropsWithChildren<{

@@ -1,9 +1,7 @@
-import { View, Text, Image, FlatList, TouchableHighlight, Modal, RefreshControl, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Text, Image, FlatList, TouchableHighlight, Modal, RefreshControl, TouchableOpacity, ToastAndroid, LogBox } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import styles from '../themes/styles'
-import UseUser from '../hooks/UseUser'
 import { AppContext, useAppContext } from '../context/AppContextProvider'
-import { Button, Input } from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient'
 import { launchImageLibrary } from 'react-native-image-picker';
 import Globals from '../components/Globals';
@@ -15,6 +13,7 @@ type Props = {
 }
 
 const Profile = ({ navigation }: Props) => {
+    LogBox.ignoreAllLogs();
     const { ruta } = Globals();
     const { setUser, user, eggsContext, token, setImgContext } = useContext(AppContext);
     const [selectedImage, setSelectedImage] = useState<string>(ruta + "v1/files/" + user.img);
@@ -25,7 +24,6 @@ const Profile = ({ navigation }: Props) => {
         async function getClan() {
             try {
                 const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
                 setClan(response.data);
             } catch (error) {
                 console.log(error);
@@ -45,14 +43,13 @@ const Profile = ({ navigation }: Props) => {
 
         launchImageLibrary(options, (response) => {
             if (response.didCancel) {
-                console.log('User cancelled image picker');
+
             } else if (response.errorMessage) {
-                console.log('Image picker error: ', response.errorMessage);
+
             } else {
                 let image64: string = response.assets?.[0].base64 + "" || response.assets?.[0].base64 + "";
                 setSelectedImage(`data:image/png;base64,${image64}`);
                 setSelectedImage64(image64);
-                console.log(image64);
             }
         });
     };
@@ -68,11 +65,8 @@ const Profile = ({ navigation }: Props) => {
 
             try {
                 const response = await axios.put(ruta + "v2/users/profilepic", body, { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
 
                 const responseGet = await axios.get(ruta + "v2/users/me", { headers: { "Authorization": "Bearer " + token } });
-                console.log("Usu" + responseGet.data);
-                console.log("UsuImg" + responseGet.data.img);
 
                 setUser(responseGet.data);
                 setSelectedImage(ruta + "v1/files/" + responseGet.data.img);

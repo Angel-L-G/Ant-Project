@@ -1,12 +1,9 @@
-import { View, Text } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import axios from 'axios'
+import { useContext, useRef, useState } from 'react'
 import { Client } from '@stomp/stompjs'
 import Globals from '../components/Globals'
 import * as encoding from 'text-encoding';
 import { AppContext } from '../context/AppContextProvider';
-import { Chat, groupMessage, Message, websocketMessage } from '../types/chatTypes'
-import UseChatHistory from './UseChatHistory'
+import { Chat, Message, websocketMessage } from '../types/chatTypes'
 
 const UseChat = () => {
     const stompRef = useRef({} as Client);
@@ -14,7 +11,7 @@ const UseChat = () => {
     const [conectado, setConectado] = useState(false);
     const [historico, setHistorico] = useState<Message[]>(new Array<Message>());
     const chatActual = useRef<Chat>();
-    const {ruta, ip} = Globals();
+    const {ip} = Globals();
 
     Object.assign(global, {
         TextEncoder: encoding.TextEncoder,
@@ -28,12 +25,11 @@ const UseChat = () => {
                 Authorization: 'Bearer ' + token,
             },
             debug: function (str) {
-                console.log(str);
+
             },
             onConnect: conectarOK,
-            onWebSocketError: (error) => console.log(error),
             onStompError: (frame) => {
-                console.log('Additional details: ' + frame.body);
+
             },
             forceBinaryWSFrames: true,
             appendMissingNULLonIncoming: true,
@@ -41,15 +37,10 @@ const UseChat = () => {
 
         function conectarOK() {
             setConectado(true);
-            console.log("entra en conectarOK");
             let stompClient = stompRef.current;
             stompClient.subscribe('/salas/general', onPublicMessageReceived);
             stompClient.subscribe('/usuarios/cola/mensajes', onPrivateMessageReceived);
             stompClient.subscribe('/topic/chatroom/' + user.id_guild, onGroupMessageReceived);
-        }
-
-        function conectarError() {
-            console.log("Error en el websocket");
         }
 
         stompRef.current.activate();
@@ -57,13 +48,8 @@ const UseChat = () => {
 
     ////////////////////////////////////////////////////////
     function onGroupMessageReceived(datos: any) {
-        console.log("Grupal");
-        console.log("datos: " + datos.body);
-
         let nuevoMensaje = JSON.parse(datos.body);
 
-        console.log("DATO: " + nuevoMensaje.receiver);
-        
         if(nuevoMensaje.receiver != undefined && nuevoMensaje.receiver == user.id_guild){
             let messageRecieved: Message = {
                 body: nuevoMensaje.content,
@@ -77,14 +63,12 @@ const UseChat = () => {
                 return array
             });
         }else{
-            console.log("No Pa Ti");
+
         }
     }
     //////////////////////////////////////////////////////////////
 
     function onPublicMessageReceived(datos: any) {
-        console.log("Publico");
-
         let messageRecieved: Message = {
             body: datos.content,
             sentAt: datos.sentAt,
@@ -99,7 +83,6 @@ const UseChat = () => {
     }
 
     function onPrivateMessageReceived(datos: any) {
-        console.log("Privado");
         
         let nuevoMensaje = JSON.parse(datos.body);
         
@@ -116,7 +99,7 @@ const UseChat = () => {
                 return array
             });
         }else{
-            console.log("No Pa Ti");
+
         }
     }
 
@@ -132,7 +115,6 @@ const UseChat = () => {
         };
 
         stompClient.publish({ destination: '/app/groups/' + user.id_guild, body: JSON.stringify(messageTo) });
-        console.log("enviado Grupal");
     }
     //////////////////////////////////////////////////////
 
@@ -147,7 +129,6 @@ const UseChat = () => {
         };
 
         stompClient.publish({ destination: "/app/mensajegeneral", body: JSON.stringify(messageTo) });
-        console.log("enviado público");
 
         let messageRecieved: Message = {
             body: messageTo.content,
@@ -173,7 +154,6 @@ const UseChat = () => {
         };
 
         stompClient.publish({ destination: "/app/privado", body: JSON.stringify(messageTo) });
-        console.log("enviado privado");
 
         let messageRecieved: Message = {
             body: messageTo.content,

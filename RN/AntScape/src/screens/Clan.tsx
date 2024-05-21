@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, ImageBackground, TextInput, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, ImageBackground, TextInput, FlatList, LogBox } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import NavBarTop from '../components/NavBarTop'
 import NavBarBotton from '../components/NavBarBotton'
@@ -8,12 +8,10 @@ import { AppContext } from '../context/AppContextProvider'
 import { ClanType, GuildLevel } from '../types/types'
 import { Image } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { es } from 'date-fns/locale';
 import LinearGradient from 'react-native-linear-gradient';
 import UseChat from '../hooks/UseChat';
 import UseChatHistory from '../hooks/UseChatHistory';
-import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
-import { formatDistanceToNow } from 'date-fns';
+import { Chat } from '../types/chatTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
@@ -23,16 +21,10 @@ import MensajeClanOtro from '../components/MensajeClanOtro';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Clan">;
 
-type UsuarioImagen = {
-    id: number,
-    nick: string,
-    img: string
-}
-
 const Clan = ({ navigation, route }: Props) => {
+    LogBox.ignoreAllLogs();
     const { ruta } = Globals();
     const { token, user, goldenEggsContext, setGoldenEggsContext } = useContext(AppContext);
-    const numero = route.params.numero;
     const [clan, setClan] = useState<ClanType>({} as ClanType);
     const [tieneClan, setTieneClan] = useState(false);
     const [clanId, setClanId] = useState(0);
@@ -45,13 +37,12 @@ const Clan = ({ navigation, route }: Props) => {
     const [momentoDeAtaque, setMomentoDeAtaque] = useState("");
     const [modalDefensaVisible, setModalDefensaVisible] = useState(false);
     const [rangoDefensa, setRangoDefensa] = useState<Array<number>>([]);
-    const [numeroDeDefensa, setNumeroDeDefensa] = useState(0);
     const [rangoInferior, setRangoInferior] = useState(0);
     const [rangoSuperior, setRangoSuperior] = useState(0);
     const [nuevoNumeroDeDefensa, setNuevoNumeroDeDefensa] = useState(0);
 
     const { sendGroupMessage, conectado, conectar, chatActual, historico, setHistorico } = UseChat();
-    const { chats, save, saveMessages, findGuildChat } = UseChatHistory();
+    const { saveMessages, findGuildChat } = UseChatHistory();
     const [modalChatVisible, setModalChatVisible] = useState(false);
     const [mensaje, setMensaje] = useState("");
     const [loading, setLoading] = useState(true);
@@ -85,17 +76,12 @@ const Clan = ({ navigation, route }: Props) => {
 
     useFocusEffect(
         useCallback(() => {
-            console.log("Pantalla activa");
-
-            console.log(user);
 
             const obtenerEstadoAsyncStorage = async () => {
                 try {
                     const estadoPuedeAtacar = await AsyncStorage.getItem(`puedeAtacar${user.id}`);
-                    console.log(estadoPuedeAtacar + "Aaaaaaaaaaaa");
 
                     const tiempoDeAtaque = await AsyncStorage.getItem(`momentoDeAtaque${user.id}`);
-                    console.log(tiempoDeAtaque + "Aaaaaaaaaaaa");
 
                     if (tiempoDeAtaque !== null) {
                         setMomentoDeAtaque(tiempoDeAtaque);
@@ -108,21 +94,15 @@ const Clan = ({ navigation, route }: Props) => {
             obtenerEstadoAsyncStorage();
 
             async function carga() {
-                console.log("UseEffect");
 
                 try {
                     const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
-                    console.log(response.data);
 
                     if (response.data != "") {
-                        console.log("ASASDASDASDASDAS");
-                        console.log(response.data);
 
                         let [inferior, superior] = response.data.defenseRange.split("-");
                         let arr: Array<number> = [];
                         for (let i = inferior; i <= superior; i++) {
-                            console.log(i);
-
                             arr.push(i);
                         }
                         setRangoDefensa(arr);
@@ -132,7 +112,6 @@ const Clan = ({ navigation, route }: Props) => {
                         setClan(response.data);
                         setClanId(response.data.id);
                         setTieneClan(true);
-                        setNumeroDeDefensa(response.data.defenseNumber);
                         setNuevoNumeroDeDefensa(response.data.defenseNumber);
                     } else {
                         setTieneClan(false);
@@ -147,7 +126,6 @@ const Clan = ({ navigation, route }: Props) => {
 
             return () => {
 
-                console.log("Pantalla perdiendo foco");
             };
         }, [])
     );
@@ -181,7 +159,6 @@ const Clan = ({ navigation, route }: Props) => {
             setGuildLevelUno(response.data.guildLevels[0]);
             setGuildLevelDos(response.data.guildLevels[1]);
             setGuildLevelTres(response.data.guildLevels[2]);
-            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -191,10 +168,7 @@ const Clan = ({ navigation, route }: Props) => {
         if (goldenEggsContext >= guildLevel.cost) {
             if (guildLevel.name == "Barracks") {
                 try {
-                    console.log(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name);
-
                     const response = await axios.put(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name, {}, { headers: { "Authorization": "Bearer " + token } });
-                    console.log(response.data);
                     getGuild();
                     user.goldenEggs = goldenEggsContext - guildLevel.cost;
                     setGoldenEggsContext(goldenEggsContext - guildLevel.cost);
@@ -204,7 +178,6 @@ const Clan = ({ navigation, route }: Props) => {
             } else if (guildLevel.name == "Defenses") {
                 try {
                     const response = await axios.put(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name, {}, { headers: { "Authorization": "Bearer " + token } });
-                    console.log(response.data);
                     getGuild();
                     user.goldenEggs = goldenEggsContext - guildLevel.cost;
                     setGoldenEggsContext(goldenEggsContext - guildLevel.cost);
@@ -212,14 +185,12 @@ const Clan = ({ navigation, route }: Props) => {
                         newDefenseRange: (Number(rangoInferior) + 1) + "-" + (Number(rangoSuperior) + 1)
                     }
                     const response2 = await axios.put(ruta + "v2/guilds/" + clan.id + "/defenserange", null, { params: params, headers: { Authorization: "Bearer " + token } });
-                    console.log(response2.data);
                 } catch (error) {
                     console.log(error);
                 }
             } else {
                 try {
                     const response = await axios.put(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name, {}, { headers: { "Authorization": "Bearer " + token } });
-                    console.log(response.data);
                     getGuild();
                     user.goldenEggs = goldenEggsContext - guildLevel.cost;
                     setGoldenEggsContext(goldenEggsContext - guildLevel.cost);
@@ -235,14 +206,10 @@ const Clan = ({ navigation, route }: Props) => {
     async function irAAtacar() {
         const currentTime = new Date().getTime();
         const disabledTime = parseInt(momentoDeAtaque);
-        const remainingTime = 1000 - (currentTime - disabledTime); //3600000
+        const remainingTime = 3600000 - (currentTime - disabledTime);
         let puede = false;
-        console.log(currentTime);
-        console.log(disabledTime);
 
         if (remainingTime <= 0 || isNaN(disabledTime)) {
-            console.log("Hola");
-
             puede = true;
 
             await AsyncStorage.setItem(`puedeAtacar${user.id}`, "true");
@@ -269,17 +236,13 @@ const Clan = ({ navigation, route }: Props) => {
             let [inferior, superior] = response.data.defenseRange.split("-");
             let arr: Array<number> = [];
             for (let i = inferior; i <= superior; i++) {
-                console.log(i);
-
                 arr.push(i);
             }
             setRangoDefensa(arr);
             setRangoInferior(inferior);
             setRangoSuperior(superior);
 
-            setNumeroDeDefensa(response.data.defenseNumber);
             setNuevoNumeroDeDefensa(response.data.defenseNumber);
-            console.log(response.data);
         } catch (error) {
             console.log(error);
         }
@@ -288,13 +251,11 @@ const Clan = ({ navigation, route }: Props) => {
     }
 
     async function cambiarNumeroDeDefensa() {
-        setNumeroDeDefensa(nuevoNumeroDeDefensa);
         try {
             const params = {
                 newDefenseNumber: nuevoNumeroDeDefensa
             }
             const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/defensenumber", null, { params: params, headers: { Authorization: "Bearer " + token } });
-            console.log(response.data);
             ToastAndroid.show("Ahora el número de defensa es " + nuevoNumeroDeDefensa, ToastAndroid.SHORT);
             setModalDefensaVisible(false);
         } catch (error) {
@@ -554,14 +515,14 @@ const Clan = ({ navigation, route }: Props) => {
                                         <View style={{ width: "5%" }}></View>
                                         <View style={{ width: "55%", borderLeftWidth: 2, alignItems: "center" }}>
                                             <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 20, color: "yellow", textAlign: "center", textDecorationLine: 'underline' }}>{guildLevelTres.name}</Text>
-                                            <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 16, color: "white", textAlign: "center", marginTop: 10 }}>Aumenta el robo de recursos</Text>
+                                            <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 16, color: "white", textAlign: "center", marginTop: 10 }}>Aumenta la recolección de recursos</Text>
                                         </View>
                                     </View>
                                     <View style={{ width: "100%", height: "70%", alignItems: "center", marginTop: "7%" }}>
-                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Aumenta la cantidad de recursos que robas en un 1% por cada nivel.</Text>
-                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Actualmente {1 * guildLevelTres.level}%</Text>
+                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Aumenta la cantidad de recursos que recolectas en un 0,1% por cada nivel.</Text>
+                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Actualmente 0,{1 * guildLevelTres.level}%</Text>
                                         <Icon name="arrow-down" size={50} color={"black"}></Icon>
-                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Proximo nivel: {1 * (guildLevelTres.level + 1)}%</Text>
+                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Proximo nivel: 0,{1 * (guildLevelTres.level + 1)}%</Text>
                                         <View style={{ width: "70%", height: "20%", flexDirection: "row", marginTop: "10%", alignItems: "center", justifyContent: "space-between" }}>
                                             <View style={{ width: "50%", height: "100%", flexDirection: "row", alignItems: "center" }}>
                                                 <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 16, color: "yellow", textAlign: "center" }}>Coste: {guildLevelTres.cost}</Text>

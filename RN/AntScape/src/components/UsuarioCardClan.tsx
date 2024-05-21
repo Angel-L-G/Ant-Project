@@ -18,35 +18,17 @@ type Props = {
 
 const UsuarioCardClan = ({ usu, navigation, clan, recargar }: Props) => {
     const { ruta } = Globals();
-    const { user, token, setUser } = useContext(AppContext);
-    const [bloqueado, setBloqueado] = useState(false);
+    const { user, token } = useContext(AppContext);
     const [modalAscenderVisible, setModalAscenderVisible] = useState(false);
     const [usuario, setUsuario] = useState<User>({} as User);
 
     useEffect(() => {
         setUsuario(usu);
-        
-        async function verificarBloqueo() {
-            try {
-                const response = await axios.get(ruta + "v2/users/" + user.id + "/bloqued", { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
-                for (let i = 0; i < response.data.length; i++) {
-                    if (response.data[i].id == usuario.id) {
-                        setBloqueado(true);
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        verificarBloqueo();
     }, [])
 
     async function ascender() {
         try {
             const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/giveOwnership/" + usuario.id, {}, { headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             if (recargar) {
                 recargar();
             }
@@ -59,11 +41,9 @@ const UsuarioCardClan = ({ usu, navigation, clan, recargar }: Props) => {
     async function chatear() {
         try {
             const response = await axios.get(ruta + "v2/users/" + user.id + "/bloqued", { headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             let bloq = false;
             for (let i = 0; i < response.data.length; i++) {
                 if (response.data[i].id == usu.id) {
-                    setBloqueado(true);
                     bloq = true;
                     ToastAndroid.show("Usuario Bloqueado", ToastAndroid.SHORT);
                 }

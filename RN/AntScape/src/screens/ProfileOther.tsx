@@ -1,4 +1,4 @@
-import { Alert, Pressable, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, ToastAndroid } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, ToastAndroid, LogBox } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import { ClanType, User } from '../types/types'
 import LinearGradient from 'react-native-linear-gradient'
@@ -14,6 +14,7 @@ import { Modal } from 'react-native'
 type Props = NativeStackScreenProps<RootStackParamList, "ProfileOther">;
 
 const ProfileOther = ({route, navigation}: Props) => {
+    LogBox.ignoreAllLogs();
     const {token, user} = useContext(AppContext);
     const {usu} = route.params;
     const {ruta} = Globals();
@@ -35,7 +36,6 @@ const ProfileOther = ({route, navigation}: Props) => {
                         setAmigo(true);
                     }
                 }
-                console.log(amigo);
             } catch (error) {
                 console.log(error);
             }
@@ -51,7 +51,6 @@ const ProfileOther = ({route, navigation}: Props) => {
                         setBloqueado(true);
                     }
                 }
-                console.log(bloqueado);
             } catch (error) {
                 console.log(error);
             }
@@ -62,7 +61,6 @@ const ProfileOther = ({route, navigation}: Props) => {
         async function buscarClanes() {
             try {
                 const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
                 
             } catch (error) {
                 console.log(error);
@@ -74,7 +72,6 @@ const ProfileOther = ({route, navigation}: Props) => {
         async function getClan() {
             try {
                 const response = await axios.get(ruta + "v2/users/" + usu.id + "/guild", {headers: { "Authorization": "Bearer " + token }});
-                console.log(response.data);
                 setClan(response.data);
             } catch (error) {
                 console.log(error);
@@ -85,11 +82,8 @@ const ProfileOther = ({route, navigation}: Props) => {
     }, [])
 
     async function aniadirAmigo() {
-        console.log("Añadiendo amigo");
-        
         try {
             const response = await axios.post(ruta + "v2/users/" + user.name + "/friends/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             setAmigo(true);
         } catch (error) {
             console.log(error);
@@ -99,7 +93,6 @@ const ProfileOther = ({route, navigation}: Props) => {
     async function eliminarAmigo() {
         try {
             const response = await axios.delete(ruta + "v2/users/" + user.name + "/friends/" + usu.name, { headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             setAmigo(false);
         } catch (error) {
             console.log(error);
@@ -115,7 +108,6 @@ const ProfileOther = ({route, navigation}: Props) => {
             if (bloqueado) {
                 try {
                     const response = await axios.delete(ruta + "v2/users/" + user.name + "/blocked/" + usu.name, { headers: { "Authorization": "Bearer " + token } });
-                    console.log(response.data);
                     setBloqueado(false);
                     setModalVisible(false);
                 } catch (error) {
@@ -125,7 +117,6 @@ const ProfileOther = ({route, navigation}: Props) => {
                 if (amigo) {
                     try {
                         const response = await axios.delete(ruta + "v2/users/" + user.name + "/friends/" + usu.name, { headers: { "Authorization": "Bearer " + token } });
-                        console.log(response.data);
                         setAmigo(false);
                     } catch (error) {
                         console.log(error);
@@ -133,7 +124,6 @@ const ProfileOther = ({route, navigation}: Props) => {
 
                     try {
                         const response = await axios.post(ruta + "v2/users/" + user.name + "/blocked/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
-                        console.log(response.data);
                         setBloqueado(true);
                         setModalVisible(false);
                     } catch (error) {
@@ -142,7 +132,6 @@ const ProfileOther = ({route, navigation}: Props) => {
                 } else {
                     try {
                         const response = await axios.post(ruta + "v2/users/" + user.name + "/blocked/" + usu.name, {}, { headers: { "Authorization": "Bearer " + token } });
-                        console.log(response.data);
                         setBloqueado(true);
                         setModalVisible(false);
                     } catch (error) {

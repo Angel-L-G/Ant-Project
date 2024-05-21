@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity, ToastAndroid } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableHighlight, View, TouchableOpacity, ToastAndroid, LogBox } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native';
 import { ImageBackground } from 'react-native';
@@ -15,11 +15,14 @@ type Props = {
 }
 
 const Personal = ({ navigation }: Props) => {
+    LogBox.ignoreAllLogs();
     const { ruta } = Globals();
     const { token, user, totalEggsContext, goldenEggsContext, eggsContext, setEggsContext, setTotalEggsContext, setGoldenEggsContext } = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
+    const [nivelMejora, setNivelMejora] = useState(0);
+    const [tieneClan, setTieneClan] = useState(false);
     const eg = useRef(0);
     const totalEggs = useRef(0);
     const [nests, setNests] = useState<Array<Nest>>([]);
@@ -30,7 +33,6 @@ const Personal = ({ navigation }: Props) => {
         totalEggs.current = user.totalMoneyGenerated;
         setEggsContext(user.eggs);
         setTotalEggsContext(user.totalMoneyGenerated);
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaa" + user.goldenEggs);
 
         setGoldenEggsContext(user.goldenEggs);
 
@@ -44,6 +46,21 @@ const Personal = ({ navigation }: Props) => {
         }
 
         getOwnNests();
+
+        async function getMejoraClan() {
+            try {
+                const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
+
+                if (response.data != "") {
+                    setTieneClan(true);
+                    setNivelMejora(response.data.guildLevels[2].level);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        getMejoraClan();
     }, [])
 
     function abreviarNumero(valor: number): string {
@@ -69,8 +86,6 @@ const Personal = ({ navigation }: Props) => {
     }
 
     async function nuevaRama() {
-        console.log(lastLevel);
-
         const coste = Math.round(lastLevel?.multiplier ** levels.length * 100);
         const cantidadEg = eg.current;
 
@@ -92,13 +107,9 @@ const Personal = ({ navigation }: Props) => {
             production: 2 * newMult
         }
 
-        console.log("Current" + eg.current);
-        console.log(eg.current > coste);
-
         if (eg.current > coste) {
             try {
                 const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, { headers: { "Authorization": "Bearer " + token } });
-                console.log(responseN.data);
 
                 const responseNi = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
 
@@ -111,8 +122,6 @@ const Personal = ({ navigation }: Props) => {
                 console.log(error);
             }
         } else {
-            console.log("No tienes huevos");
-            console.log(eg.current);
             ToastAndroid.show("Huevos insuficientes", ToastAndroid.SHORT);
         }
     }
@@ -120,14 +129,34 @@ const Personal = ({ navigation }: Props) => {
     useEffect(() => {
         const intervalo = setInterval(() => {
             async function updateMoney() {
-                console.log(goldenEggsContext);
-
-                console.log(totalEggs.current);
-
-                console.log(eggsContext);
-
                 try {
-                    const response = await axios.put(ruta + "v2/users/update/eggs", eg.current + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
+                    const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
+
+                    if (response.data != "") {
+                        setTieneClan(true);
+                        const porcentaje = response.data.guildLevels[2].level / 1000;
+                        const nuevoDinero = Math.round(eg.current + totalEggs.current * porcentaje);
+                        const diferencia = nuevoDinero - eg.current;
+                        updateEggs(eg.current + diferencia);
+                        const dineroNuevo = Math.round((Number)(totalEggs.current) + (Number)(diferencia));
+
+                        setTotalEggsContext(dineroNuevo);
+                        totalEggs.current = dineroNuevo;
+
+                        try {
+                            const response = await axios.put(ruta + "v2/users/update/eggs", nuevoDinero + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
+
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        try {
+                            const response = await axios.put(ruta + "v2/users/update/eggs", eg.current + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
+
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
 
                 } catch (error) {
                     console.log(error);
@@ -137,11 +166,10 @@ const Personal = ({ navigation }: Props) => {
                     const response = await axios.put(ruta + "v2/users/update/totalmoney", totalEggs.current + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
 
                 } catch (error) {
-                    
+
                 }
             }
             updateMoney();
-            console.log('Esta función se ejecutará cada 5 segundos');
         }, 5000);
 
         return () => clearInterval(intervalo);
@@ -185,6 +213,18 @@ const Personal = ({ navigation }: Props) => {
                 <View style={{ height: "93%", width: "100%" }}>
                     <View style={{ height: "30%", width: "100%" }}>
                         <Image source={require('../assets/imgs/Background.png')} style={{ height: "100%", width: "100%" }} />
+
+                        {(tieneClan) ?
+                            <View style={{ position: 'absolute', width: "100%", height: "100%", justifyContent: "center", alignItems: "flex-end" }}>
+                                <View style={{ width: "30%", height: "50%", backgroundColor: "rgba(20, 40, 140, 0.8)", borderWidth: 2, borderColor: "yellow", borderTopLeftRadius: 30, borderBottomLeftRadius: 30, borderRightWidth: 0, paddingLeft: 10, paddingVertical: 5 }}>
+                                    <Text style={{ color: "yellow", fontSize: 16, textAlign: 'center' }}>Mejora del Clan: {nivelMejora}</Text>
+                                    <Text style={{ color: "yellow", fontSize: 14, textAlign: 'center' }}>0,{nivelMejora}% de {abreviarNumero(totalEggs.current)}</Text>
+                                    <Text style={{ color: "yellow", fontSize: 14, textAlign: 'center' }}>= {Math.round(totalEggs.current * (nivelMejora / 1000))} cada 5 segundos</Text>
+                                </View>
+                            </View>
+                            :
+                            <></>
+                        }
                     </View>
 
                     <View style={{ height: "63%", width: "100%" }}>

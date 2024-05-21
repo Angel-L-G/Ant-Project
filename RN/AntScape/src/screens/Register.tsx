@@ -1,8 +1,6 @@
-import { View, Text, TouchableOpacity, Image, TextInput, Dimensions, ImageBackground, ToastAndroid } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, Dimensions, ImageBackground, ToastAndroid, LogBox } from 'react-native'
 import React, { useState } from 'react'
 import styles from '../themes/styles'
-import UseUser from '../hooks/UseUser'
-import { UserRegister } from '../types/types'
 import UseSesion from '../hooks/UseSesion'
 import LinearGradient from 'react-native-linear-gradient'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -12,7 +10,7 @@ type Props = {
 }
 
 const Register = ({navigation}: Props) => {
-    //const {save} = UseUser();
+    LogBox.ignoreAllLogs();
     const {register} = UseSesion();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");

@@ -15,46 +15,26 @@ const UsuarioCard = ({ usu, navigation }: Props) => {
     const { ruta } = Globals();
     const { user, token } = useContext(AppContext);
     const [clan, setClan] = useState<ClanType>({} as ClanType);
-    const [bloqueado, setBloqueado] = useState(false);
 
     useEffect(() => {
         async function getClan() {
             try {
                 const response = await axios.get(ruta + "v2/users/" + usu.id + "/guild", { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
                 setClan(response.data);
             } catch (error) {
-                console.error(error);
+                console.log(error);
             }
         }
 
         getClan();
-
-        async function verificarBloqueo() {
-            try {
-                const response = await axios.get(ruta + "v2/users/" + user.id + "/bloqued", { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
-                for (let i = 0; i < response.data.length; i++) {
-                    if (response.data[i].id == usu.id) {
-                        setBloqueado(true);
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        verificarBloqueo();
     }, [])
 
     async function chatear() {
         try {
             const response = await axios.get(ruta + "v2/users/" + user.id + "/bloqued", { headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             let bloq = false;
             for (let i = 0; i < response.data.length; i++) {
                 if (response.data[i].id == usu.id) {
-                    setBloqueado(true);
                     bloq = true;
                     ToastAndroid.show("Usuario Bloqueado", ToastAndroid.SHORT);
                 }
@@ -64,7 +44,7 @@ const UsuarioCard = ({ usu, navigation }: Props) => {
                 navigation.navigate("NuevoChat", { usu: usu });
             }
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     }
 

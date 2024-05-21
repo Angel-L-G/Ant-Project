@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, Animated, ImageBackground, BackHandler } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, TouchableHighlight, Touchable, Modal, Alert, ToastAndroid, Animated, ImageBackground, BackHandler, LogBox } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import Globals from '../components/Globals'
@@ -16,11 +16,11 @@ import images from '../assets/imgs';
 type Props = NativeStackScreenProps<RootStackParamList, "Atacar">;
 
 const Atacar = ({ navigation, route }: Props) => {
+    LogBox.ignoreAllLogs();
     const clan = route.params.clan;
     const { ruta } = Globals();
-    const { token, user, setGoldenEggsContext, goldenEggsContext, eggsContext } = useContext(AppContext);
+    const { token, setGoldenEggsContext, goldenEggsContext } = useContext(AppContext);
     const [enemigo, setEnemigo] = useState<ClanType>({} as ClanType);
-    const [clanUsuario, setClanUsuario] = useState<ClanType>({} as ClanType);
     const [ultimasTiradas, setUltimasTiradas] = useState<Array<number>>([]);
     const [tiradasRestantes, setTiradasRestantes] = useState(5);
     const [sumaTotal, setSumaTotal] = useState<number>(0);
@@ -119,7 +119,6 @@ const Atacar = ({ navigation, route }: Props) => {
         async function buscarOponente() {
             try {
                 const response = await axios.get(ruta + "v2/guilds/" + clan.id + "/seekChallenger", { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
                 setEnemigo(response.data);
                 let [inferior, superior] = response.data.defenseRange.split("-");
                 setRangoSuperior(superior);
@@ -134,8 +133,6 @@ const Atacar = ({ navigation, route }: Props) => {
         async function getClan() {
             try {
                 const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
-                setClanUsuario(response.data);
                 setTiradasRestantes(response.data.guildLevels[0].level + 5);
             } catch (error) {
                 console.log(error);
@@ -151,13 +148,11 @@ const Atacar = ({ navigation, route }: Props) => {
                 attackNumber: sumaTotal,
             }
             const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/attack/" + enemigo.id, null, { params: params, headers: { Authorization: "Bearer " + token } });
-            console.log(response.data);
             setResultado(response.data);
             const newGoldenEggs = Number(goldenEggsContext) + Number(response.data.goldenEggs);
             setGoldenEggsContext(newGoldenEggs);
             try {
                 const response = await axios.put(ruta + "v2/users/update/goldeneggs", newGoldenEggs + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
-                console.log(response.data);
             } catch (error: any) {
                 console.log(error);                
             }
@@ -191,7 +186,6 @@ const Atacar = ({ navigation, route }: Props) => {
                     attackNumber: -1000,
                 }
                 const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/attack/" + enemigo.id, null, { params: params, headers: { Authorization: "Bearer " + token } });
-                console.log(response.data);
                 setResultado(response.data);
                 if (response.data.trophys > 10) {
                     setConclusion("Victoria");

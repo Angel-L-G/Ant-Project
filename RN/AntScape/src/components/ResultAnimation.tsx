@@ -7,26 +7,21 @@ type Props = {
 }
 
 const ResultAnimation = ({option}: Props) => {
-    const [animation, setAnimation] = useState();
-    const routes = [
-        require("../assets/animations/defeatAnimation.json"),
-        require("../assets/animations/VictoryConfety.json")
-    ];
     
     return (
         <View style={styles.container}>
             {(option == 0) 
                 ? <LottieView
-                    source={require("../assets/animations/defeatAnimation.json")} // Carga el archivo JSON de la animación
+                    source={require("../assets/animations/defeatAnimation.json")} 
                     autoPlay
                     loop
-                    style={styles.animation} // Aplica el estilo al componente LottieView
+                    style={styles.animation} 
                 />
                 : <LottieView
-                    source={require("../assets/animations/VictoryConfety.json")} // Carga el archivo JSON de la animación
+                    source={require("../assets/animations/VictoryConfety.json")} 
                     autoPlay
                     loop
-                    style={styles.animation} // Aplica el estilo al componente LottieView
+                    style={styles.animation} 
                 />
             }  
         </View>
@@ -35,10 +30,10 @@ const ResultAnimation = ({option}: Props) => {
 
 const styles = StyleSheet.create({
     container: {
-        ...StyleSheet.absoluteFillObject, // Ocupa todo el espacio disponible en la pantalla
+        ...StyleSheet.absoluteFillObject, 
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'transparent', // Hace que la vista sea transparente para que la animación se superponga a otros elementos
+        backgroundColor: 'transparent', 
     },
     animation: {
         width: 200,

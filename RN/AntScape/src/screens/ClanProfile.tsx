@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TextInput, ToastAndroid, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, LogBox, StyleSheet, Text, TextInput, ToastAndroid, TouchableHighlight, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
@@ -15,6 +15,7 @@ import { Modal } from 'react-native';
 type Props = NativeStackScreenProps<RootStackParamList, "ClanProfile">;
 
 const ClanProfile = ({ navigation, route }: Props) => {
+    LogBox.ignoreAllLogs();
     const clan = route.params.clan;
     const { ruta } = Globals();
     const { token, user, setUser } = useContext(AppContext);
@@ -42,19 +43,16 @@ const ClanProfile = ({ navigation, route }: Props) => {
 
     const handleChangeInput = (text: string) => {
         setValorInput(text);
-        console.log(valorInput);
     };
 
     async function buscarUsuarios(inputValue: string) {
         try {
             const response = await axios.get(ruta + "v2/guilds/" + clanUser.id + "/users", { headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
 
             const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
                 usuario.name.includes(inputValue)
             );
             setUsers(usuariosFiltrados);
-            console.log(usuariosFiltrados);
         } catch (error) {
             console.log(error);
         }
@@ -68,7 +66,6 @@ const ClanProfile = ({ navigation, route }: Props) => {
         } else {
             try {
                 const response = await axios.put(ruta + "v2/guilds/" + clanUser.id + "/leaveguild", {}, { params: { newLeader: -1 }, headers: { "Authorization": "Bearer " + token } });
-                console.log(response.data);
                 setUser({ ...user, id_guild: undefined });
                 navigation.navigate("Social", { tab: 2 });
             } catch (error) {
@@ -80,7 +77,6 @@ const ClanProfile = ({ navigation, route }: Props) => {
     async function abandonarOk() {
         try {
             const response = await axios.put(ruta + "v2/guilds/" + clanUser.id + "/leaveguild", {}, { params: { newLeader: -1 }, headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             setUser({ ...user, id_guild: undefined });
             navigation.navigate("Social", { tab: 2 });
         } catch (error) {

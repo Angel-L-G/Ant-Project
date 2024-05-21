@@ -1,17 +1,14 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { Image } from 'react-native-elements/dist/image/Image'
 import { AppContext } from '../context/AppContextProvider'
-import Globals from './Globals'
 
 type Props = {
     navigation: any
 }
 
 const NavBarTop = ({ navigation }: Props) => {
-    const { user, eggsContext, goldenEggsContext, imgContext } = useContext(AppContext);
-    const { ruta } = Globals();
-    const [img, setImg] = useState("");
+    const { eggsContext, goldenEggsContext, imgContext } = useContext(AppContext);
 
     function abreviarNumero(valor: number): string {
         if (valor < 10000) {

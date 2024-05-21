@@ -1,12 +1,12 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Chat, ChatInputSaveDTO } from '../types/chatTypes';
 import { AppContext } from '../context/AppContextProvider';
 import Globals from '../components/Globals';
 
 const UseChatHistory = () => {
     const {ruta} = Globals();
-    const { token, user } = useContext(AppContext);
+    const { token } = useContext(AppContext);
     const [chats, setChats] = useState<Chat[]>(new Array<Chat>());
 
     useEffect(() => {
@@ -16,7 +16,6 @@ const UseChatHistory = () => {
     async function findUserChats() {
         try {
             const response = await axios.get(ruta + "v2/chats/me", { headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             
             setChats(response.data);
         } catch (error) {

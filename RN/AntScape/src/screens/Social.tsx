@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableHighlight, TextInput, FlatList, KeyboardAvoidingView, Platform, Image } from 'react-native';
+import React, { useCallback, useContext, useState } from 'react';
+import { View, Text, StyleSheet, TouchableHighlight, TextInput, FlatList, LogBox } from 'react-native';
 import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
 import { Icon } from 'react-native-elements';
@@ -17,16 +17,15 @@ import { useFocusEffect } from '@react-navigation/native';
 type Props = NativeStackScreenProps<RootStackParamList, "Social">;
 
 const Social = ({ navigation, route }: Props) => {
+    LogBox.ignoreAllLogs();
     const { ruta } = Globals();
     const { token, user } = useContext(AppContext);
     const [activeTab, setActiveTab] = useState(0);
     const [usuarios, setUsuarios] = useState<Array<User>>([]);
     const [amigos, setAmigos] = useState<Array<User>>([]);
     const [clan, setClan] = useState<ClanType>({} as ClanType);
-    const [tieneClan, setTieneClan] = useState(false);
     const [clanes, setClanes] = useState<Array<ClanType>>([]);
     const [valorInput, setValorInput] = useState('');
-    const [clanUsers, setClanUsers] = useState<Array<User>>([]);
     const tabNumber = route.params.tab;
 
     useFocusEffect(
@@ -67,7 +66,6 @@ const Social = ({ navigation, route }: Props) => {
                     for (let i = 0; i < response.data.length; i++) {
                         if (response.data[i].id === user.id_guild) {
                             setClan(response.data[i]);
-                            setTieneClan(true);
                         }
                     }
                     const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) =>
@@ -91,10 +89,8 @@ const Social = ({ navigation, route }: Props) => {
 
             getClanUsers();
 
-            console.log("UseEffect");
             return () => {
 
-                console.log("Pantalla perdiendo foco");
             };
         }, [tabNumber])
     );
@@ -115,7 +111,6 @@ const Social = ({ navigation, route }: Props) => {
 
     const handleChangeInput = (text: string) => {
         setValorInput(text);
-        console.log(valorInput);
     };
 
     async function buscarUsuarios(inputValue: string) {
@@ -125,7 +120,6 @@ const Social = ({ navigation, route }: Props) => {
                 usuario.name.includes(inputValue) && usuario.name !== user.name
             );
             setUsuarios(usuariosFiltrados);
-            console.log(usuariosFiltrados);
         } catch (error) {
             console.log(error);
         }
@@ -138,7 +132,6 @@ const Social = ({ navigation, route }: Props) => {
                 amigo.name.includes(inputValue) && amigo.name !== user.name
             );
             setAmigos(amigosFiltrados);
-            console.log(amigosFiltrados);
         } catch (error) {
             console.log(error);
         }
@@ -149,9 +142,7 @@ const Social = ({ navigation, route }: Props) => {
             if (user.id_guild != undefined) {
                 const response = await axios.get(ruta + "v2/guilds/" + user.id_guild, { headers: { "Authorization": "Bearer " + token } });
                 setClan(response.data);
-                setTieneClan(true);
             } else {
-                setTieneClan(false);
             }
         } catch (error) {
             console.log(error);

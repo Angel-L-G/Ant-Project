@@ -1,4 +1,4 @@
-import { Alert, ImageBackground, Modal, Pressable, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Modal, Pressable, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import ProgressBar from './ProgressBar'
 import { NestLevel } from '../types/types'
@@ -67,7 +67,6 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 
 				const responseGet = await axios.get(ruta + "v2/nestlevels/" + levelToUpgrade.id, { headers: { "Authorization": "Bearer " + token } });
 				setActualLvl(responseGet.data);
-				console.log("Upgrade: " + actualLvl.production);
 
 				const responseGetLevels = await axios.get(ruta + "v2/nests/own/" + user.name, { headers: { "Authorization": "Bearer " + token } });
 				updateLevels(responseGetLevels.data[0].nestLevels);

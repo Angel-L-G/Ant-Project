@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, TextInput, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, TouchableOpacity, TextInput, FlatList, LogBox } from 'react-native';
 import React, { useContext, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import Globals from '../components/Globals';
@@ -12,6 +12,7 @@ type Props = {
 }
 
 const CrearClan = ({ navigation }: Props) => {
+    LogBox.ignoreAllLogs();
     const { ruta } = Globals();
     const { token, setUser, user } = useContext(AppContext);
     const [descripcion, setDescripcion] = useState('');
@@ -30,7 +31,6 @@ const CrearClan = ({ navigation }: Props) => {
                 guildImage: icono + colorIcono + colorFondo
             }
             const response = await axios.post(ruta + "v2/guilds", null, { params: params, headers: { "Authorization": "Bearer " + token } });
-            console.log(response.data);
             setUser({ ...user, id_guild: response.data.id });
             navigation.navigate("Social", { tab: 2 });
         } catch (error) {
