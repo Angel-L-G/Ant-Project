@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react"
 import { GraphqlSaveInputDTO, GraphqlUpdateInputDTO } from "../type/typesGraphql"
 
 const Main = () => {
-    const { users, loginInfo, registerInfo, setLoginInfo, setRegisterInfo, findAllUser, findLoginDates, findRegisterDates, } = UseInformation();
+    const { users, setLoginInfo, setRegisterInfo, findAllUser, findLoginDates, findRegisterDates, } = UseInformation();
 
     const [showForm, setShowForm] = useState(true);
     const [loginLoading, setLoginLoading] = useState(true);
@@ -20,6 +20,26 @@ const Main = () => {
     const [selectedUser, setSelectedUser] = useState<any>();
     const [userList, setUserList] = useState<Array<Usuario>>([]);
     const { deleteUserMutation, UpdateUserMutation, saveUserMutation } = UseMutation();
+
+    const loginInfo = [
+        { date: '2023-01-01', count: 10 },
+        { date: '2023-01-02', count: 20 },
+        { date: '2023-01-03', count: 30 },
+        // Añadir más datos según sea necesario
+    ];
+
+    const registerInfo = [
+        { date: '2023-05-01', count: 15 },
+        { date: '2023-05-02', count: 22 },
+        { date: '2023-05-03', count: 30 },
+        { date: '2023-05-04', count: 45 },
+        { date: '2023-05-05', count: 50 },
+        { date: '2023-05-06', count: 55 },
+        { date: '2023-05-07', count: 65 },
+        { date: '2023-05-08', count: 70 },
+        { date: '2023-05-09', count: 80 },
+        { date: '2023-05-10', count: 95 },
+    ];
 
     useEffect(() => {
         fetchLoginData();
@@ -88,8 +108,7 @@ const Main = () => {
             <div className="contenedor">
                 <nav className="nav">
                     <div className="switch-container">
-                        <h2>Cambiar Formulario</h2>
-                        <br />
+                        <h4>Cambiar Formulario</h4>
                         <label className="switch">
                             <input type="checkbox" checked={showForm} onChange={toggleForm} />
                             <span className="slider"></span>
@@ -108,7 +127,7 @@ const Main = () => {
                             <div>
                                 <h3>Logins</h3>
                                 {(loginLoading)
-                                    ?<LineChart width={1000} height={400} data={loginInfo}>
+                                    ?<LineChart width={900} height={250} data={loginInfo}>
                                         <XAxis dataKey="date"/>
                                         <YAxis dataKey="count"/>
                                         <Tooltip />
@@ -121,7 +140,7 @@ const Main = () => {
                             <div>
                                 <h3>Registers</h3>
                                 {(registerLoading)
-                                    ?<LineChart width={1000} height={400} data={registerInfo}>
+                                    ?<LineChart width={900} height={250} data={registerInfo}>
                                         <XAxis dataKey="date"/>
                                         <YAxis dataKey="count"/>
                                         <Tooltip />

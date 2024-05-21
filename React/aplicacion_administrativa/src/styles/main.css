@@ -19,7 +19,7 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* 100% de la altura de la pantalla */
+    height: 100%; /* 100% de la altura de la pantalla */
     background-color: rgba(40, 60, 160, 1);
 }
   
@@ -30,7 +30,6 @@ p {
 .header, .footer {
     background-color: #333;
     color: white;
-    height: 5%;
 }
 
 .header {
@@ -39,24 +38,25 @@ p {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
     text-align: center;
     font-style: italic;
+    height: 7vh;
 }
   
 .contenedor {
     display: flex;
-    height: 90%;
+    height: 88vh;
     width: 100%;
 }
   
 .nav {
     background-color: #444;
     color: white;
-    width: 10%;
+    width: 20%;
 }
   
 .main {
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: 80%;
 }
   
 .contenedor .content {
@@ -69,33 +69,27 @@ p {
 .content {
   display: flex;
   flex-direction: row;
-  gap: 50px;
 }
   
 .footer {
   background-color: #333;
   color: white;
   align-items: center;
+  height: 5vh;
 }
   
 .nav form {
-  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
 }
   
   .nav form label {
     display: block;
-    margin-bottom: 5px;
     flex: 0 0 100%; /* Ocupa el 100% del ancho en una nueva línea */
   }
   
   .nav form label.checkbox {
     flex: 0 0 auto; /* Ocupa el ancho necesario */
-  }
-  
-  .nav form input[type="checkbox"] {
-    margin-right: 5px; /* Espacio entre el checkbox y el texto */
   }
   
   .nav form input[type="number"],
@@ -104,7 +98,7 @@ p {
   .nav form input[type="password"] {
     width: calc(100% - 10px); /* Ancho del campo de entrada */
     padding: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
@@ -125,7 +119,6 @@ p {
   
   .switch-container {
     width: 100%;
-    gap: 10px;
     margin-left: 20px;
     padding: 20px 0;
   }
@@ -193,12 +186,13 @@ p {
   }
   
   .form-container {
-    padding: 20px; /* Añade 20px de espacio alrededor del formulario */
+    padding-left: 20px;
+    padding-right: 20px; /* Añade 20px de espacio alrededor del formulario */
   }
   
   .form-title {
     color: #ffffff; /* Color del texto */
-    font-size: 24px; /* Tamaño del texto */
+    font-size: 20px; /* Tamaño del texto */
     margin-bottom: 20px; /* Margen inferior para separarlo del resto del formulario */
   }
   
@@ -221,7 +215,6 @@ p {
   
   .input {
     width: 200px;
-    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 3px;
   }
@@ -243,7 +236,7 @@ p {
 .chartContainer {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
   align-items: center;
 }
 
