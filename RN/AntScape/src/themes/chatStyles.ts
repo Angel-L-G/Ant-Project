@@ -17,7 +17,7 @@ const chatStyles = StyleSheet.create({
     ////////////////////////////////////////////
     upperBar: {
         width: '100%',
-        height: '7%',
+        height: 60,
         backgroundColor: "rgba(20, 40, 140, 1)",
         display: 'flex',
         flexDirection: 'row',
@@ -53,8 +53,8 @@ const chatStyles = StyleSheet.create({
     //BottomPart
     ////////////////////////////////////////////
     messageContainer: {
+        flex: 1,
         width: '100%',
-        height: '93%',
     },
 
     messageInput: {

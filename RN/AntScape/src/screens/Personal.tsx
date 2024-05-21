@@ -16,7 +16,7 @@ type Props = {
 
 const Personal = ({ navigation }: Props) => {
     const { ruta } = Globals();
-    const { token, user, totalEggsContext, goldenEggsContext, setEggsContext, setTotalEggsContext, setGoldenEggsContext } = useContext(AppContext);
+    const { token, user, totalEggsContext, goldenEggsContext, eggsContext, setEggsContext, setTotalEggsContext, setGoldenEggsContext } = useContext(AppContext);
     const [levels, setLevels] = useState<Array<NestLevel>>([]);
     const [lastLevel, setLastLevel] = useState<NestLevel>({} as NestLevel);
     const [eggs, setEggs] = useState(0);
@@ -27,11 +27,11 @@ const Personal = ({ navigation }: Props) => {
     useEffect(() => {
         setEggs(user.eggs);
         eg.current = user.eggs;
+        totalEggs.current = user.totalMoneyGenerated;
         setEggsContext(user.eggs);
-        totalEggs.current = Number(user.totalMoneyGenerated);
         setTotalEggsContext(user.totalMoneyGenerated);
         console.log("aaaaaaaaaaaaaaaaaaaaaaaaa" + user.goldenEggs);
-        
+
         setGoldenEggsContext(user.goldenEggs);
 
         async function getOwnNests() {
@@ -77,15 +77,14 @@ const Personal = ({ navigation }: Props) => {
         const dineroRestante = Math.round(cantidadEg - coste);
 
         const body = {
-            eggs: dineroRestante,
-            goldenEggs: user.goldenEggs
+            eggs: dineroRestante
         }
 
         const newMult = lastLevel.multiplier + 0.2;
 
         const nestlevel: NestLevel = {
             id: 0,
-            cost: 10 * newMult ,
+            cost: 10 * newMult,
             id_nest: nests[0].id,
             name: "" + Number(levels.length + 1),
             level: 1,
@@ -95,7 +94,7 @@ const Personal = ({ navigation }: Props) => {
 
         console.log("Current" + eg.current);
         console.log(eg.current > coste);
-        
+
         if (eg.current > coste) {
             try {
                 const responseN = await axios.post(ruta + "v2/nestlevels", nestlevel, { headers: { "Authorization": "Bearer " + token } });
@@ -106,7 +105,7 @@ const Personal = ({ navigation }: Props) => {
                 setLevels(responseNi.data[0].nestLevels);
                 setLastLevel(responseNi.data[0].nestLevels[responseNi.data[0].nestLevels?.length - 1]);
 
-                const response = await axios.put(ruta + "v2/users/updatemoney", body, { headers: { "Authorization": "Bearer " + token } });
+                const response = await axios.put(ruta + "v2/users/update/eggs", body, { headers: { "Authorization": "Bearer " + token } });
                 eg.current = dineroRestante;
             } catch (error) {
                 console.log(error);
@@ -122,28 +121,34 @@ const Personal = ({ navigation }: Props) => {
         const intervalo = setInterval(() => {
             async function updateMoney() {
                 console.log(goldenEggsContext);
-                
-                const body = {
-                    eggs: eg.current,
-                    goldenEggs: goldenEggsContext
-                }
+
+                console.log(totalEggs.current);
+
+                console.log(eggsContext);
 
                 try {
-                    const response = await axios.put(ruta + "v2/users/updatemoney", body, { headers: { "Authorization": "Bearer " + token } });
+                    const response = await axios.put(ruta + "v2/users/update/eggs", eg.current + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
 
                 } catch (error) {
                     console.log(error);
                 }
+
+                try {
+                    const response = await axios.put(ruta + "v2/users/update/totalmoney", totalEggs.current + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
+
+                } catch (error) {
+                    
+                }
             }
             updateMoney();
-            console.log('Esta función se ejecutará cada 5 segundos');            
+            console.log('Esta función se ejecutará cada 5 segundos');
         }, 5000);
 
         return () => clearInterval(intervalo);
     }, []);
 
     async function ganarDinero(produccion: number) {
-        
+
         let eggs1 = eg.current;
 
         let eggs2 = totalEggs.current;
@@ -157,7 +162,7 @@ const Personal = ({ navigation }: Props) => {
         if (produccion > 0) {
             const dineroNuevo = Math.round((Number)(eggs2) + (Number)(produccion));
 
-            setTotalEggsContext(dineroNuevo + "");
+            setTotalEggsContext(dineroNuevo);
             totalEggs.current = dineroNuevo;
         }
     }
@@ -171,24 +176,24 @@ const Personal = ({ navigation }: Props) => {
         eg.current = egg;
         setEggsContext(eg.current);
     }
-    
+
     return (
         <ImageBackground source={require('../assets/imgs/Muro.jpg')} style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
-                <NavBarTop navigation={navigation}/>
+                <NavBarTop navigation={navigation} />
 
                 <View style={{ height: "93%", width: "100%" }}>
                     <View style={{ height: "30%", width: "100%" }}>
                         <Image source={require('../assets/imgs/Background.png')} style={{ height: "100%", width: "100%" }} />
                     </View>
-                    
+
                     <View style={{ height: "63%", width: "100%" }}>
                         <ScrollView>
                             <View>
                                 <FlatList
                                     data={levels}
                                     renderItem={({ item }) =>
-                                        <Rama lastLevel={lastLevel} updateEggs={updateEggs} updateLevels={updateLevels} actualLevel={item} ganarDinero={ganarDinero} eg={eg.current}/>
+                                        <Rama lastLevel={lastLevel} updateEggs={updateEggs} updateLevels={updateLevels} actualLevel={item} ganarDinero={ganarDinero} eg={eg.current} />
                                     }
                                     style={{}}
                                 />
@@ -207,7 +212,7 @@ const Personal = ({ navigation }: Props) => {
                         </ScrollView>
                     </View>
 
-                    <NavBarBotton navigation={navigation} icon='personal'/>
+                    <NavBarBotton navigation={navigation} icon='personal' />
                 </View>
             </View>
         </ImageBackground>

@@ -18,14 +18,13 @@ import { Icon } from 'react-native-elements';
 type Props = NativeStackScreenProps<RootStackParamList, "NuevoChat">;
 
 const NuevoChat = ({ navigation, route }: Props) => {
-    const idOtherUser = route.params.idOtherUser;
-    const nameOtherUser = route.params.nameOtherUser;
+    const usu = route.params.usu;
 
     const { conectar, conectado, historico, enviarPrivado, setHistorico, chatActual } = UseChat();
     const { chats, save, saveMessages, findAllMessagesByChatId } = UseChatHistory();
     const { token, user } = useContext(AppContext);
     const { ruta } = Globals();
-    const [img, setImg] = useState(ruta + "v1/files/" + user.img);
+    const [img, setImg] = useState(ruta + "v1/files/" + usu.img);
     const [loading, setLoading] = useState(true);
 
     const [mensaje, setMensaje] = useState("");
@@ -36,7 +35,7 @@ const NuevoChat = ({ navigation, route }: Props) => {
 
     useEffect(() => {
         if (conectado == true) {
-            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === nameOtherUser || chat.nameUser2 === nameOtherUser) as Chat | undefined;
+            const chatEncontrado: Chat | undefined = chats.find(chat => chat.nameUser1 === usu.name || chat.nameUser2 === usu.name) as Chat | undefined;
 
             if (chatEncontrado) {
                 chatActual.current = chatEncontrado;
@@ -52,7 +51,7 @@ const NuevoChat = ({ navigation, route }: Props) => {
 
             } else {
                 const chatInput: ChatInputSaveDTO = {
-                    nameUser2: nameOtherUser
+                    nameUser2: usu.name
                 }
 
                 const fetchData = async () => {
@@ -80,7 +79,8 @@ const NuevoChat = ({ navigation, route }: Props) => {
 
     function sendMessage() {
         saveMessages(chatActual.current?.id as number, mensaje);
-        enviarPrivado(user.name, nameOtherUser, mensaje, user.id);
+        enviarPrivado(user.name, usu.name, mensaje, user.id);
+        setMensaje("");
     }
 
     return (
@@ -98,7 +98,7 @@ const NuevoChat = ({ navigation, route }: Props) => {
 
                 <View style={chatStyles.usernameContainer}>
                     <Text style={chatStyles.usernameText}>
-                        {nameOtherUser}
+                        {usu.name}
                     </Text>
                 </View>
             </View>
@@ -137,7 +137,7 @@ const NuevoChat = ({ navigation, route }: Props) => {
                 </View>
                 <View style={{ height: "8%" }}>
                     <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
-                        <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", paddingHorizontal: 20, fontSize: 16, backgroundColor: "white", height: "80%", alignSelf: "center", marginLeft: "2%", paddingVertical: 0 }} />
+                        <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", paddingHorizontal: 20, fontSize: 16, backgroundColor: "white", height: "80%", alignSelf: "center", marginLeft: "2%", paddingVertical: 0, color: "black" }} />
                         <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: "80%", borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
                             <Icon name="send" size={30} color={"yellow"}></Icon>
                         </TouchableHighlight>

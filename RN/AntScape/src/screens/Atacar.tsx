@@ -10,11 +10,10 @@ import { Image } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import VictoryAnimation from '../components/ResultAnimation';
 import ResultAnimation from '../components/ResultAnimation';
+import images from '../assets/imgs';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Atacar">;
-const AnimatedText = Animated.createAnimatedComponent(Text);
 
 const Atacar = ({ navigation, route }: Props) => {
     const clan = route.params.clan;
@@ -23,7 +22,7 @@ const Atacar = ({ navigation, route }: Props) => {
     const [enemigo, setEnemigo] = useState<ClanType>({} as ClanType);
     const [clanUsuario, setClanUsuario] = useState<ClanType>({} as ClanType);
     const [ultimasTiradas, setUltimasTiradas] = useState<Array<number>>([]);
-    const [tiradasRestantes, setTiradasRestantes] = useState(4);
+    const [tiradasRestantes, setTiradasRestantes] = useState(5);
     const [sumaTotal, setSumaTotal] = useState<number>(0);
     const [rangoInferior, setRangoInferior] = useState<number>(0);
     const [rangoSuperior, setRangoSuperior] = useState<number>(0);
@@ -40,6 +39,9 @@ const Atacar = ({ navigation, route }: Props) => {
     const [animation] = useState(new Animated.Value(0));
     const delayBeforeClose = 1500; // 5 segundos antes de cerrar el modal
     const transitionDuration = 1; // Duración de la transición en milisegundos
+
+    const imageName = clan.guildImage;
+    const imageSource = images[imageName as keyof typeof images];
 
     const handleBackPress = () => {
         setModalSalirVisible(true);
@@ -82,6 +84,7 @@ const Atacar = ({ navigation, route }: Props) => {
                         const nuevasTiradas = ultimasTiradas.slice(1);
                         setUltimasTiradas([...nuevasTiradas, currentNumber]);
                     }
+                    setTiradasRestantes(tiradasRestantes - 1);
 
                     setSumaTotal(prevTotal => prevTotal + currentNumber);
                 }, delayBeforeClose);
@@ -100,7 +103,6 @@ const Atacar = ({ navigation, route }: Props) => {
             setAnimationRunning(true);
             setCurrentNumber(0);
             setRepetitions(0);
-            setTiradasRestantes(tiradasRestantes - 1);
         } else {
             ToastAndroid.show("Tiradas Agotadas", ToastAndroid.SHORT)
         }
@@ -134,7 +136,7 @@ const Atacar = ({ navigation, route }: Props) => {
                 const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
                 console.log(response.data);
                 setClanUsuario(response.data);
-                setTiradasRestantes(response.data.guildLevels[0].level + 4);
+                setTiradasRestantes(response.data.guildLevels[0].level + 5);
             } catch (error) {
                 console.log(error);
             }
@@ -151,13 +153,10 @@ const Atacar = ({ navigation, route }: Props) => {
             const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/attack/" + enemigo.id, null, { params: params, headers: { Authorization: "Bearer " + token } });
             console.log(response.data);
             setResultado(response.data);
-            setGoldenEggsContext(Number(goldenEggsContext) + Number(response.data.goldenEggs))
-            const body = {
-                eggs: eggsContext,
-                goldenEggs: Number(goldenEggsContext) + Number(response.data.goldenEggs)
-            }
+            const newGoldenEggs = Number(goldenEggsContext) + Number(response.data.goldenEggs);
+            setGoldenEggsContext(newGoldenEggs);
             try {
-                const response = await axios.put(ruta + "v2/users/updatemoney", body, { headers: { "Authorization": "Bearer " + token } });
+                const response = await axios.put(ruta + "v2/users/update/goldeneggs", newGoldenEggs + "", { headers: { "Authorization": "Bearer " + token, "Content-Type": "text/plain" } });
                 console.log(response.data);
             } catch (error: any) {
                 console.log(error);                
@@ -215,7 +214,7 @@ const Atacar = ({ navigation, route }: Props) => {
         <View style={{ width: "100%", height: "100%", backgroundColor: "rgb(28, 64, 169)" }}>
             <View style={{ width: "100%", height: "7%", backgroundColor: "rgb(28, 64, 169)", justifyContent: "space-around", alignItems: 'center', flexDirection: 'row', borderBottomWidth: 1 }}>
                 <View style={{ width: "11%", height: "80%" }}>
-                    <Image source={{ uri: ruta + "v1/files/" + user.img }} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
+                    <Image source={ imageSource } style={{ width: "100%", height: "100%", borderRadius: 100 }} />
                 </View>
                 <View>
                     <Text style={{ color: "yellow", fontSize: 20, fontFamily: "MadimiOneRegular" }}>{enemigo.name}</Text>
@@ -277,14 +276,10 @@ const Atacar = ({ navigation, route }: Props) => {
                 <View style={{position: "absolute", backgroundColor: "rgba(20, 40, 140, 0.9)", width: "31%", alignSelf: 'flex-end', top: "40%", borderTopLeftRadius: 15, borderBottomLeftRadius: 15, borderWidth: 2, borderColor: "yellow", borderRightWidth: 0}}>
                     <View style={{padding: 10}}>
                         <Text style={{ color: "yellow", fontSize: 14, fontFamily: "MadimiOneRegular"}}>Dados restantes:</Text>
-                        <View style={{flexDirection: "row"}}>
-                            <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular", marginRight: 5}}>{tiradasRestantes}</Text>
-                            <Icon name="dice" size={20} color={"yellow"}></Icon>
+                        <View style={{flexDirection: "row", justifyContent: 'center', alignItems: "center", marginTop: 5}}>
+                            <Text style={{ color: "yellow", fontSize: 26, fontFamily: "MadimiOneRegular", marginRight: 5}}>{tiradasRestantes}</Text>
+                            <Icon name="dice" size={30} color={"yellow"}></Icon>
                         </View>
-                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}></Text>
-                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}>Jol</Text>
-                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}>Jol</Text>
-                        <Text style={{ color: "yellow", fontSize: 16, fontFamily: "MadimiOneRegular"}}>Jol</Text>
                     </View>
                 </View>
 
@@ -490,7 +485,7 @@ const Atacar = ({ navigation, route }: Props) => {
                         </TouchableHighlight>
                     </View>
                     <View style={{ width: "37.5%", height: "100%", alignItems: "center", justifyContent: "center" }}>
-                        {(sumaTotal < rangoInferior) ?
+                        {(sumaTotal < - 2 && tiradasRestantes > 0) ?
                             <TouchableHighlight underlayColor={"rgb(24, 50, 150)"} onPress={() => ToastAndroid.show("Sigue tirando, todavía no estás dentro del rango enemigo", ToastAndroid.LONG)} style={{ width: 100, height: 30, backgroundColor: "rgba(20, 40, 140, 1)", borderRadius: 20, justifyContent: "center", alignContent: 'center', marginBottom: 10 }}>
                                 <Text style={{ textAlign: 'center', fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow" }}>Terminar</Text>
                             </TouchableHighlight>

@@ -14,8 +14,10 @@ export interface AppContextType {
     setEggsContext: Dispatch<SetStateAction<number>>;
     goldenEggsContext: number;
     setGoldenEggsContext: Dispatch<SetStateAction<number>>;
-    totalEggsContext: string;
-    setTotalEggsContext: Dispatch<SetStateAction<string>>;
+    totalEggsContext: number;
+    setTotalEggsContext: Dispatch<SetStateAction<number>>;
+    imgContext: string;
+    setImgContext: Dispatch<SetStateAction<string>>;
 }
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -26,7 +28,8 @@ export const AppContextProvider = (props: any) => {
     const [rol, setRol] = useState("");
     const [eggsContext, setEggsContext] = useState(0);
     const [goldenEggsContext, setGoldenEggsContext] = useState(0);
-    const [totalEggsContext, setTotalEggsContext] = useState("");
+    const [totalEggsContext, setTotalEggsContext] = useState(0);
+    const [imgContext, setImgContext] = useState("");
     
     const contextValues: AppContextType = {
         user: usuario,
@@ -35,12 +38,14 @@ export const AppContextProvider = (props: any) => {
         eggsContext: eggsContext,
         totalEggsContext: totalEggsContext,
         goldenEggsContext: goldenEggsContext,
+        imgContext: imgContext,
         setRol: setRol,
         setToken: setToken,
         setUser: setUsuario,
         setEggsContext: setEggsContext,
         setTotalEggsContext: setTotalEggsContext,
-        setGoldenEggsContext: setGoldenEggsContext
+        setGoldenEggsContext: setGoldenEggsContext,
+        setImgContext: setImgContext
     };
 
     return (

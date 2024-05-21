@@ -12,7 +12,7 @@ type Props = {
 }
 
 const UseSesion = () => {
-    const { setUser, setToken, setRol, token } = useContext(AppContext);
+    const { setUser, setToken, setRol, token, setImgContext } = useContext(AppContext);
     const { ruta } = Globals();
     const [loading, setLoading] = useState(false);
 
@@ -64,6 +64,8 @@ const UseSesion = () => {
                     setUser(responseGet.data);
 
                     setToken(response.data);
+
+                    setImgContext(ruta + "v1/files/" + responseGet.data.img)
                     await EncryptedStorage.setItem("token", response.data);
 
                     //const rolFromBack = await axios.get(ruta+"/"+tk);

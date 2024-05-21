@@ -75,7 +75,7 @@ export type User = {
     name: string,
     nests: Array<Nest>,
     id_guild: number | undefined,
-    totalMoneyGenerated: string
+    totalMoneyGenerated: number
 }
 
 export type Nest = {

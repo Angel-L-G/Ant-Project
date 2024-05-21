@@ -50,6 +50,7 @@ import AnimatedGif from './src/components/AnimatedGif';
 import ChatScreen from './src/screens/ChatScreen';
 import TestChatGrupal from './src/screens/TestChatGrupal';
 import VictoryAnimation from './src/components/ResultAnimation';
+import { Usuario } from '../../React/aplicacion_administrativa/src/type/types';
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -59,7 +60,7 @@ export type RootStackParamList = {
     Register: undefined,
     Login: undefined,
     Social: {tab: number},
-    NuevoChat: {idOtherUser: number, nameOtherUser: string},
+    NuevoChat: {usu: Usuario},
     Profile: undefined,
     Personal: {numero: number},
     ProfileOther: {usu: User},

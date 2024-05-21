@@ -8,17 +8,11 @@ type Props = {
     navigation: any
 }
 
-const NavBarTop = ({navigation}: Props) => {
-    const {user, eggsContext, goldenEggsContext} = useContext(AppContext);
-    const {ruta} = Globals();
-    const [img, setImg] = useState(ruta + "v1/files/" + user.img);
+const NavBarTop = ({ navigation }: Props) => {
+    const { user, eggsContext, goldenEggsContext, imgContext } = useContext(AppContext);
+    const { ruta } = Globals();
+    const [img, setImg] = useState("");
 
-    useEffect(() => {
-        console.log("aaaaaaaaaaaaaaaaaaaa");
-        
-        setImg(ruta + "v1/files/" + user.img);
-    }, [])
-    
     function abreviarNumero(valor: number): string {
         if (valor < 10000) {
             return valor.toString();
@@ -48,7 +42,7 @@ const NavBarTop = ({navigation}: Props) => {
     return (
         <View style={{ width: "100%", height: "7%", backgroundColor: "rgb(28, 64, 169)", justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row', borderTopWidth: 2, borderBottomWidth: 2 }}>
             <TouchableOpacity onPress={() => goToProfile()} style={{ width: "11%", height: "80%" }}>
-                <Image source={{ uri: img}} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
+                <Image source={{ uri: imgContext }} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
             </TouchableOpacity>
             <View style={{ width: "20%", height: "60%" }}>
                 <Image source={require('../assets/imgs/tablon.png')} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
@@ -59,7 +53,7 @@ const NavBarTop = ({navigation}: Props) => {
                     </View>
                 </View>
             </View>
-            
+
             <View style={{ width: "20%", height: "60%" }}>
                 <Image source={require('../assets/imgs/tablon.png')} style={{ width: "100%", height: "100%", borderRadius: 100 }} />
                 <View style={{ position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: "rgba(255, 255, 255, 0.4)", width: "100%", height: "100%", borderRadius: 100, flexDirection: 'row' }}>

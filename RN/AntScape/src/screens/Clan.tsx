@@ -18,8 +18,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useFocusEffect } from '@react-navigation/native';
+import MensajeClan from '../components/MensajeClan';
+import MensajeClanOtro from '../components/MensajeClanOtro';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Clan">;
+
+type UsuarioImagen = {
+    id: number,
+    nick: string,
+    img: string
+}
 
 const Clan = ({ navigation, route }: Props) => {
     const { ruta } = Globals();
@@ -34,8 +42,13 @@ const Clan = ({ navigation, route }: Props) => {
     const [guildLevelDos, setGuildLevelDos] = useState<GuildLevel>({} as GuildLevel);
     const [modalConstruccionTres, setModalConstruccionTres] = useState(false);
     const [guildLevelTres, setGuildLevelTres] = useState<GuildLevel>({} as GuildLevel);
-    const [puedeAtacar, setPuedeAtacar] = useState(true);
     const [momentoDeAtaque, setMomentoDeAtaque] = useState("");
+    const [modalDefensaVisible, setModalDefensaVisible] = useState(false);
+    const [rangoDefensa, setRangoDefensa] = useState<Array<number>>([]);
+    const [numeroDeDefensa, setNumeroDeDefensa] = useState(0);
+    const [rangoInferior, setRangoInferior] = useState(0);
+    const [rangoSuperior, setRangoSuperior] = useState(0);
+    const [nuevoNumeroDeDefensa, setNuevoNumeroDeDefensa] = useState(0);
 
     const { sendGroupMessage, conectado, conectar, chatActual, historico, setHistorico } = UseChat();
     const { chats, save, saveMessages, findGuildChat } = UseChatHistory();
@@ -81,10 +94,6 @@ const Clan = ({ navigation, route }: Props) => {
                     const estadoPuedeAtacar = await AsyncStorage.getItem(`puedeAtacar${user.id}`);
                     console.log(estadoPuedeAtacar + "Aaaaaaaaaaaa");
 
-                    if (estadoPuedeAtacar !== null) {
-                        setPuedeAtacar(false);
-                    }
-
                     const tiempoDeAtaque = await AsyncStorage.getItem(`momentoDeAtaque${user.id}`);
                     console.log(tiempoDeAtaque + "Aaaaaaaaaaaa");
 
@@ -104,18 +113,31 @@ const Clan = ({ navigation, route }: Props) => {
                 try {
                     const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
                     console.log(response.data);
-                    
+
                     if (response.data != "") {
                         console.log("ASASDASDASDASDAS");
                         console.log(response.data);
-        
+
+                        let [inferior, superior] = response.data.defenseRange.split("-");
+                        let arr: Array<number> = [];
+                        for (let i = inferior; i <= superior; i++) {
+                            console.log(i);
+
+                            arr.push(i);
+                        }
+                        setRangoDefensa(arr);
+                        setRangoInferior(inferior);
+                        setRangoSuperior(superior);
+
                         setClan(response.data);
                         setClanId(response.data.id);
                         setTieneClan(true);
+                        setNumeroDeDefensa(response.data.defenseNumber);
+                        setNuevoNumeroDeDefensa(response.data.defenseNumber);
                     } else {
                         setTieneClan(false);
                     }
-        
+
                 } catch (error) {
                     console.log(error);
                 }
@@ -166,7 +188,7 @@ const Clan = ({ navigation, route }: Props) => {
     }
 
     async function levelUpConstruction(guildLevel: GuildLevel) {
-        if (user.goldenEggs >= guildLevel.cost) {
+        if (goldenEggsContext >= guildLevel.cost) {
             if (guildLevel.name == "Barracks") {
                 try {
                     console.log(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name);
@@ -174,8 +196,8 @@ const Clan = ({ navigation, route }: Props) => {
                     const response = await axios.put(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name, {}, { headers: { "Authorization": "Bearer " + token } });
                     console.log(response.data);
                     getGuild();
-                    user.goldenEggs = user.goldenEggs - guildLevel.cost;
-                    setGoldenEggsContext(user.goldenEggs - guildLevel.cost);
+                    user.goldenEggs = goldenEggsContext - guildLevel.cost;
+                    setGoldenEggsContext(goldenEggsContext - guildLevel.cost);
                 } catch (error) {
                     console.log(error);
                 }
@@ -184,8 +206,13 @@ const Clan = ({ navigation, route }: Props) => {
                     const response = await axios.put(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name, {}, { headers: { "Authorization": "Bearer " + token } });
                     console.log(response.data);
                     getGuild();
-                    user.goldenEggs = user.goldenEggs - guildLevel.cost;
-                    setGoldenEggsContext(user.goldenEggs - guildLevel.cost);
+                    user.goldenEggs = goldenEggsContext - guildLevel.cost;
+                    setGoldenEggsContext(goldenEggsContext - guildLevel.cost);
+                    const params = {
+                        newDefenseRange: (Number(rangoInferior) + 1) + "-" + (Number(rangoSuperior) + 1)
+                    }
+                    const response2 = await axios.put(ruta + "v2/guilds/" + clan.id + "/defenserange", null, { params: params, headers: { Authorization: "Bearer " + token } });
+                    console.log(response2.data);
                 } catch (error) {
                     console.log(error);
                 }
@@ -194,8 +221,8 @@ const Clan = ({ navigation, route }: Props) => {
                     const response = await axios.put(ruta + "v2/guilds/" + clanId + "/levelUp/" + guildLevel.name, {}, { headers: { "Authorization": "Bearer " + token } });
                     console.log(response.data);
                     getGuild();
-                    user.goldenEggs = user.goldenEggs - guildLevel.cost;
-                    setGoldenEggsContext(user.goldenEggs - guildLevel.cost);
+                    user.goldenEggs = goldenEggsContext - guildLevel.cost;
+                    setGoldenEggsContext(goldenEggsContext - guildLevel.cost);
                 } catch (error) {
                     console.log(error);
                 }
@@ -208,16 +235,14 @@ const Clan = ({ navigation, route }: Props) => {
     async function irAAtacar() {
         const currentTime = new Date().getTime();
         const disabledTime = parseInt(momentoDeAtaque);
-        const remainingTime =  10000 - (currentTime - disabledTime); //3600000
+        const remainingTime = 1000 - (currentTime - disabledTime); //3600000
         let puede = false;
         console.log(currentTime);
         console.log(disabledTime);
 
-
         if (remainingTime <= 0 || isNaN(disabledTime)) {
             console.log("Hola");
 
-            setPuedeAtacar(true);
             puede = true;
 
             await AsyncStorage.setItem(`puedeAtacar${user.id}`, "true");
@@ -225,7 +250,6 @@ const Clan = ({ navigation, route }: Props) => {
         }
 
         if (remainingTime <= 0 && puede || isNaN(disabledTime) && puede) {
-            setPuedeAtacar(false);
             await AsyncStorage.setItem(`puedeAtacar${user.id}`, 'false');
             await AsyncStorage.setItem(`momentoDeAtaque${user.id}`, String(new Date().getTime()));
             setMomentoDeAtaque(String(new Date().getTime()));
@@ -237,6 +261,50 @@ const Clan = ({ navigation, route }: Props) => {
 
             ToastAndroid.show("Debes esperar " + minutos + " minutos y " + segundos + " segundos para volver a atacar", ToastAndroid.LONG)
         }
+    }
+
+    async function abrirModalDefensa() {
+        try {
+            const response = await axios.get(ruta + "v2/users/me/guild", { headers: { "Authorization": "Bearer " + token } });
+            let [inferior, superior] = response.data.defenseRange.split("-");
+            let arr: Array<number> = [];
+            for (let i = inferior; i <= superior; i++) {
+                console.log(i);
+
+                arr.push(i);
+            }
+            setRangoDefensa(arr);
+            setRangoInferior(inferior);
+            setRangoSuperior(superior);
+
+            setNumeroDeDefensa(response.data.defenseNumber);
+            setNuevoNumeroDeDefensa(response.data.defenseNumber);
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+
+        setModalDefensaVisible(true);
+    }
+
+    async function cambiarNumeroDeDefensa() {
+        setNumeroDeDefensa(nuevoNumeroDeDefensa);
+        try {
+            const params = {
+                newDefenseNumber: nuevoNumeroDeDefensa
+            }
+            const response = await axios.put(ruta + "v2/guilds/" + clan.id + "/defensenumber", null, { params: params, headers: { Authorization: "Bearer " + token } });
+            console.log(response.data);
+            ToastAndroid.show("Ahora el número de defensa es " + nuevoNumeroDeDefensa, ToastAndroid.SHORT);
+            setModalDefensaVisible(false);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function abrirChat() {
+        setModalChatVisible(true);
+        
     }
 
     return (
@@ -316,11 +384,19 @@ const Clan = ({ navigation, route }: Props) => {
                             </View>
                         </View>
 
+                        {(clan.leader == user.id) ?
+                            <TouchableHighlight onPress={() => abrirModalDefensa()} style={{ width: "25%", position: 'absolute', flexDirection: "row", justifyContent: "space-around", backgroundColor: "rgba(20, 40, 140, 1)", top: 50, left: 15, borderRadius: 20 }}>
+                                <Text style={{ color: "yellow", fontSize: 18, fontFamily: "MadimiOneRegular", textAlign: 'center' }}>Modificar Defensa</Text>
+                            </TouchableHighlight>
+                            :
+                            <></>
+                        }
+
                         {(modalChatVisible) ?
                             <></>
                             :
                             <View style={{ position: 'absolute', height: "8%", width: "9%", backgroundColor: "rgba(40, 60, 160, 1)", right: 0, top: "46%" }}>
-                                <TouchableHighlight underlayColor={"rgba(60, 80, 180, 1)"} onPress={() => setModalChatVisible(true)} style={{ width: "100%", height: "100%", alignItems: "flex-start", justifyContent: "center" }}>
+                                <TouchableHighlight underlayColor={"rgba(60, 80, 180, 1)"} onPress={() => abrirChat()} style={{ width: "100%", height: "100%", alignItems: "flex-start", justifyContent: "center" }}>
                                     <Icon name="chevron-back" size={50} color={"yellow"} style={{ right: 8 }}></Icon>
                                 </TouchableHighlight>
                             </View>
@@ -372,10 +448,10 @@ const Clan = ({ navigation, route }: Props) => {
                                         </View>
                                     </View>
                                     <View style={{ width: "100%", height: "70%", alignItems: "center", marginTop: "7%" }}>
-                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Aumenta la cantidad probabilidad de ejecutar un ataque exitoso en un 1% por cada nivel.</Text>
-                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Actualmente {1 * guildLevelUno.level}%</Text>
+                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Aumenta la cantidad de dados disponibles al atacar en 1 por cada nivel.</Text>
+                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Actualmente {1 * guildLevelUno.level}</Text>
                                         <Icon name="arrow-down" size={50} color={"black"}></Icon>
-                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Proximo nivel: {1 * (guildLevelUno.level + 1)}%</Text>
+                                        <Text style={{ width: "80%", fontFamily: "MadimiOneRegular", fontSize: 14, color: "white", textAlign: "center" }}>Proximo nivel: {1 * (guildLevelUno.level + 1)}</Text>
                                         <View style={{ width: "70%", height: "20%", flexDirection: "row", marginTop: "5%", alignItems: "center", justifyContent: "space-between" }}>
                                             <View style={{ width: "50%", height: "100%", flexDirection: "row", alignItems: "center" }}>
                                                 <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 16, color: "yellow", textAlign: "center" }}>Coste: {guildLevelUno.cost}</Text>
@@ -511,6 +587,47 @@ const Clan = ({ navigation, route }: Props) => {
             </Modal>
 
             <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalDefensaVisible}
+                onRequestClose={() => {
+                    setModalDefensaVisible(!modalDefensaVisible);
+                }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <LinearGradient colors={['rgba(30, 70, 200, 1)', 'rgba(20, 40, 140, 1)']}
+                        start={{ x: 0.5, y: 0 }}
+                        end={{ x: 0.5, y: 1.25 }}
+                        style={stylesModal.modalDefensaView}>
+                        <View style={{ height: "20%" }}>
+                            <Text style={{ textAlign: "center", fontFamily: "MadimiOneRegular", color: "yellow", fontSize: 20 }}>Elige tu número de defensa</Text>
+                        </View>
+                        <View style={{ height: "60%" }}>
+                            <FlatList
+                                data={rangoDefensa}
+                                renderItem={({ item }) =>
+                                    (item == nuevoNumeroDeDefensa) ?
+                                        <TouchableHighlight onPress={() => setNuevoNumeroDeDefensa(item)} style={{ padding: 15, backgroundColor: "rgba(60, 80, 200, 1)", marginBottom: 10, borderWidth: 2, borderColor: "yellow" }}>
+                                            <Text style={{ color: "yellow", fontSize: 26 }}>{item}</Text>
+                                        </TouchableHighlight>
+                                        :
+                                        <TouchableHighlight onPress={() => setNuevoNumeroDeDefensa(item)} style={{ padding: 15, backgroundColor: "rgba(20, 40, 140, 1)", marginBottom: 10, borderWidth: 2, borderColor: "yellow" }}>
+                                            <Text style={{ color: "yellow", fontSize: 26 }}>{item}</Text>
+                                        </TouchableHighlight>
+                                }
+                                horizontal={true}
+                                contentContainerStyle={{ width: "100%", justifyContent: "space-around", flexWrap: "wrap" }}
+                            />
+                        </View>
+                        <View style={{ height: "20%", justifyContent: "center", alignItems: "center" }}>
+                            <TouchableHighlight onPress={() => cambiarNumeroDeDefensa()} style={{ borderWidth: 3, borderColor: "rgba(50, 180, 120, 1)", padding: 5, borderRadius: 100 }}>
+                                <Text style={{ color: "yellow", fontSize: 18 }}>Aceptar</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </LinearGradient>
+                </View>
+            </Modal>
+
+            <Modal
                 animationType="fade"
                 transparent={true}
                 visible={modalChatVisible}
@@ -534,19 +651,9 @@ const Clan = ({ navigation, route }: Props) => {
                                         data={historico}
                                         renderItem={({ item }) =>
                                             (item.senderId === user.id) ?
-                                                <View style={{ alignSelf: 'flex-end' }}>
-                                                    <Text style={{ color: "black", marginTop: 10, marginRight: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                                    <View style={styles.myMessage}>
-                                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
-                                                    </View>
-                                                </View>
+                                                <MensajeClan mensaje={item}/>
                                                 :
-                                                <View style={{ alignSelf: 'flex-start' }}>
-                                                    <Text style={{ color: "black", marginTop: 10, marginLeft: 16, fontFamily: "MadimiOneRegular", fontSize: 16 }}>{item.sentAt && formatDistanceToNow(new Date(item.sentAt), { addSuffix: true, locale: es })}</Text>
-                                                    <View style={styles.otherMessage}>
-                                                        <Text style={{ ...styles.messageText, color: "black" }}>{item.body}</Text>
-                                                    </View>
-                                                </View>
+                                                <MensajeClanOtro mensaje={item}/>
                                         }
                                         keyExtractor={(item, index) => index.toString()}
                                         inverted
@@ -555,7 +662,7 @@ const Clan = ({ navigation, route }: Props) => {
                             </View>
                             <View style={{ height: "8%", width: "100%", marginTop: "2%" }}>
                                 <View style={{ height: "100%", flexDirection: "row", justifyContent: 'space-between' }}>
-                                    <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", fontSize: 14, backgroundColor: "white", height: 30, alignSelf: "center", marginLeft: "2%", paddingVertical: 0 }} />
+                                    <TextInput multiline onChangeText={setMensaje} value={mensaje} style={{ borderWidth: 1, borderColor: 'black', borderRadius: 20, width: "78%", fontSize: 14, backgroundColor: "white", height: 30, alignSelf: "center", marginLeft: "2%", paddingVertical: 0, color: "black" }} />
                                     <TouchableHighlight onPress={sendMessage} style={{ backgroundColor: "green", alignItems: 'center', justifyContent: 'center', width: "16%", height: 30, borderRadius: 20, alignSelf: 'center', marginRight: "2%" }}>
                                         <Icon name="send" size={20} color={"yellow"}></Icon>
                                     </TouchableHighlight>
@@ -585,6 +692,14 @@ const stylesModal = StyleSheet.create({
         height: "50%",
         borderWidth: 2,
     },
+    modalDefensaView: {
+        borderRadius: 20,
+        padding: 20,
+        elevation: 15,
+        width: "80%",
+        height: "40%",
+        borderWidth: 2,
+    },
     modalChatView: {
         borderRadius: 20,
         borderTopRightRadius: 0,
@@ -600,31 +715,4 @@ const stylesModal = StyleSheet.create({
     },
 })
 
-const styles = StyleSheet.create({
-    myMessage: {
-        borderBottomEndRadius: 0,
-        alignSelf: 'flex-end',
-        backgroundColor: '#D68200',
-        borderRadius: 18,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        padding: 12,
-        elevation: 5,
-        maxWidth: '60%',
-    },
-    otherMessage: {
-        borderBottomStartRadius: 0,
-        alignSelf: 'flex-start',
-        backgroundColor: '#00a8d6',
-        borderRadius: 18,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        padding: 12,
-        elevation: 5,
-        maxWidth: '60%',
-    },
-    messageText: {
-        fontSize: 16,
-        fontFamily: "MadimiOneRegular",
-    },
-});
+const styles = StyleSheet.create({});

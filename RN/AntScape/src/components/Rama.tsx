@@ -156,7 +156,7 @@ const Rama = ({ lastLevel, updateEggs, updateLevels, actualLevel, ganarDinero, e
 								{(actualLvl.production * actualLvl.multiplier <= actualLvl.production + 1) ?
 									<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>Produc.: {Math.round(actualLvl.production + 1)}</Text>
 									:
-									<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>{Math.round(actualLvl.production * actualLvl.multiplier)}</Text>
+									<Text style={{ fontFamily: "MadimiOneRegular", fontSize: 18, color: "yellow", padding: 5, textAlign: 'center' }}>Produc.: {Math.round(actualLvl.production * actualLvl.multiplier + 0.3 + 1)}</Text>
 								}
 							</LinearGradient>
 						</View>

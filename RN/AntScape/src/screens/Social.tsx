@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableHighlight, TextInput, FlatList, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import NavBarBotton from '../components/NavBarBotton';
 import NavBarTop from '../components/NavBarTop';
@@ -12,6 +12,7 @@ import { AppContext } from '../context/AppContextProvider';
 import ClanCard from '../components/ClanCard';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, "Social">;
 
@@ -28,69 +29,75 @@ const Social = ({ navigation, route }: Props) => {
     const [clanUsers, setClanUsers] = useState<Array<User>>([]);
     const tabNumber = route.params.tab;
 
-    useEffect(() => {
-        setActiveTab(tabNumber);
+    useFocusEffect(
+        useCallback(() => {
+            setActiveTab(tabNumber);
 
-        async function getUsuarios() {
-            try {
-                const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
-                const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
-                    usuario.name.includes(valorInput) && usuario.name !== user.name
-                );
-                setUsuarios(usuariosFiltrados);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        getUsuarios();
-
-        async function getAmigos() {
-            try {
-                const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
-                const amigosFiltrados: Array<User> = response.data.filter((amigo: User) =>
-                    amigo.name.includes(valorInput) && amigo.name !== user.name
-                );
-                setAmigos(amigosFiltrados);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        getAmigos();
-
-        async function getClans() {
-            try {
-                const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
-                for (let i = 0; i < response.data.length; i++) {
-                    if (response.data[i].id === user.id_guild) {
-                        setClan(response.data[i]);
-                        setTieneClan(true);
-                    }
+            async function getUsuarios() {
+                try {
+                    const response = await axios.get(ruta + "v2/users", { headers: { "Authorization": "Bearer " + token } });
+                    const usuariosFiltrados: Array<User> = response.data.filter((usuario: User) =>
+                        usuario.name.includes(valorInput) && usuario.name !== user.name
+                    );
+                    setUsuarios(usuariosFiltrados);
+                } catch (error) {
+                    console.log(error);
                 }
-                const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) =>
-                    c.name.includes(valorInput) && c !== clan
-                );
-                setClanes(clanesFiltrados);
-            } catch (error) {
-                console.log(error);
             }
-        }
 
-        getClans();
+            getUsuarios();
 
-        async function getClanUsers() {
-            try {
-                const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
-            } catch (error) {
-                console.log(error);
+            async function getAmigos() {
+                try {
+                    const response = await axios.get(ruta + "v2/users/" + user.id + "/friends", { headers: { "Authorization": "Bearer " + token } });
+                    const amigosFiltrados: Array<User> = response.data.filter((amigo: User) =>
+                        amigo.name.includes(valorInput) && amigo.name !== user.name
+                    );
+                    setAmigos(amigosFiltrados);
+                } catch (error) {
+                    console.log(error);
+                }
             }
-        }
 
-        getClanUsers();
+            getAmigos();
 
-        console.log("UseEffect");
-    }, [tabNumber])
+            async function getClans() {
+                try {
+                    const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+                    for (let i = 0; i < response.data.length; i++) {
+                        if (response.data[i].id === user.id_guild) {
+                            setClan(response.data[i]);
+                            setTieneClan(true);
+                        }
+                    }
+                    const clanesFiltrados: Array<ClanType> = response.data.filter((c: ClanType) =>
+                        c.name.includes(valorInput) && c !== clan
+                    );
+                    setClanes(clanesFiltrados);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            getClans();
+
+            async function getClanUsers() {
+                try {
+                    const response = await axios.get(ruta + "v2/guilds", { headers: { "Authorization": "Bearer " + token } });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            getClanUsers();
+
+            console.log("UseEffect");
+            return () => {
+
+                console.log("Pantalla perdiendo foco");
+            };
+        }, [tabNumber])
+    );
 
     const handleTabPress = (tabIndex: number) => {
         setActiveTab(tabIndex);

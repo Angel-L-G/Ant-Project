@@ -16,7 +16,11 @@ const Login = ({ navigation }: Props) => {
     const [password, setPassword] = useState("");
 
     function searchUser() {
-        login(username, password, navigation);
+        let name = username;
+        let pass = password;
+        setUsername("");
+        setPassword("");
+        login(name, pass, navigation);
     }
 
     return (
@@ -37,12 +41,12 @@ const Login = ({ navigation }: Props) => {
 
                             <View style={styles.innerFormContainer}>
                                 <Text style={styles.formText}>Nick:</Text>
-                                <TextInput placeholder='Nick' onChangeText={setUsername} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white", }} placeholderTextColor={"white"} />
+                                <TextInput placeholder='Nick' onChangeText={setUsername} value={username} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white", }} placeholderTextColor={"white"} />
                             </View>
 
                             <View style={styles.innerFormContainer}>
                                 <Text style={styles.formText}>Password:</Text>
-                                <TextInput placeholder='Password' onChangeText={setPassword} secureTextEntry={true} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white" }} placeholderTextColor={"white"} />
+                                <TextInput placeholder='Password' onChangeText={setPassword} value={password} secureTextEntry={true} style={{ width: 80, borderBottomWidth: 1, borderColor: "black", height: 30, padding: 0, color: "white" }} placeholderTextColor={"white"} />
                             </View>
 
                             <Text></Text>

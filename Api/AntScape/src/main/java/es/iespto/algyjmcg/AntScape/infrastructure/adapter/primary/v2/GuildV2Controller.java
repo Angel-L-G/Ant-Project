@@ -374,10 +374,10 @@ public class GuildV2Controller {
 			}
 			
 			if(Double.parseDouble(user.getGoldenEggs()) >= guildLevel.getCost()) {
+				double goldenEggs = Double.parseDouble(user.getGoldenEggs()) - guildLevel.getCost();
+				
 				guildLevel.setCost(guildLevel.getCost()*1.5);
 				guildLevel.setLevel(guildLevel.getLevel()+1);
-				
-				double goldenEggs = Double.parseDouble(user.getGoldenEggs()) - guildLevel.getCost();
 				
 				user.setGoldenEggs(Math.round(goldenEggs)+"");
 				

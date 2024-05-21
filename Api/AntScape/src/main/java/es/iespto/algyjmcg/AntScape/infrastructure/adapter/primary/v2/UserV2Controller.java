@@ -173,7 +173,7 @@ public class UserV2Controller {
 		out.setImg(u.getImg());
 		out.setName(u.getName());
 		out.setNests(u.getNests());
-		
+		out.setTotalMoneyGenerated(u.getTotalMoneyGenerated());	
 		if(guild != null) {
 			out.setId_guild(guild.getId());
 		}else {
@@ -322,6 +322,7 @@ class UsuarioOutput {
 	private String img;
 	private String name;
 	private Integer id_guild;
+	private String totalMoneyGenerated;
 	private List<Nest> nests;
 	
 	public Integer getId() {
@@ -365,6 +366,12 @@ class UsuarioOutput {
 	}
 	public void setNests(List<Nest> nests) {
 		this.nests = nests;
+	}
+	public String getTotalMoneyGenerated() {
+		return totalMoneyGenerated;
+	}
+	public void setTotalMoneyGenerated(String totalMoneyGenerated) {
+		this.totalMoneyGenerated = totalMoneyGenerated;
 	}
 }
 

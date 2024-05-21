@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text, ToastAndroid, TouchableHighlight, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { ClanType, User } from '../types/types'
 import { Image } from 'react-native-elements'
@@ -56,6 +56,27 @@ const UsuarioCardClan = ({ usu, navigation, clan, recargar }: Props) => {
         }
     }
 
+    async function chatear() {
+        try {
+            const response = await axios.get(ruta + "v2/users/" + user.id + "/bloqued", { headers: { "Authorization": "Bearer " + token } });
+            console.log(response.data);
+            let bloq = false;
+            for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].id == usu.id) {
+                    setBloqueado(true);
+                    bloq = true;
+                    ToastAndroid.show("Usuario Bloqueado", ToastAndroid.SHORT);
+                }
+            }
+
+            if (bloq == false) {
+                navigation.navigate("NuevoChat", { usu: usuario })
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <View style={{ height: 80, padding: 5, margin: 15, flexDirection: 'row' }}>
             <Image source={{ uri: ruta + "v1/files/" + usuario.img }} style={{ height: "100%", width: 70, borderRadius: 100 }} />
@@ -84,12 +105,9 @@ const UsuarioCardClan = ({ usu, navigation, clan, recargar }: Props) => {
                 {(user.id == usuario.id) ?
                     <></>
                     :
-                    (bloqueado) ?
-                        <Text style={{ fontFamily: "MadimiOneRegular", fontSize: 14, color: "yellow", textAlign: 'center' }}>Usuario Bloqueado</Text>
-                        :
-                        <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => navigation.navigate("NuevoChat", { name: usuario.name })} style={{ justifyContent: 'center', alignItems: 'center', height: "100%", borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3" }}>
-                            <Text style={{ color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18 }}>Chat</Text>
-                        </TouchableHighlight>
+                    <TouchableHighlight underlayColor={"rgba(30, 70, 200, 1)"} onPress={() => chatear()} style={{ justifyContent: 'center', alignItems: 'center', height: "100%", borderRadius: 20, padding: 10, elevation: 2, backgroundColor: "#2196F3" }}>
+                        <Text style={{ color: "yellow", fontFamily: "MadimiOneRegular", fontSize: 18 }}>Chat</Text>
+                    </TouchableHighlight>
                 }
             </View>
 
