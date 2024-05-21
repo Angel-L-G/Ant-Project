@@ -3,86 +3,151 @@ import React, { useContext } from 'react'
 import Globals from '../assets/Globals';
 import { AppContext } from '../context/AppContextProvider';
 import { GraphqlSaveInputDTO, GraphqlUpdateInputDTO } from '../type/typesGraphql';
+import UseInformation from './UseInformation';
+import { Usuario } from '../type/types';
 
 const UseMutation = () => {
     const {graphqlRuta} = Globals();
+    const {users, usersLoading, findAllUser, setUsersLoading, setUsers} = UseInformation();
     const {token} = useContext(AppContext);
-    const updatearUser = '';
 
-    async function saveUserMutation(u: GraphqlSaveInputDTO) {
-        const query = 'mutation { ' +
-            'saveUser(' +
-                'user: { ' +
-                    'active: ' + u.active + ', ' +
-                    'eggs: ' + u.eggs + ', ' +
-                    'email: ' + u.email + ', ' +
-                    'goldenEggs: ' + u.goldenEggs + ', ' +
-                    'img: ' + u.img + ', ' +
-                    'name: ' + u.name + ', ' +
-                    'password: ' + u.password + ', ' +
-                    'rol: ' + u.rol + '} , ' +
-            ') {' +
-                'msg' +
-                'name' +
-                'status' +
-            '}' +
-        '}';
-
+    const saveUserMutation = async (u: GraphqlSaveInputDTO) => {
+        const query = `
+            mutation($user: UsuarioSaveInputDTO!) {
+                saveUser(user: $user) {
+                    msg
+                    name
+                    status
+                }
+            }
+        `;
+    
+        const variables = {
+            user: {
+                active: u.active,
+                eggs: u.eggs,
+                email: u.email,
+                goldenEggs: u.goldenEggs,
+                img: u.img,
+                name: u.name,
+                password: u.password,
+                rol: u.rol,
+            },
+        };
+    
         try {
-            const response = await axios.post(graphqlRuta, {query:  query}, {headers: { "Authorization": "Bearer " + token }});
-
-            return response.data;
+            console.log('Variables:', JSON.stringify(variables, null, 2)); // Verifica las variables
+    
+            const response = await axios.post(
+                graphqlRuta, // reemplaza con tu URL de endpoint
+                {
+                    query,
+                    variables,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
+    
+            // Verifica si hay errores en la respuesta de GraphQL
+            if (response.data.errors) {
+                console.error('GraphQL validation errors:', response.data.errors);
+                throw new Error('GraphQL validation error');
+            }
+    
+            // Verifica y loguea el resultado para confirmar que todo está bien
+            console.log(response.data.data.saveUser);
+    
+            setUsers(prevList => [...prevList, response.data.data.saveUser]);
+    
         } catch (error) {
-            console.log(error);
+            console.error('GraphQL request error:', error);
+            throw error;
         }
-    }
+    };
+    
 
-    async function UpdateUserMutation(u: GraphqlUpdateInputDTO) {
-        const query = 'mutation { ' +
-            'updatearUser( ' +
-                'user: { ' +
-                    'active: ' + u.active + ',' + 
-                    'eggs: ' + u.eggs + ',' +  
-                    'email: ' + u.email + ',' +
-                    'goldenEggs: ' + u.goldenEggs + ',' +
-                    'id: ' + u.id + ',' +  
-                    'img: ' + u.img + ',' +
-                    'password: ' + u.password + ',' +
-                    'name: ' + u.name + 
-                '}' +
-            ') {' +
-                'msg' +
-                'name' +
-                'status' +
-            '}' +
-        '}';
-
+    const UpdateUserMutation = async (u: GraphqlUpdateInputDTO) => {
+        const query = `
+            mutation($user: UsuarioInputGraphqlUpdateDTO!) {
+                updatearUser(user: $user) {
+                    msg
+                    name
+                    status
+                }
+            }
+        `;
+    
+        const variables = {
+            user: {
+                id: u.id,
+                name: u.name,
+                email: u.email,
+                password: u.password,
+                img: u.img,
+                active: u.active,
+                eggs: u.eggs,
+                goldenEggs: u.goldenEggs
+            },
+        };
+    
         try {
-            const response = await axios.post(graphqlRuta, {query:  query}, {headers: { "Authorization": "Bearer " + token }});
+            const response = await axios.post(graphqlRuta, {
+                query,
+                variables,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
 
-            return response.data;
+            setUsers(prevList => 
+                prevList.map(user => 
+                    user.id === u.id ? { ...user, u } : user
+                )
+            );
         } catch (error) {
-            console.log(error);
+            console.error('GraphQL request error:', error);
+            throw error;
         }
-    }
+    };
 
-    async function deleteUserMutation(id: number) {
-        const query = 'mutation { ' +
-            'deleteUser(id: ' + id + ') { ' +
-                'msg' +
-                'name' +
-                'status' +
-            '}' +
-        '}';
-
+    const deleteUserMutation = async (id: number) => {
+        const query = `
+            mutation($id: Int!) {
+                deleteUser(id: $id) {
+                    msg
+                    name
+                    status
+                }
+            }
+        `;
+    
+        const variables = {
+            id: id,
+        };
+    
         try {
-            const response = await axios.post(graphqlRuta, {query:  query}, {headers: { "Authorization": "Bearer " + token }});
-
-            return response.data;
+            const response = await axios.post(graphqlRuta, {
+                query,
+                variables,
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            
+            return response.data; // Asegúrate de retornar el resultado para manejar la promesa
         } catch (error) {
-            console.log(error);
+            console.error('GraphQL request error:', error);
+            throw error;
         }
-    }
+    };
 
     return {
         saveUserMutation,

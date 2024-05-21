@@ -102,6 +102,7 @@ public class AdministrationGaphQLController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SchemaMapping(typeName = "Mutation", field = "saveUser")
     public GraphqlResponse saveUser(@Argument UsuarioSaveInputDTO user) {
+    	System.err.println("AAAAAAAAAAAA");
         GraphqlResponse response = new GraphqlResponse();
 
         if(user != null) {
@@ -178,9 +179,11 @@ public class AdministrationGaphQLController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SchemaMapping(typeName = "Mutation", field = "updatearUser")
     public GraphqlResponse updateUser(@Argument UsuarioInputGraphqlUpdateDTO user) {
+    	System.err.println("312");
     	GraphqlResponse response = new GraphqlResponse();
     	
     	if(user != null) {
+    		System.err.println("123: " + user.getId());
     		Usuario u = usuarioservice.findById(user.getId());
     		
     		u.setEggs(user.getEggs()+"");
@@ -349,7 +352,7 @@ class UsuarioSaveInputDTO {
 }
 
 class UsuarioInputGraphqlUpdateDTO {
-	private Integer Id;
+	private Integer id;
 	private Boolean active;
 	private Integer eggs;
 	private Integer goldenEggs;
@@ -426,11 +429,11 @@ class UsuarioInputGraphqlUpdateDTO {
 	}
 
 	public Integer getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(Integer id) {
-		Id = id;
+		this.id = id;
 	}
 }
 

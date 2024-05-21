@@ -1,49 +1,71 @@
 import "../styles/main.css"
-import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
 import UseInformation from '../hook/UseInformation'
 import UseMutation from '../hook/UseMutation'
 import FormSaveUser from '../components/FormSaveUser'
 import FormUpdateuser from '../components/FormUpdateuser'
 import UserCard from '../components/UserCard'
 import { Usuario } from '../type/types'
-import axios from 'axios'
-import Globals from '../assets/Globals'
-import Query from '../assets/Query'
-import { AppContext } from '../context/AppContextProvider'
-import { useContext, useEffect, useState } from "react"
-import UserModal from "../components/Modal"
-import styles from '../../../../RN/AntScape/src/themes/styles';
+import { useEffect, useRef, useState } from "react"
+import { GraphqlSaveInputDTO, GraphqlUpdateInputDTO } from "../type/typesGraphql"
 
 const Main = () => {
-    const { users, loginInfo, registerInfo, setLoginInfo, setRegisterInfo, findAllUser, finduserInfoById, findLoginDates, findRegisterDates, } = UseInformation();
-    const { UpdateUserMutation, deleteUserMutation, saveUserMutation } = UseMutation();
-    const {graphqlRuta} = Globals();
-    const {findLastLogins} = Query();
-    const { token } = useContext(AppContext);
+    const { users, loginInfo, registerInfo, setLoginInfo, setRegisterInfo, findAllUser, findLoginDates, findRegisterDates, } = UseInformation();
 
     const [showForm, setShowForm] = useState(true);
     const [loginLoading, setLoginLoading] = useState(true);
     const [registerLoading, setRegisterLoading] = useState(true);
+    const usersLoading = useRef(false);
 
     const [selectedUser, setSelectedUser] = useState<any>();
+    const [userList, setUserList] = useState<Array<Usuario>>([]);
+    const { deleteUserMutation, UpdateUserMutation, saveUserMutation } = UseMutation();
 
     useEffect(() => {
         fetchLoginData();
         fetchRegisterData();
     }, [])
 
+    useEffect(() => {
+        findAllUser();
+        setUserList(users);
+    }, [users]);
+
     const toggleForm = () => {
         setShowForm(prevState => !prevState);
+    };
+
+    const saveUser = async (u: GraphqlSaveInputDTO) => {
+        try {
+            await saveUserMutation(u);
+            findAllUser();
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
+    const updateUser = async (u: GraphqlUpdateInputDTO) => {
+        try {
+            await UpdateUserMutation(u);
+            findAllUser();
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
+    const deleteUser = async (userId: number) => {
+        try {
+            await deleteUserMutation(userId);
+            setUserList(prevList => prevList.filter(user => user.id !== userId));
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
     };
 
     const fetchLoginData = async () => {
         try {
             const result = await findLoginDates();
             setLoginInfo(result.data.findLastLogins);
-            console.log("Logins: ");
-            console.log(result.data.findLastLogins);
-            
-                       
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -53,10 +75,6 @@ const Main = () => {
         try {
             const result = await findRegisterDates();
             setRegisterInfo(result.data.findRegisterAlongTime);
-            console.log("Registers: ");
-            console.log(result.data.findRegisterAlongTime);
-            
-                       
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -70,15 +88,17 @@ const Main = () => {
             <div className="contenedor">
                 <nav className="nav">
                     <div className="switch-container">
+                        <h2>Cambiar Formulario</h2>
+                        <br />
                         <label className="switch">
                             <input type="checkbox" checked={showForm} onChange={toggleForm} />
                             <span className="slider"></span>
                         </label>
-                        <label>Mostrar Formulario</label>
+                        
                     </div>
                     {(showForm)
-                        ? <FormSaveUser />
-                        : <FormUpdateuser />
+                        ? <FormSaveUser saveUser={saveUser} />
+                        : <FormUpdateuser updateUser={updateUser} />
                     }
                 </nav>
                 <main className="main">
@@ -86,8 +106,9 @@ const Main = () => {
                         <div className="chartContainer">
                             <h2>Contenido Principal</h2>
                             <div>
+                                <h3>Logins</h3>
                                 {(loginLoading)
-                                    ?<LineChart width={1000} height={450} data={loginInfo}>
+                                    ?<LineChart width={1000} height={400} data={loginInfo}>
                                         <XAxis dataKey="date"/>
                                         <YAxis dataKey="count"/>
                                         <Tooltip />
@@ -98,8 +119,9 @@ const Main = () => {
                                 }
                             </div>
                             <div>
+                                <h3>Registers</h3>
                                 {(registerLoading)
-                                    ?<LineChart width={1000} height={450} data={registerInfo}>
+                                    ?<LineChart width={1000} height={400} data={registerInfo}>
                                         <XAxis dataKey="date"/>
                                         <YAxis dataKey="count"/>
                                         <Tooltip />
@@ -113,18 +135,21 @@ const Main = () => {
 
                         <div className="sidebar">
                             <h3>Lista de Elementos</h3>
-                            {users.map((usuario, index) => (
-                                <UserCard usuario={usuario} />
-                            ))}
+                            {(usersLoading.current) 
+                                ?<p>Loading...</p>
+                                :<div>{userList.map((usuario) => (
+                                    <UserCard key={usuario.id} usuario={usuario} deleteUser={deleteUser} />
+                                ))}</div>
+                            }
                         </div>
                     </div>
                 </main>
 
             </div>
+
             <footer className="footer">
                 <p style={{alignItems: "center"}}>&copy; 2024 AntScape</p>
             </footer>
-
         </div>
     )
 }

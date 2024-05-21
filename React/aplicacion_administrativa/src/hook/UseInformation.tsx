@@ -3,19 +3,20 @@ import axios from 'axios';
 import Query from '../assets/Query';
 import Globals from '../assets/Globals';
 import { AppContext } from '../context/AppContextProvider';
+import { Usuario } from '../type/types';
 
 const UseInformation = () => {
     const {findAllUsers, findLastLogins, findRegisterAlongTime} = Query();
     const {token} = useContext(AppContext);
     const {ruta} = Globals();
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<Array<Usuario>>([] as Array<Usuario>);
     const [loginInfo, setLoginInfo] = useState();
     const [registerInfo, setRegisterInfo] = useState();
+    const [usersLoading, setUsersLoading] = useState(false);
 
     useEffect(() => {
         findAllUser();
     }, [])
-    
 
     async function finduserInfoById(id: number) {
         const query = 'findAdministrativeInfoByUserId(userId: ' + id + ') {' +
@@ -62,8 +63,6 @@ const UseInformation = () => {
                 },
             });
     
-            console.log("Users: ");
-            console.log(response.data.data.findAllUsers);
             setUsers(response.data.data.findAllUsers)
         } catch (error) {
             console.error('GraphQL request error:', error);
@@ -142,8 +141,11 @@ const UseInformation = () => {
         findRegisterDates,
         setLoginInfo,
         setRegisterInfo,
+        setUsers,
+        setUsersLoading,
         loginInfo,
         registerInfo,
+        usersLoading,
         users,
     }
 }
